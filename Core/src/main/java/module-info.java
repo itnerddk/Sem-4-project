@@ -1,6 +1,5 @@
 module Core {
-    requires Common;
-    requires CommonBullet;    
+    requires Common;  
     requires javafx.graphics;    
     opens org.sdu.sem4.g7.main to javafx.graphics;
     uses org.sdu.sem4.g7.common.services.IGamePluginService;
