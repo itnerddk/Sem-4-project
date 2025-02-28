@@ -8,8 +8,6 @@ import org.sdu.sem4.g7.common.services.IGamePluginService;
 
 public class BulletPlugin implements IGamePluginService {
 
-    private Entity bullet;
-
     @Override
     public void start(GameData gameData, Level world) {
 

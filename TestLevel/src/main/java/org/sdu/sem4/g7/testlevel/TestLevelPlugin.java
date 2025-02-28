@@ -1,14 +1,15 @@
+package org.sdu.sem4.g7.testlevel;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Level;
-import org.sdu.sem4.g7.common.services.ILevelPluginService;
+import org.sdu.sem4.g7.common.services.IGamePluginService;
 
-public class TestLevelPlugin implements ILevelPluginService {
+public class TestLevelPlugin implements IGamePluginService {
 
     private Level level;
 
     @Override
-    public void start(GameData gameData) {
+    public void start(GameData gameData, Level world) {
         // Implement if needed
         Entity entity = new Entity();
         entity.setRadius(1);
@@ -20,8 +21,9 @@ public class TestLevelPlugin implements ILevelPluginService {
     }
 
     @Override
-    public void stop(GameData gameData) {
-        
+    public void stop(GameData gameData, Level world) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'stop'");
     }
     
 }

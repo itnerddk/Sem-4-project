@@ -6,7 +6,6 @@ import org.sdu.sem4.g7.common.data.GameKeys;
 import org.sdu.sem4.g7.common.data.Level;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
-import org.sdu.sem4.g7.common.services.ILevelPluginService;
 import org.sdu.sem4.g7.common.services.IPostEntityProcessingService;
 import java.util.Collection;
 import java.util.Map;
@@ -26,6 +25,7 @@ public class Main extends Application {
 
     private final GameData gameData = new GameData();
     private Level world;
+    
     private final Map<Entity, Polygon> polygons = new ConcurrentHashMap<>();
     private final Pane gameWindow = new Pane();
 
@@ -34,7 +34,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage window) throws Exception {
+    public void start(Stage window) {
         Text text = new Text(10, 20, "Destroyed asteroids: 0");
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         gameWindow.getChildren().add(text);
@@ -81,7 +81,7 @@ public class Main extends Application {
         }
         render();
         window.setScene(scene);
-        window.setTitle("ASTEROIDS");
+        window.setTitle("TANK WARS");
         window.show();
     }
 
@@ -131,10 +131,6 @@ public class Main extends Application {
 
     private Collection<? extends IGamePluginService> getPluginServices() {
         return ServiceLoader.load(IGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
-    }
-
-    private Collection<? extends ILevelPluginService> getLevelPluginServices() {
-        return ServiceLoader.load(ILevelPluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 
     private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
