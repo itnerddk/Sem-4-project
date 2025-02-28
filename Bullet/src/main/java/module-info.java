@@ -1,11 +1,11 @@
-import dk.sdu.mmmi.cbse.common.bullet.BulletSPI;
-import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
-import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
+import org.sdu.sem4.g7.common.bullet.BulletSPI;
+import org.sdu.sem4.g7.common.services.IEntityProcessingService;
+import org.sdu.sem4.g7.common.services.IGamePluginService;
 
 module Bullet {
     requires Common;
     requires CommonBullet;
-    provides IGamePluginService with dk.sdu.mmmi.cbse.bulletsystem.BulletPlugin;
-    provides BulletSPI with dk.sdu.mmmi.cbse.bulletsystem.BulletControlSystem;
-    provides IEntityProcessingService with dk.sdu.mmmi.cbse.bulletsystem.BulletControlSystem;
+    provides IGamePluginService with org.sdu.sem4.g7.bulletsystem.BulletPlugin;
+    provides BulletSPI with org.sdu.sem4.g7.bulletsystem.BulletControlSystem;
+    provides IEntityProcessingService with org.sdu.sem4.g7.bulletsystem.BulletControlSystem;
 }

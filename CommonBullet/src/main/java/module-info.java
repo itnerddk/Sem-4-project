@@ -1,4 +1,4 @@
 module CommonBullet {
     requires Common;
-    exports dk.sdu.mmmi.cbse.common.bullet;
+    exports org.sdu.sem4.g7.common.bullet;
 }

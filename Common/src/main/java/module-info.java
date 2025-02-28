@@ -1,4 +1,4 @@
 module Common {
-    exports dk.sdu.mmmi.cbse.common.services;
-    exports dk.sdu.mmmi.cbse.common.data;
+    exports org.sdu.sem4.g7.common.services;
+    exports org.sdu.sem4.g7.common.data;
 }

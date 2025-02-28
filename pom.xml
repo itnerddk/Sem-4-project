@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>dk.sdu.mmmi.cbse</groupId>
-    <artifactId>asteroids.jpms</artifactId>
+    <groupId>org.sdu.sem4.g7</groupId>
+    <artifactId>tank-wars</artifactId>
     <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>AsteroidsFX</name>
+    <name>Tank Wars</name>
     <repositories>
     </repositories>
 
@@ -16,9 +16,10 @@
         <module>Player</module>
         <module>Bullet</module>
         <module>CommonBullet</module>
-        <module>CommonAsteroids</module>
-        <module>Asteroids</module>
-        <module>Collision</module>
+        <module>TestLevel</module>
+        <!-- <module>CommonAsteroids</module> -->
+        <!-- <module>Asteroids</module> -->
+        <!-- <module>Collision</module> -->
     </modules>
     <properties>
         <java>java</java>
@@ -92,8 +93,8 @@
                         I still wanted to do it for clarity, but for some reason that results
                         in "java.lang.module.FindException: Module monitor.observer.zero not found";
                         strange... -->
-                        <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=127.0.0.1:8000</argument>
-                        <argument>--module=Core/dk.sdu.mmmi.cbse.main.Main</argument>
+                        <!-- <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=127.0.0.1:8000</argument> -->
+                        <argument>--module=Core/org.sdu.sem4.g7.main.Main</argument>
                         <argument>--add-modules javafx.graphics</argument>
                     </arguments>
                 </configuration>
