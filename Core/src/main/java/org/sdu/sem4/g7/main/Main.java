@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import static java.util.stream.Collectors.toList;
+
+import java.util.ArrayList;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -25,7 +28,6 @@ public class Main extends Application {
 
     private final GameData gameData = new GameData();
     private Level world;
-    
     private final Map<Entity, Polygon> polygons = new ConcurrentHashMap<>();
     private final Pane gameWindow = new Pane();
 
@@ -70,10 +72,14 @@ public class Main extends Application {
 
         });
 
-        // Lookup all Game Plugins using ServiceLoader
+        // Lookup all Game Plugins using ServiceLoader, this is also where levels load
         for (IGamePluginService iGamePlugin : getPluginServices()) {
             iGamePlugin.start(gameData, world);
         }
+
+        System.out.println("Levels loaded: " + gameData.getLevels().size());
+        this.world = gameData.getLevels().get(0);
+
         for (Entity entity : world.getEntities()) {
             Polygon polygon = new Polygon(entity.getPolygonCoordinates());
             polygons.put(entity, polygon);
