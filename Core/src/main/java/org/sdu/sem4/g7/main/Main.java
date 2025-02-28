@@ -12,15 +12,12 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import static java.util.stream.Collectors.toList;
-
-import java.util.ArrayList;
-
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -28,7 +25,7 @@ public class Main extends Application {
 
     private final GameData gameData = new GameData();
     private Level world;
-    private final Map<Entity, Polygon> polygons = new ConcurrentHashMap<>();
+    private final Map<Entity, ImageView> sprites = new ConcurrentHashMap<>();
     private final Pane gameWindow = new Pane();
 
     public static void main(String[] args) {
@@ -52,6 +49,9 @@ public class Main extends Application {
             if (event.getCode().equals(KeyCode.UP)) {
                 gameData.getKeys().setKey(GameKeys.UP, true);
             }
+            if (event.getCode().equals(KeyCode.DOWN)) {
+                gameData.getKeys().setKey(GameKeys.DOWN, true);
+            }
             if (event.getCode().equals(KeyCode.SPACE)) {
                 gameData.getKeys().setKey(GameKeys.SPACE, true);
             }
@@ -65,6 +65,9 @@ public class Main extends Application {
             }
             if (event.getCode().equals(KeyCode.UP)) {
                 gameData.getKeys().setKey(GameKeys.UP, false);
+            }
+            if (event.getCode().equals(KeyCode.DOWN)) {
+                gameData.getKeys().setKey(GameKeys.DOWN, false);
             }
             if (event.getCode().equals(KeyCode.SPACE)) {
                 gameData.getKeys().setKey(GameKeys.SPACE, false);
@@ -81,9 +84,8 @@ public class Main extends Application {
         this.world = gameData.getLevels().get(0);
 
         for (Entity entity : world.getEntities()) {
-            Polygon polygon = new Polygon(entity.getPolygonCoordinates());
-            polygons.put(entity, polygon);
-            gameWindow.getChildren().add(polygon);
+            sprites.put(entity, entity.getSprite());
+            gameWindow.getChildren().add(entity.getSprite());
         }
         render();
         window.setScene(scene);
@@ -112,25 +114,26 @@ public class Main extends Application {
         }       
     }
 
-    private void draw() {        
-        for (Entity polygonEntity : polygons.keySet()) {
-            if(!world.getEntities().contains(polygonEntity)){   
-                Polygon removedPolygon = polygons.get(polygonEntity);               
-                polygons.remove(polygonEntity);                      
-                gameWindow.getChildren().remove(removedPolygon);
+    private void draw() {
+        // If the entity is gone from the world, remove the sprite and entity from the sprites buffer
+        for (Entity spriteEntity : sprites.keySet()) {
+            if(!world.getEntities().contains(spriteEntity)){   
+                ImageView removedSprite = sprites.get(spriteEntity);               
+                sprites.remove(spriteEntity);
+                gameWindow.getChildren().remove(removedSprite);
             }
         }
-                
+        // Iterate through all entities in the world and update their position and rotation
         for (Entity entity : world.getEntities()) {                      
-            Polygon polygon = polygons.get(entity);
-            if (polygon == null) {
-                polygon = new Polygon(entity.getPolygonCoordinates());
-                polygons.put(entity, polygon);
-                gameWindow.getChildren().add(polygon);
+            ImageView sprite = sprites.get(entity);
+            if (sprite == null) {
+                sprite = new ImageView();
+                sprites.put(entity, sprite);
+                gameWindow.getChildren().add(sprite);
             }
-            polygon.setTranslateX(entity.getX());
-            polygon.setTranslateY(entity.getY());
-            polygon.setRotate(entity.getRotation());
+            sprite.setTranslateX(entity.getPosition().getX());
+            sprite.setTranslateY(entity.getPosition().getY());
+            sprite.setRotate(entity.getRotation());
         }
 
     }

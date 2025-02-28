@@ -18,12 +18,9 @@ public class TestLevelPlugin extends Level implements IGamePluginService {
     public void start(GameData gameData, Level world) {
         // Implement if needed
         this.level = new TestLevel();
-        Entity entity = new Entity();
-        entity.setPolygonCoordinates(-5, -5, 10, 0, -5, 5);
-        entity.setX(gameData.getDisplayHeight() / 3);
-        entity.setY(gameData.getDisplayWidth() / 3);
-        entity.setRadius(8);
-        this.level.addEntity(entity);
+        // Entity entity = new Entity();
+        // entity.setPosition(100, 100);
+        // this.level.addEntity(entity);
 
         for (IEntityPluginService plugin : getPluginServices()) {
             plugin.start(gameData, this.level);
