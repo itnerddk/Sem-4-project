@@ -3,8 +3,8 @@ package org.sdu.sem4.g7.common.data;
 public class Tank extends Entity {
     private double speed;
     private double maxSpeed = 5;
-    private double acceleration = 0.1;
-    private double deacceleration = 1;
+    private double acceleration = 0.3;
+    private double deacceleration = 0.1;
     private float rotationSpeed = 2;
 
     public double getSpeed() {

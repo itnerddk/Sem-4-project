@@ -14,15 +14,28 @@ public class PlayerControlSystem implements IEntityProcessingService {
             // Controls
             Player player = (Player) entity;
 
-            // Drag of 1
-            player.setSpeed(lerp(player.getSpeed(), 0, 0.1));
-
-
+            
+            
             // Forward and backward
             if (gameData.getKeys().isDown(GameKeys.UP)) {
-                player.setSpeed(lerp(player.getSpeed(), player.getMaxSpeed(), player.getAcceleration()));
+                player.setSpeed(
+                    lerp(
+                        player.getSpeed(),
+                        Math.min(player.getSpeed() + player.getAcceleration(), player.getMaxSpeed()),
+                        0.7
+                    )
+                );
             } else if (gameData.getKeys().isDown(GameKeys.DOWN)) {
-                player.setSpeed(Math.min(player.getSpeed() - player.getDeacceleration(), -(player.getMaxSpeed()/2)));
+                player.setSpeed(
+                    lerp(
+                        player.getSpeed(),
+                        Math.max(player.getSpeed() - player.getDeacceleration(), -(player.getMaxSpeed()/2)),
+                        0.5
+                    )
+                );
+            } else {
+                // Drag of 1
+                player.setSpeed(lerp(player.getSpeed(), 0, 0.1));
             }
 
             // Rotate
