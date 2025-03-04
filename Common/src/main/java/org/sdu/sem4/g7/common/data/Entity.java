@@ -19,7 +19,7 @@ public class Entity implements Serializable {
     private int health;
     private int maxHealth;
     private boolean immoveable;
-    private boolean collission;
+    private boolean collision;
     private int weight;
 
     
@@ -102,12 +102,12 @@ public class Entity implements Serializable {
         this.immoveable = immoveable;
     }
 
-    public boolean isCollission() {
-        return collission;
+    public boolean isCollision() {
+        return collision;
     }
 
-    public void setCollission(boolean collission) {
-        this.collission = collission;
+    public void setCollision(boolean collision) {
+        this.collision = collision;
     }
 
     public int getWeight() {
