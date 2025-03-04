@@ -1,11 +1,16 @@
 package org.sdu.sem4.g7.common.data;
 
 public class Tank extends Entity {
+    /**
+     * The current forwards, backwards velocity of the tank
+     */
     private double speed;
     private double maxSpeed = 5;
     private double acceleration = 0.3;
     private double deacceleration = 0.1;
     private float rotationSpeed = 2;
+
+    private Turret turret;
 
     public double getSpeed() {
         return speed;

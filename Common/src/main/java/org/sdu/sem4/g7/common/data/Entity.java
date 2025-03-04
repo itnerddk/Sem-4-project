@@ -8,21 +8,68 @@ import java.util.UUID;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/*
+ * Base object for all visible objects in the game
+ */
 public class Entity implements Serializable {
 
+    /*
+     * Unique id for the entity
+     */
     private final UUID ID = UUID.randomUUID();
     
+    /*
+     * Position of the entity
+     */
     private Vector2 position = new Vector2(0, 0);
+
+    /*
+     * Rotation of the entity
+     *
+     * Value between 0 and 359
+     */ 
     private float rotation = 0;
+
+    /*
+     * direction of travel (with velocity)
+     */ 
     private Vector2 velocity = new Vector2(0, 0);
+
+    /*
+     * Image of the sprite
+     */
     private ImageView sprite;
+
+    /*
+     * Health of the entity
+     *
+     * NOTE: An entity should die, whenever the health is <= 0
+     */
     private int health;
+
+    /*
+     * Limit for health, to ensure that the player cannot stack health
+     */
     private int maxHealth;
+
+    /*
+     * Defines if the entity is able to move
+     */
     private boolean immoveable;
+
+    /*
+     * Defines if the entity should have an hit box
+     */
     private boolean collision;
+
+    /*
+     * Weight of the entity, used when collision occurs
+     */
     private int weight;
 
-    
+    /*
+     * Radius of collision circle
+     */
     private float radius;
             
 
