@@ -1,0 +1,24 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Attach",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": "8000"
+        },
+        {
+            "type": "java",
+            "name": "Run Jar",
+            "request": "launch",
+            "mainClass": "",
+            "preLaunchTask": "build",
+            "projectName": "core",
+            "vmArgs": "--module-path=mods-mvn --module=Core/org.sdu.sem4.g7.main.Main"
+        }
+    ]
+}
