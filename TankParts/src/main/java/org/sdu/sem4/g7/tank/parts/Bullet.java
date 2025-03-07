@@ -5,7 +5,7 @@ import org.sdu.sem4.g7.common.data.Entity;
 /*
  * Shootable and renderable bullet
  */
-public class Bullet extends Entity {
+public abstract class Bullet extends Entity {
     
     /*
      * Defines how many health an entity loses upon collision

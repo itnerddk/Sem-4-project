@@ -19,7 +19,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
             // Forward and backward
             if (gameData.getKeys().isDown(GameKeys.UP)) {
                 player.setSpeed(
-                    lerp(
+                    player.lerp(
                         player.getSpeed(),
                         Math.min(player.getSpeed() + player.getAcceleration(), player.getMaxSpeed()),
                         0.7
@@ -27,15 +27,12 @@ public class PlayerControlSystem implements IEntityProcessingService {
                 );
             } else if (gameData.getKeys().isDown(GameKeys.DOWN)) {
                 player.setSpeed(
-                    lerp(
+                    player.lerp(
                         player.getSpeed(),
-                        Math.max(player.getSpeed() - player.getDeacceleration(), -(player.getMaxSpeed()/2)),
+                        Math.max(player.getSpeed() - player.getDeceleration(), -(player.getMaxSpeed()/2)),
                         0.5
                     )
                 );
-            } else {
-                // Drag of 1
-                player.setSpeed(lerp(player.getSpeed(), 0, 0.1));
             }
 
             // Rotate
@@ -45,20 +42,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
                 player.setRotation(player.getRotation() + player.getRotationSpeed());
             }
 
-            
-
-            double changeX = Math.cos(Math.toRadians(player.getRotation() - 90));
-            double changeY = Math.sin(Math.toRadians(player.getRotation() - 90));
-
-            
-            // Set position
-            player.setPosition(player.getPosition().getX() + (changeX * player.getSpeed()), player.getPosition().getY() + (changeY * player.getSpeed()));
+            player.processPosition();
         }
     }
-
-    double lerp(double a, double b, double f)
-    {
-        return a * (1.0 - f) + (b * f);
-    }
-    
 }

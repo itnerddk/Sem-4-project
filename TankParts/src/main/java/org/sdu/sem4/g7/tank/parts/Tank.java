@@ -2,17 +2,28 @@ package org.sdu.sem4.g7.tank.parts;
 
 import org.sdu.sem4.g7.common.data.Entity;
 
-public class Tank extends Entity {
+public abstract class Tank extends Entity {
     /**
      * The current forwards, backwards velocity of the tank
      */
     private double speed;
     private double maxSpeed = 5;
     private double acceleration = 0.3;
-    private double deacceleration = 0.1;
+    private double deceleration = 0.1;
     private float rotationSpeed = 2;
 
     private Turret turret;
+
+    public void processPosition() {
+        setSpeed(lerp(getSpeed(), 0, 0.1));
+
+        double changeY = Math.sin(Math.toRadians(getRotation() - 90));
+        double changeX = Math.cos(Math.toRadians(getRotation() - 90));
+
+        
+        // Set position
+        setPosition(getPosition().getX() + (changeX * getSpeed()), getPosition().getY() + (changeY * getSpeed()));
+    }
 
     public double getSpeed() {
         return speed;
@@ -38,12 +49,12 @@ public class Tank extends Entity {
         this.acceleration = acceleration;
     }
 
-    public double getDeacceleration() {
-        return deacceleration;
+    public double getDeceleration() {
+        return deceleration;
     }
 
-    public void setDeacceleration(double deacceleration) {
-        this.deacceleration = deacceleration;
+    public void setDeceleration(double deceleration) {
+        this.deceleration = deceleration;
     }
 
     public float getRotationSpeed() {
@@ -52,5 +63,9 @@ public class Tank extends Entity {
 
     public void setRotationSpeed(float rotationSpeed) {
         this.rotationSpeed = rotationSpeed;
+    }
+
+    public double lerp(double a, double b, double f) {
+        return a * (1.0 - f) + (b * f);
     }
 }
