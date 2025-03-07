@@ -1,7 +1,7 @@
 package org.sdu.sem4.g7.playersystem;
 import java.net.URISyntaxException;
 
-import org.sdu.sem4.g7.common.data.Tank;
+import org.sdu.sem4.g7.tank.parts.Tank;
 
 public class Player extends Tank {
     public Player() {

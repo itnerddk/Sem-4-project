@@ -15,6 +15,7 @@
         <module>Common</module>
         <module>TestMission</module>
         <module>Player</module>
+        <module>TankParts</module>
         <!-- <module>CommonAsteroids</module> -->
         <!-- <module>Asteroids</module> -->
         <!-- <module>Collision</module> -->

@@ -9,18 +9,13 @@
           <version>1.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>Player</artifactId>
+    <artifactId>TankParts</artifactId>
     <packaging>jar</packaging>
-    <name>Player</name>
+    <name>TankParts</name>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>Common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>TankParts</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

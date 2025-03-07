@@ -1,4 +1,6 @@
-package org.sdu.sem4.g7.common.data;
+package org.sdu.sem4.g7.tank.parts;
+
+import org.sdu.sem4.g7.common.data.Entity;
 
 public class Tank extends Entity {
     /**
