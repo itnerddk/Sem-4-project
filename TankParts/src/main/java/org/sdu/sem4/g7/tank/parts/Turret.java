@@ -52,4 +52,6 @@ public abstract class Turret extends Entity {
     public void setAttackSpeed(int attackSpeed) {
         this.attackSpeed = attackSpeed;
     }
+
+    abstract public void shoot();
 }

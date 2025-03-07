@@ -1,10 +1,11 @@
-package org.sdu.sem4.g7.playersystem;
+package org.sdu.sem4.g7.cannonTurret;
+
 import java.net.URISyntaxException;
 
-import org.sdu.sem4.g7.tank.parts.Tank;
+import org.sdu.sem4.g7.tank.parts.Turret;
 
-public class Player extends Tank {
-    public Player() {
+public class CannonTurret extends Turret {
+    public CannonTurret() {
         super();
         try {
             System.out.println(this.getClass().getClassLoader().getResource("Sprite.png"));
@@ -13,5 +14,9 @@ public class Player extends Tank {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public void shoot() {
+        
     }
 }
