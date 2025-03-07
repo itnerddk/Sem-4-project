@@ -133,6 +133,15 @@ public class Entity implements Serializable {
         this.health = health;
     }
 
+    /*
+     * Checks if the entity is dead
+     * 
+     * @returns true if dead
+     */
+    public boolean isDead() {
+        return health <= 0;
+    }
+
     public int getMaxHealth() {
         return maxHealth;
     }

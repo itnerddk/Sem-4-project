@@ -13,8 +13,12 @@ public class PlayerControlSystem implements IEntityProcessingService {
         for (Entity entity : world.getEntities(Player.class)) {
             // Controls
             Player player = (Player) entity;
-
             
+            // check if player is dead
+            if (player.isDead()) {
+                System.out.println("Player died!");
+                world.removeEntity(player);
+            }
             
             // Forward and backward
             if (gameData.getKeys().isDown(GameKeys.UP)) {

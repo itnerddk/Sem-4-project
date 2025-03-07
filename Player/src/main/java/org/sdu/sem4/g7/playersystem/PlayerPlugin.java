@@ -15,6 +15,7 @@ public class PlayerPlugin implements IEntityPluginService {
         // Spawn player in middle of mission
         Player player = new Player();
         player.setPosition(gameData.getDisplayWidth() / 2, gameData.getDisplayHeight() / 2);
+        player.setHealth(100);
         world.addEntity(player);
     }
 
