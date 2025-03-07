@@ -7,8 +7,8 @@ public class Player extends Tank {
     public Player() {
         super();
         try {
-            System.out.println(this.getClass().getClassLoader().getResource("Sprite.png"));
-            this.setSprite(this.getClass().getClassLoader().getResource("Sprite.png").toURI());
+            System.out.println(this.getClass().getClassLoader().getResource("Player.png"));
+            this.setSprite(this.getClass().getClassLoader().getResource("Player.png").toURI());
         } catch (URISyntaxException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

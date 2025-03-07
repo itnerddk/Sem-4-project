@@ -8,8 +8,8 @@ public class CannonBullet extends Bullet {
     public CannonBullet() {
         super();
         try {
-            System.out.println(this.getClass().getClassLoader().getResource("Bullet.png"));
-            this.setSprite(this.getClass().getClassLoader().getResource("Bullet.png").toURI());
+            System.out.println(this.getClass().getClassLoader().getResource("CannonBullet.png"));
+            this.setSprite(this.getClass().getClassLoader().getResource("CannonBullet.png").toURI());
         } catch (URISyntaxException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

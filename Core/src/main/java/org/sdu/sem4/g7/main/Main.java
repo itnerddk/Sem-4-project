@@ -7,6 +7,8 @@ import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
 import org.sdu.sem4.g7.common.services.IPostEntityProcessingService;
+import org.sdu.sem4.g7.common.services.IPreGamePluginService;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -76,12 +78,18 @@ public class Main extends Application {
         });
 
         // Lookup all Game Plugins using ServiceLoader, this is also where missions load
+        for (IPreGamePluginService iPrePluginService : getPrePluginServices()) {
+            iPrePluginService.start(gameData, world);
+        }
+
         for (IGamePluginService iGamePlugin : getPluginServices()) {
             iGamePlugin.start(gameData, world);
         }
 
         System.out.println("Missions loaded: " + gameData.getMissions().size());
         this.world = gameData.getMissions().get(0);
+
+        System.out.println("Turrets loaded: " + gameData.getTurrets().size());
 
         for (Entity entity : world.getEntities()) {
             sprites.put(entity, entity.getSprite());
@@ -136,6 +144,10 @@ public class Main extends Application {
             sprite.setRotate(entity.getRotation());
         }
 
+    }
+
+    private Collection<? extends IPreGamePluginService> getPrePluginServices() {
+        return ServiceLoader.load(IPreGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 
     private Collection<? extends IGamePluginService> getPluginServices() {

@@ -31,13 +31,11 @@ public class Mission {
         return entityMap.values();
     }
 
-    public <E extends Entity> List<Entity> getEntities(Class<E>... entityTypes) {
-        List<Entity> r = new ArrayList<>();
+    public <E extends Entity> List<E> getEntities(Class<E> entityType) {
+        List<E> r = new ArrayList<>();
         for (Entity e : getEntities()) {
-            for (Class<E> entityType : entityTypes) {
-                if (entityType.equals(e.getClass())) {
-                    r.add(e);
-                }
+            if (entityType.equals(e.getClass())) {
+                r.add((E) e);
             }
         }
         return r;

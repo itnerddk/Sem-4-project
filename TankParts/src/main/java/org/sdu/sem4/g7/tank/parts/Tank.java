@@ -71,6 +71,15 @@ public abstract class Tank extends Entity {
         this.rotationSpeed = rotationSpeed;
     }
 
+    public Turret getTurret() {
+        return turret;
+    }
+
+    public void setTurret(Turret turret) {
+        this.turret = turret;
+        turret.setTank(this);
+    }
+
     public double lerp(double a, double b, double f) {
         return a * (1.0 - f) + (b * f);
     }

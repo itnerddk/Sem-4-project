@@ -8,8 +8,8 @@ public class CannonTurret extends Turret {
     public CannonTurret() {
         super();
         try {
-            System.out.println(this.getClass().getClassLoader().getResource("Sprite.png"));
-            this.setSprite(this.getClass().getClassLoader().getResource("Sprite.png").toURI());
+            System.out.println(this.getClass().getClassLoader().getResource("CannonTurret.png"));
+            this.setSprite(this.getClass().getClassLoader().getResource("CannonTurret.png").toURI());
         } catch (URISyntaxException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
