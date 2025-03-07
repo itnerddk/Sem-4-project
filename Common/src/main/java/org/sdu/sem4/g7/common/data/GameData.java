@@ -8,7 +8,7 @@ public class GameData {
     private int displayHeight = 800;
     private final GameKeys keys = new GameKeys();
 
-    private ArrayList<Level> levels = new ArrayList<>();
+    private ArrayList<Mission> missions = new ArrayList<>();
 
 
     public GameKeys getKeys() {
@@ -31,16 +31,16 @@ public class GameData {
         return displayHeight;
     }
 
-    public void addLevel(Level level) {
-        levels.add(level);
+    public void addMission(Mission mission) {
+        missions.add(mission);
     }
 
-    public ArrayList<Level> getLevels() {
-        return levels;
+    public ArrayList<Mission> getMissions() {
+        return missions;
     }
 
-    public void setLevels(ArrayList<Level> levels) {
-        this.levels = levels;
+    public void setMissions(ArrayList<Mission> missions) {
+        this.missions = missions;
     }
 
 }

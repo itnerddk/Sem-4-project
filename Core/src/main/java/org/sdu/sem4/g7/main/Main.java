@@ -3,7 +3,7 @@ package org.sdu.sem4.g7.main;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.GameKeys;
-import org.sdu.sem4.g7.common.data.Level;
+import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
 import org.sdu.sem4.g7.common.services.IPostEntityProcessingService;
@@ -24,7 +24,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     private final GameData gameData = new GameData();
-    private Level world;
+    private Mission world;
     private final Map<Entity, ImageView> sprites = new ConcurrentHashMap<>();
     private final Pane gameWindow = new Pane();
 
@@ -75,13 +75,13 @@ public class Main extends Application {
 
         });
 
-        // Lookup all Game Plugins using ServiceLoader, this is also where levels load
+        // Lookup all Game Plugins using ServiceLoader, this is also where missions load
         for (IGamePluginService iGamePlugin : getPluginServices()) {
             iGamePlugin.start(gameData, world);
         }
 
-        System.out.println("Levels loaded: " + gameData.getLevels().size());
-        this.world = gameData.getLevels().get(0);
+        System.out.println("Missions loaded: " + gameData.getMissions().size());
+        this.world = gameData.getMissions().get(0);
 
         for (Entity entity : world.getEntities()) {
             sprites.put(entity, entity.getSprite());

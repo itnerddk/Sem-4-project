@@ -1,4 +1,4 @@
-package org.sdu.sem4.g7.testlevel;
+package org.sdu.sem4.g7.testmission;
 import static java.util.stream.Collectors.toList;
 
 import java.util.Collection;
@@ -6,31 +6,31 @@ import java.util.ServiceLoader;
 
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
-import org.sdu.sem4.g7.common.data.Level;
+import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.common.services.IEntityPluginService;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
 
-public class TestLevelPlugin extends Level implements IGamePluginService {
+public class TestMissionPlugin extends Mission implements IGamePluginService {
 
-    private Level level;
+    private Mission mission;
 
     @Override
-    public void start(GameData gameData, Level world) {
+    public void start(GameData gameData, Mission world) {
         // Implement if needed
-        this.level = new TestLevel();
+        this.mission = new TestMission();
         // Entity entity = new Entity();
         // entity.setPosition(100, 100);
-        // this.level.addEntity(entity);
+        // this.mission.addEntity(entity);
 
         for (IEntityPluginService plugin : getPluginServices()) {
-            plugin.start(gameData, this.level);
+            plugin.start(gameData, this.mission);
         }
 
-        gameData.addLevel(this.level);
+        gameData.addMission(this.mission);
     }
 
     @Override
-    public void stop(GameData gameData, Level world) {
+    public void stop(GameData gameData, Mission world) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'stop'");
     }

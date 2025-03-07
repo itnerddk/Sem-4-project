@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Level {
+public class Mission {
 
     private final Map<String, Entity> entityMap = new ConcurrentHashMap<>();
 
