@@ -45,6 +45,11 @@ public class PlayerControlSystem implements IEntityProcessingService {
                 player.setRotation(player.getRotation() + player.getRotationSpeed());
             }
 
+            // Shoot
+            if (gameData.getKeys().isPressed(GameKeys.SPACE)) {
+                player.shoot();
+            }
+
             player.processPosition(gameData);
         }
     }
