@@ -107,12 +107,15 @@ public class Main extends Application {
             long lastTick;
             @Override
             public void handle(long now) {
-                update();
+                // Framerate cap
+                if (now - lastTick >= 28_000_000) {
+                    update();
+                    gameData.getKeys().update();
+                    gameData.setDelta((now - lastTick) * 1.0e-9);
+                    gameData.addDebug("Delta", String.valueOf((Math.round(gameData.getDelta() * 10000) / 10.0))); // Turning nano seconds into ms
+                    lastTick = now;
+                }
                 draw();
-                gameData.getKeys().update();
-                gameData.setDelta((now - lastTick) * 1.0e-9);
-                gameData.addDebug("Delta", String.valueOf((Math.round(gameData.getDelta() * 10000) / 10.0))); // Turning nano seconds into ms
-                lastTick = now;
             }
 
         }.start();

@@ -4,7 +4,6 @@ import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.GameKeys;
 import org.sdu.sem4.g7.common.data.Mission;
-import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 
 public class PlayerControlSystem implements IEntityProcessingService {
@@ -25,7 +24,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
                 player.setSpeed(
                     player.lerp(
                         player.getSpeed(),
-                        Math.min(player.getSpeed() + player.getAcceleration(), player.getMaxSpeed()),
+                        Math.min(player.getSpeed() + (player.getAcceleration()), player.getMaxSpeed()),
                         0.7
                     )
                 );
@@ -33,7 +32,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
                 player.setSpeed(
                     player.lerp(
                         player.getSpeed(),
-                        Math.max(player.getSpeed() - player.getDeceleration(), -(player.getMaxSpeed()/2)),
+                        Math.max(player.getSpeed() - (player.getDeceleration()), -(player.getMaxSpeed()/2)),
                         0.5
                     )
                 );
@@ -46,7 +45,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
                 player.setRotation(player.getRotation() + player.getRotationSpeed());
             }
 
-            player.processPosition();
+            player.processPosition(gameData);
         }
     }
 }

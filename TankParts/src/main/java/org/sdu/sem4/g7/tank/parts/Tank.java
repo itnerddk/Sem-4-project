@@ -1,20 +1,21 @@
 package org.sdu.sem4.g7.tank.parts;
 
 import org.sdu.sem4.g7.common.data.Entity;
+import org.sdu.sem4.g7.common.data.GameData;
 
 public abstract class Tank extends Entity {
     /**
      * The current forwards, backwards velocity of the tank
      */
     private double speed;
-    private double maxSpeed = 5;
-    private double acceleration = 0.3;
-    private double deceleration = 0.1;
+    private double maxSpeed = 7.5;
+    private double acceleration = 1;
+    private double deceleration = .5;
     private float rotationSpeed = 2;
 
     private Turret turret;
 
-    public void processPosition() {
+    public void processPosition(GameData gameData) {
         setSpeed(lerp(getSpeed(), 0, 0.1));
 
         double changeY = Math.sin(Math.toRadians(getRotation() - 90));
