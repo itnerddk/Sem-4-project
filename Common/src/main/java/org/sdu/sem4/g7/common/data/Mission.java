@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Mission {
 
     private final Map<String, Entity> entityMap = new ConcurrentHashMap<>();
+    private Map<String, List<Class<? extends Entity>>> entityTypes = new ConcurrentHashMap<>();
 
     public void start() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -16,7 +17,21 @@ public class Mission {
 
     public String addEntity(Entity entity) {
         entityMap.put(entity.getID(), entity);
+
+        // Sort z-index then iterate
+        List<Entity> sortedEntities = new ArrayList<>(entityMap.values());
+        sortedEntities.sort((e1, e2) -> e2.getzIndex() - e1.getzIndex());
+        for (Entity e : sortedEntities) {
+            e.getSprite().toBack();
+        }
+
         return entity.getID();
+    }
+
+    public void addEntity(List<Entity> entities) {
+        for (Entity entity : entities) {
+            this.addEntity(entity);
+        }
     }
 
     public void removeEntity(String entityID) {
@@ -43,6 +58,29 @@ public class Mission {
 
     public Entity getEntity(String ID) {
         return entityMap.get(ID);
+    }
+
+    public Map<String, List<Class<? extends Entity>>> getEntityTypes() {
+        return entityTypes;
+    }
+
+    @SafeVarargs // Up for debate
+    public final void addEntityType(String key, Class<? extends Entity>... entities) {
+        if (entityTypes.containsKey(key)) {
+            for (Class<? extends Entity> entity : entities) {
+                entityTypes.get(key).add(entity);
+            }
+            return;
+        }
+        List<Class<? extends Entity>> entityList = new ArrayList<>();
+        for (Class<? extends Entity> entity : entities) {
+            entityList.add(entity);
+        }
+        entityTypes.put(key, entityList);
+    }
+
+    public void load() {
+        throw new UnsupportedOperationException("This is an \"abstract\" class homieo :)");
     }
 
 }

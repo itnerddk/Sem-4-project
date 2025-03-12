@@ -112,6 +112,7 @@ public class Main extends Application {
                     update();
                     gameData.getKeys().update();
                     gameData.setDelta((now - lastTick) * 1.0e-9);
+                    gameData.addDebug("Entity Count", String.valueOf(mission.getEntities().size()));
                     gameData.addDebug("Delta", String.valueOf((Math.round(gameData.getDelta() * 10000) / 10.0))); // Turning nano seconds into ms
                     lastTick = now;
                 }
@@ -131,28 +132,31 @@ public class Main extends Application {
     }
 
     private void draw() {
-        // If the entity is gone from the world, remove the sprite and entity from the sprites buffer
-        for (Entity spriteEntity : sprites.keySet()) {
-            if(!mission.getEntities().contains(spriteEntity)){   
-                ImageView removedSprite = sprites.get(spriteEntity);               
-                sprites.remove(spriteEntity);
-                gameWindow.getChildren().remove(removedSprite);
+        if (mission != null) {
+            // If the entity is gone from the world, remove the sprite and entity from the sprites buffer
+            for (Entity spriteEntity : sprites.keySet()) {
+                if(!mission.getEntities().contains(spriteEntity)){   
+                    ImageView removedSprite = sprites.get(spriteEntity);               
+                    sprites.remove(spriteEntity);
+                    gameWindow.getChildren().remove(removedSprite);
+                }
             }
-        }
-        // Iterate through all entities in the world and update their position and rotation
-        for (Entity entity : mission.getEntities()) {                      
-            ImageView sprite = sprites.get(entity);
-            if (sprite == null) {
-                sprite = new ImageView();
-                sprites.put(entity, sprite);
-                gameWindow.getChildren().add(sprite);
+            // Iterate through all entities in the world and update their position and rotation
+            for (Entity entity : mission.getEntities()) {                      
+                ImageView sprite = sprites.get(entity);
+                if (sprite == null) {
+                    sprite = new ImageView();
+                    sprites.put(entity, sprite);
+                    gameWindow.getChildren().add(sprite);
+                }
+                sprite.setTranslateX(entity.getPosition().getX());
+                sprite.setTranslateY(entity.getPosition().getY());
+                sprite.setRotate(entity.getRotation());
             }
-            sprite.setTranslateX(entity.getPosition().getX());
-            sprite.setTranslateY(entity.getPosition().getY());
-            sprite.setRotate(entity.getRotation());
         }
         debugText.setText("");
         for (String key : gameData.debugMap.keySet()) {
+            // System.out.println(key + ": " + gameData.debugMap.get(key));
             debugText.setText(debugText.getText() + key + ": " + gameData.debugMap.get(key) + "\n");
         }
     }

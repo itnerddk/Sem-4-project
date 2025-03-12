@@ -9,7 +9,7 @@ import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.common.services.IEntityPluginService;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
 
-public class TestMissionPlugin extends Mission implements IGamePluginService {
+public class TestMissionPlugin implements IGamePluginService {
 
     private Mission mission;
 
@@ -17,13 +17,12 @@ public class TestMissionPlugin extends Mission implements IGamePluginService {
     public void start(GameData gameData, Mission world) {
         // Implement if needed
         this.mission = new TestMission();
-        // Entity entity = new Entity();
-        // entity.setPosition(100, 100);
-        // this.mission.addEntity(entity);
 
         for (IEntityPluginService plugin : getPluginServices()) {
             plugin.start(gameData, this.mission);
         }
+
+        this.mission.load();
 
         gameData.addMission(this.mission);
     }
