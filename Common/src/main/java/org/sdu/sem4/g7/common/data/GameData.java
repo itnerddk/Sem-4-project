@@ -4,9 +4,10 @@ import java.util.ArrayList;
 
 public class GameData {
 
-    private int displayWidth  = 800 ;
+    private int displayWidth  = 800;
     private int displayHeight = 800;
     private final GameKeys keys = new GameKeys();
+    private double delta;
 
     private ArrayList<Mission> missions = new ArrayList<>();
     private ArrayList<Entity> turrets = new ArrayList<>();
@@ -30,6 +31,14 @@ public class GameData {
 
     public int getDisplayHeight() {
         return displayHeight;
+    }
+
+    public double getDelta() {
+        return delta;
+    }
+
+    public void setDelta(double delta) {
+        this.delta = delta;
     }
 
     public void addMission(Mission mission) {

@@ -103,11 +103,14 @@ public class Main extends Application {
 
     private void render() {
         new AnimationTimer() {
+            long lastTick;
             @Override
             public void handle(long now) {
                 update();
                 draw();
                 gameData.getKeys().update();
+                lastTick = now;
+                gameData.setDelta((now - lastTick) * 1.0e-9);
             }
 
         }.start();
