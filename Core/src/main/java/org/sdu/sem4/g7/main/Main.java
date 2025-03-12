@@ -90,7 +90,7 @@ public class Main extends Application {
         System.out.println("Missions loaded: " + gameData.getMissions().size());
         this.mission = gameData.getMissions().get(0);
 
-        System.out.println("Turrets loaded: " + gameData.getTurrets().size());
+        // System.out.println("Turrets loaded: " + gameData.getTurrets().size());
 
         for (Entity entity : mission.getEntities()) {
             sprites.put(entity, entity.getSprite());

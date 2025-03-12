@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sdu.sem4.g7.common.data.Entity;
+import org.sdu.sem4.g7.tank.TurretLoader;
 import org.sdu.sem4.g7.tank.parts.Tank;
 
 public class Player extends Tank {
@@ -16,6 +17,10 @@ public class Player extends Tank {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+
+        // Test code to load turret
+        this.setTurret(TurretLoader.getTurrets().get(0));
     }
 
     @Override

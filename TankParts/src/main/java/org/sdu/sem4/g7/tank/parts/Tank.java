@@ -24,6 +24,10 @@ public abstract class Tank extends Entity {
         
         // Set position
         setPosition(getPosition().getX() + (changeX * getSpeed()), getPosition().getY() + (changeY * getSpeed()));
+        if (turret != null) {
+            turret.setPosition(getPosition().getX(), getPosition().getY());
+            turret.setRotation(getRotation());
+        }
     }
 
     public void shoot() {

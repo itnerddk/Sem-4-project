@@ -10,7 +10,7 @@ public class CannonTurretPlugin implements IPreGamePluginService {
     public void start(GameData gameData, Mission world) {
         System.out.println("Cannon Turret plugin started.");
         CannonTurret cTurret = new CannonTurret();
-        gameData.addTurrets(cTurret);
+        // gameData.addTurrets(cTurret);
     }
 
     @Override

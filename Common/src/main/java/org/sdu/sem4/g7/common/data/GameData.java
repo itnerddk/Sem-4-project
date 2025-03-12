@@ -12,8 +12,6 @@ public class GameData {
     private double delta;
 
     private ArrayList<Mission> missions = new ArrayList<>();
-    private ArrayList<Entity> turrets = new ArrayList<>();
-
 
     public GameKeys getKeys() {
         return keys;
@@ -53,18 +51,6 @@ public class GameData {
 
     public void setMissions(ArrayList<Mission> missions) {
         this.missions = missions;
-    }
-
-    public ArrayList<Entity> getTurrets() {
-        return turrets;
-    }
-
-    public void addTurrets(Entity turret) {
-        this.turrets.add(turret);
-    }
-
-    public void setTurrets(ArrayList<Entity> turrets) {
-        this.turrets = turrets;
     }
 
 
