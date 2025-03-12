@@ -26,7 +26,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     private final GameData gameData = new GameData();
-    private Mission world;
+    private Mission mission;
     private final Map<Entity, ImageView> sprites = new ConcurrentHashMap<>();
     private final Pane gameWindow = new Pane();
 
@@ -80,19 +80,19 @@ public class Main extends Application {
 
         // Lookup all Game Plugins using ServiceLoader, this is also where missions load
         for (IPreGamePluginService iPrePluginService : getPrePluginServices()) {
-            iPrePluginService.start(gameData, world);
+            iPrePluginService.start(gameData, mission);
         }
 
         for (IGamePluginService iGamePlugin : getPluginServices()) {
-            iGamePlugin.start(gameData, world);
+            iGamePlugin.start(gameData, mission);
         }
 
         System.out.println("Missions loaded: " + gameData.getMissions().size());
-        this.world = gameData.getMissions().get(0);
+        this.mission = gameData.getMissions().get(0);
 
         System.out.println("Turrets loaded: " + gameData.getTurrets().size());
 
-        for (Entity entity : world.getEntities()) {
+        for (Entity entity : mission.getEntities()) {
             sprites.put(entity, entity.getSprite());
             gameWindow.getChildren().add(entity.getSprite());
         }
@@ -123,24 +123,24 @@ public class Main extends Application {
 
     private void update() {
         for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
-            entityProcessorService.process(gameData, world);
+            entityProcessorService.process(gameData, mission);
         }
         for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
-            postEntityProcessorService.process(gameData, world);
+            postEntityProcessorService.process(gameData, mission);
         }       
     }
 
     private void draw() {
         // If the entity is gone from the world, remove the sprite and entity from the sprites buffer
         for (Entity spriteEntity : sprites.keySet()) {
-            if(!world.getEntities().contains(spriteEntity)){   
+            if(!mission.getEntities().contains(spriteEntity)){   
                 ImageView removedSprite = sprites.get(spriteEntity);               
                 sprites.remove(spriteEntity);
                 gameWindow.getChildren().remove(removedSprite);
             }
         }
         // Iterate through all entities in the world and update their position and rotation
-        for (Entity entity : world.getEntities()) {                      
+        for (Entity entity : mission.getEntities()) {                      
             ImageView sprite = sprites.get(entity);
             if (sprite == null) {
                 sprite = new ImageView();
