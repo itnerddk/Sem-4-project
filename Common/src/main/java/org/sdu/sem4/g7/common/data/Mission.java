@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Mission {
+public abstract class Mission {
 
     private final Map<String, Entity> entityMap = new ConcurrentHashMap<>();
     private Map<String, List<Class<? extends Entity>>> entityTypes = new ConcurrentHashMap<>();
@@ -79,8 +79,5 @@ public class Mission {
         entityTypes.put(key, entityList);
     }
 
-    public void load() {
-        throw new UnsupportedOperationException("This is an \"abstract\" class homieo :)");
-    }
-
+    public abstract void load();
 }
