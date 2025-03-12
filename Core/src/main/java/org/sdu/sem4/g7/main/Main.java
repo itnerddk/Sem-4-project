@@ -34,11 +34,12 @@ public class Main extends Application {
         launch(Main.class);
     }
 
+    public static Text debugText = new Text(10, 20, "");
+
     @Override
     public void start(Stage window) {
-        Text text = new Text(10, 20, "Destroyed asteroids: 0");
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
-        gameWindow.getChildren().add(text);
+        gameWindow.getChildren().add(debugText);
 
         Scene scene = new Scene(gameWindow);
         scene.setOnKeyPressed(event -> {
@@ -109,8 +110,9 @@ public class Main extends Application {
                 update();
                 draw();
                 gameData.getKeys().update();
-                lastTick = now;
                 gameData.setDelta((now - lastTick) * 1.0e-9);
+                gameData.addDebug("Delta", String.valueOf((Math.round(gameData.getDelta() * 10000) / 10.0))); // Turning nano seconds into ms
+                lastTick = now;
             }
 
         }.start();
@@ -146,7 +148,10 @@ public class Main extends Application {
             sprite.setTranslateY(entity.getPosition().getY());
             sprite.setRotate(entity.getRotation());
         }
-
+        debugText.setText("");
+        for (String key : gameData.debugMap.keySet()) {
+            debugText.setText(debugText.getText() + key + ": " + gameData.debugMap.get(key) + "\n");
+        }
     }
 
     private Collection<? extends IPreGamePluginService> getPrePluginServices() {
