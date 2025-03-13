@@ -9,7 +9,7 @@ public class CannonBullet extends Bullet {
         super();
         try {
             System.out.println(this.getClass().getClassLoader().getResource("CannonBullet.png"));
-            this.setSprite(this.getClass().getClassLoader().getResource("CannonBullet.png").toURI());
+            this.setSprite(this.getClass().getClassLoader().getResource("TurretShot.png").toURI());
         } catch (URISyntaxException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
