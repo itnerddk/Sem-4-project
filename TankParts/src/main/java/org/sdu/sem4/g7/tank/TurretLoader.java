@@ -8,6 +8,8 @@ import java.util.ServiceLoader.Provider;
 
 import static java.util.stream.Collectors.toList;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
@@ -29,7 +31,6 @@ public class TurretLoader implements IGamePluginService {
     public void stop(GameData gameData, Mission world) {
         turrets.clear();
     }
-    
 
     private Collection<Provider<? extends Turret>> loadTurrets() {
         return ServiceLoader.load(Turret.class).stream().collect(toList());

@@ -23,13 +23,4 @@ public class Player extends Tank {
         // Test code to load turret
         this.setTurret(TurretLoader.getTurrets().get(0).get());
     }
-
-    @Override
-    public List<Entity> getChildren() {
-        List<Entity> children = new ArrayList<>();
-        if (getTurret() != null) {
-            children.add(getTurret());
-        }
-        return children;
-    }
 }

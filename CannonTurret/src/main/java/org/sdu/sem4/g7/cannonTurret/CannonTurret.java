@@ -2,6 +2,8 @@ package org.sdu.sem4.g7.cannonTurret;
 
 import java.net.URISyntaxException;
 
+import org.sdu.sem4.g7.common.data.GameData;
+import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.tank.parts.Turret;
 
 public class CannonTurret extends Turret {
@@ -17,7 +19,12 @@ public class CannonTurret extends Turret {
         }
     }
 
-    public void shoot() {
-        
+    @Override
+    public void shoot(GameData gameData, Mission mission) {
+        CannonBullet bullet = new CannonBullet();
+        bullet.setPosition(this.getPosition());
+        mission.addEntity(bullet);
+        // bullet.setDirection(this.getDirection());
+        // bullet.setVelocity(1000);
     }
 }

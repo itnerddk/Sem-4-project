@@ -13,6 +13,10 @@ public class PlayerControlSystem implements IEntityProcessingService {
             // Controls
             Player player = (Player) entity;
             
+            if (gameData.isDebugMode()) {
+                gameData.addDebugRectangle(player.getID(), player, 15*8+2, 15*8+2);
+            }
+
             // check if player is dead
             if (player.isDead()) {
                 System.out.println("Player died!");
@@ -47,7 +51,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
 
             // Shoot
             if (gameData.getKeys().isPressed(GameKeys.SPACE)) {
-                player.shoot();
+                player.shoot(gameData, world);
             }
 
             player.processPosition(gameData);

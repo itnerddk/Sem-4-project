@@ -1,7 +1,11 @@
 package org.sdu.sem4.g7.tank.parts;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
+import org.sdu.sem4.g7.common.data.Mission;
 
 public abstract class Tank extends Entity {
     /**
@@ -30,9 +34,9 @@ public abstract class Tank extends Entity {
         }
     }
 
-    public void shoot() {
+    public void shoot(GameData gameData, Mission mission) {
         if (turret != null) {
-            turret.shoot();
+            turret.shoot(gameData, mission);
         }
     }
 
@@ -87,5 +91,15 @@ public abstract class Tank extends Entity {
 
     public double lerp(double a, double b, double f) {
         return a * (1.0 - f) + (b * f);
+    }
+
+
+    @Override
+    public List<Entity> getChildren() {
+        List<Entity> children = new ArrayList<>();
+        if (getTurret() != null) {
+            children.add(getTurret());
+        }
+        return children;
     }
 }

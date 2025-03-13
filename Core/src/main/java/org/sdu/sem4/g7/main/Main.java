@@ -16,6 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import static java.util.stream.Collectors.toList;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -27,7 +29,7 @@ public class Main extends Application {
 
     private final GameData gameData = new GameData();
     private Mission mission;
-    private final Map<Entity, ImageView> sprites = new ConcurrentHashMap<>();
+    private final Map<Entity, Node> sprites = new ConcurrentHashMap<>();
     private final Pane gameWindow = new Pane();
 
     public static void main(String[] args) {
@@ -42,6 +44,9 @@ public class Main extends Application {
         gameWindow.getChildren().add(debugText);
 
         Scene scene = new Scene(gameWindow);
+
+        scene.getStylesheets().add(this.getClass().getClassLoader().getResource("style.css").toExternalForm());
+
         scene.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.LEFT)) {
                 gameData.getKeys().setKey(GameKeys.LEFT, true);
@@ -115,8 +120,8 @@ public class Main extends Application {
                     gameData.addDebug("Entity Count", String.valueOf(mission.getEntities().size()));
                     gameData.addDebug("Delta", String.valueOf((Math.round(gameData.getDelta() * 10000) / 10.0))); // Turning nano seconds into ms
                     lastTick = now;
+                    draw();
                 }
-                draw();
             }
 
         }.start();
@@ -131,21 +136,34 @@ public class Main extends Application {
         }       
     }
 
+    Group debugGroup = new Group();
+
     private void draw() {
         if (mission != null) {
             // If the entity is gone from the world, remove the sprite and entity from the sprites buffer
             for (Entity spriteEntity : sprites.keySet()) {
                 if(!mission.getEntities().contains(spriteEntity)){   
-                    ImageView removedSprite = sprites.get(spriteEntity);               
+                    ImageView removedSprite = (ImageView) sprites.get(spriteEntity);               
                     sprites.remove(spriteEntity);
                     gameWindow.getChildren().remove(removedSprite);
                 }
             }
+            // Debugging
+            if (gameData.isDebugMode()) {
+                debugGroup.getChildren().clear();
+                debugGroup.viewOrderProperty().set(1000);
+                gameWindow.getChildren().remove(debugGroup);
+                for (Node node : gameData.debugEntities.values()) {
+                    debugGroup.getChildren().add(node);
+                }
+                gameWindow.getChildren().add(debugGroup);
+            }
+
             // Iterate through all entities in the world and update their position and rotation
             for (Entity entity : mission.getEntities()) {                      
-                ImageView sprite = sprites.get(entity);
+                ImageView sprite = (ImageView) sprites.get(entity);
                 if (sprite == null) {
-                    sprite = new ImageView();
+                    sprite = entity.getSprite();
                     sprites.put(entity, sprite);
                     gameWindow.getChildren().add(sprite);
                 }
