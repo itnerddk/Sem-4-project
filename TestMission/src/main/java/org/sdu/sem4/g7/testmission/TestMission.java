@@ -17,7 +17,7 @@ public class TestMission extends Mission {
 
         Entity floor = new Entity();
         floor.setPosition(0, 0);
-        floor.setzIndex(-1);
+        floor.setzIndex(1);
         floor.setCollision(false);
         floor.setImmoveable(true);
         floor.setHealth(1);
