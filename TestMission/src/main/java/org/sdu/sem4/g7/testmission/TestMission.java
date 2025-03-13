@@ -40,5 +40,15 @@ public class TestMission extends Mission {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+        try {
+            Entity enemy = this.getEntityTypes().get("Enemies").get(0).getDeclaredConstructor().newInstance();
+            enemy.setPosition(100, 100);
+            enemy.setHealth(100);
+            this.addEntity(enemy);
+            this.addEntity(enemy.getChildren());
+        } catch (Exception enemy) {
+            enemy.printStackTrace();
+        }
     }
 }
