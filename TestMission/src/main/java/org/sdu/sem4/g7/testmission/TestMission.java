@@ -42,11 +42,21 @@ public class TestMission extends Mission {
         }
 
         try {
-            Entity enemy = this.getEntityTypes().get("Enemies").get(0).getDeclaredConstructor().newInstance();
-            enemy.setPosition(100, 100);
-            enemy.setHealth(100);
-            this.addEntity(enemy);
-            this.addEntity(enemy.getChildren());
+            Entity enemy1 = this.getEntityTypes().get("Enemies").get(0).getDeclaredConstructor().newInstance();
+            enemy1.setPosition(100, 100);
+            enemy1.setHealth(100);
+            this.addEntity(enemy1);
+            this.addEntity(enemy1.getChildren());
+        } catch (Exception enemy) {
+            enemy.printStackTrace();
+        }
+
+        try {
+            Entity enemy2 = this.getEntityTypes().get("Enemies").get(0).getDeclaredConstructor().newInstance();
+            enemy2.setPosition(500, 300);
+            enemy2.setHealth(100);
+            this.addEntity(enemy2);
+            this.addEntity(enemy2.getChildren());
         } catch (Exception enemy) {
             enemy.printStackTrace();
         }
