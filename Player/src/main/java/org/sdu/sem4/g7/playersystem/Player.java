@@ -13,6 +13,7 @@ public class Player extends Tank {
         try {
             System.out.println(this.getClass().getClassLoader().getResource("Player.png"));
             this.setSprite(this.getClass().getClassLoader().getResource("Player.png").toURI());
+            this.setzIndex(-5);
         } catch (URISyntaxException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

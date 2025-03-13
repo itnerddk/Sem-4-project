@@ -10,6 +10,7 @@ public class CannonTurret extends Turret {
         try {
             System.out.println(this.getClass().getClassLoader().getResource("CannonTurret.png"));
             this.setSprite(this.getClass().getClassLoader().getResource("CannonTurret.png").toURI());
+            this.setzIndex(-10);
         } catch (URISyntaxException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
