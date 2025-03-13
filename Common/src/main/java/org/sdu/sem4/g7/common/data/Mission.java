@@ -17,13 +17,7 @@ public abstract class Mission {
 
     public String addEntity(Entity entity) {
         entityMap.put(entity.getID(), entity);
-
-        // Sort z-index then iterate
-        List<Entity> sortedEntities = new ArrayList<>(entityMap.values());
-        sortedEntities.sort((e1, e2) -> e2.getzIndex() - e1.getzIndex());
-        for (Entity e : sortedEntities) {
-            e.getSprite().toBack();
-        }
+        entity.getSprite().viewOrderProperty().set(entity.getzIndex());
 
         return entity.getID();
     }
