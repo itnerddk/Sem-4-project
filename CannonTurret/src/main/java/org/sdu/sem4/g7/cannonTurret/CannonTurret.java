@@ -24,7 +24,8 @@ public class CannonTurret extends Turret {
         CannonBullet bullet = new CannonBullet();
         bullet.setPosition(this.getPosition());
         mission.addEntity(bullet);
-        // bullet.setDirection(this.getDirection());
-        // bullet.setVelocity(1000);
+        bullet.setRotation(this.getRotation());
+        // bullet.setVelocity(500);
+        // bullet.setVelocity(this.ge
     }
 }

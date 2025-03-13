@@ -139,6 +139,13 @@ public class Entity implements Serializable {
         this.sprite = new ImageView(scaled);
     }
 
+    public void setSprite(URI uri, int size) {
+        Image original = new Image(uri.toString());
+        Image scaled = new Image(uri.toString(), original.getWidth() * size, original.getHeight() * size, false, false);
+
+        this.sprite = new ImageView(scaled);
+    }
+
     public int getHealth() {
         return health;
     }

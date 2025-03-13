@@ -16,5 +16,10 @@ public class CannonTurretProcessor implements IEntityProcessingService {
             Turret t = (Turret) e;
             t.setPosition(t.getTank().getPosition());
         }
+
+        for (Entity e : mission.getEntities(CannonBullet.class)) {
+            CannonBullet cb = (CannonBullet) e;
+            
+        }
 	}
 }
