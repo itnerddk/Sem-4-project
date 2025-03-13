@@ -12,6 +12,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
     public void process(GameData gameData, Mission world) {
         for (Entity entity : world.getEntities(Enemy.class)) {
             Enemy enemy = (Enemy) entity;
+            enemy.processPosition(gameData);
 
             // check if enemy is dead
             if (enemy.isDead()) {

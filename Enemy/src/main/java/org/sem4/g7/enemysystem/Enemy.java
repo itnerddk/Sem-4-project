@@ -21,7 +21,7 @@ public class Enemy extends Tank {
         }
 
         // Test code to load turret
-        this.setTurret(TurretLoader.getTurrets().get(0));
+        this.setTurret(TurretLoader.getTurrets().get(0).get());
     }
 
     @Override
