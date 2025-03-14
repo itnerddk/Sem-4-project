@@ -8,13 +8,12 @@
     </parent>
     <artifactId>Collision</artifactId>
     <name>Collision</name>
-    <url>http://maven.apache.org</url>
+    <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>org.sdu.sem4.g7</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>Common</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>
