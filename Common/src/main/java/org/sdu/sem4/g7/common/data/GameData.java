@@ -1,6 +1,5 @@
 package org.sdu.sem4.g7.common.data;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,8 +13,6 @@ public class GameData {
     private int displayHeight = 800;
     private final GameKeys keys = new GameKeys();
     private double delta;
-
-    private ArrayList<Mission> missions = new ArrayList<>();
 
     public GameKeys getKeys() {
         return keys;
@@ -43,18 +40,6 @@ public class GameData {
 
     public void setDelta(double delta) {
         this.delta = delta;
-    }
-
-    public void addMission(Mission mission) {
-        missions.add(mission);
-    }
-
-    public ArrayList<Mission> getMissions() {
-        return missions;
-    }
-
-    public void setMissions(ArrayList<Mission> missions) {
-        this.missions = missions;
     }
 
     //#region Debug

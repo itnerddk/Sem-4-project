@@ -1,77 +1,75 @@
 package org.sdu.sem4.g7.common.data;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+/*
+ * Metadata for a mission
+ */
+public class Mission {
+    
+    /*
+     * Mission id
+     */
+    private int id;
 
-public abstract class Mission {
+    /*
+     * Name of the mission
+     */
+    private String name;
 
-    private final Map<String, Entity> entityMap = new ConcurrentHashMap<>();
-    private Map<String, List<Class<? extends Entity>>> entityTypes = new ConcurrentHashMap<>();
+    /*
+     * Description descriping the mission
+     */
+    private String description;
 
-    public void start() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    /*
+     * Scale of difficulty of the mission
+     */
+    private int difficulty;
 
-    public String addEntity(Entity entity) {
-        entityMap.put(entity.getID(), entity);
-        entity.getSprite().viewOrderProperty().set(entity.getzIndex());
 
-        return entity.getID();
-    }
+	public Mission(int id, String name, String description, int difficulty) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.difficulty = difficulty;
+	}
 
-    public void addEntity(List<Entity> entities) {
-        for (Entity entity : entities) {
-            this.addEntity(entity);
-        }
-    }
+	public Mission() {}
 
-    public void removeEntity(String entityID) {
-        entityMap.remove(entityID);
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void removeEntity(Entity entity) {
-        entityMap.remove(entity.getID());
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public Collection<Entity> getEntities() {
-        return entityMap.values();
-    }
+	public String getName() {
+		return name;
+	}
 
-    public <E extends Entity> List<E> getEntities(Class<E> entityType) {
-        List<E> r = new ArrayList<>();
-        for (Entity e : getEntities()) {
-            if (entityType.equals(e.getClass())) {
-                r.add((E) e);
-            }
-        }
-        return r;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public Entity getEntity(String ID) {
-        return entityMap.get(ID);
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public Map<String, List<Class<? extends Entity>>> getEntityTypes() {
-        return entityTypes;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    @SafeVarargs // Up for debate
-    public final void addEntityType(String key, Class<? extends Entity>... entities) {
-        if (entityTypes.containsKey(key)) {
-            for (Class<? extends Entity> entity : entities) {
-                entityTypes.get(key).add(entity);
-            }
-            return;
-        }
-        List<Class<? extends Entity>> entityList = new ArrayList<>();
-        for (Class<? extends Entity> entity : entities) {
-            entityList.add(entity);
-        }
-        entityTypes.put(key, entityList);
-    }
+	public int getDifficulty() {
+		return difficulty;
+	}
 
-    public abstract void load();
+	public void setDifficulty(int difficulty) {
+		this.difficulty = difficulty;
+	}
+
+	@Override
+	public String toString() {
+		return "Mission [id=" + id + ", name=" + name + ", description=" + description + ", difficulty=" + difficulty
+				+ "]";
+	}
 }

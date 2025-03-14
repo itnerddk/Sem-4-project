@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
-import org.sdu.sem4.g7.common.data.Mission;
+import org.sdu.sem4.g7.common.data.WorldData;
 
 public abstract class Tank extends Entity {
     /**
@@ -34,7 +34,7 @@ public abstract class Tank extends Entity {
         }
     }
 
-    public void shoot(GameData gameData, Mission mission) {
+    public void shoot(GameData gameData, WorldData mission) {
         if (turret != null) {
             turret.shoot(gameData, mission);
         }

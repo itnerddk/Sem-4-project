@@ -3,7 +3,7 @@ package org.sdu.sem4.g7.main;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.GameKeys;
-import org.sdu.sem4.g7.common.data.Mission;
+import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
 import org.sdu.sem4.g7.common.services.IPostEntityProcessingService;
@@ -28,7 +28,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     private final GameData gameData = new GameData();
-    private Mission mission;
+    private WorldData mission;
     private final Map<Entity, Node> sprites = new ConcurrentHashMap<>();
     private final Pane gameWindow = new Pane();
 
@@ -83,7 +83,7 @@ public class Main extends Application {
 
         });
 
-        // Lookup all Game Plugins using ServiceLoader, this is also where missions load
+        // Lookup all Game Plugins using ServiceLoader
         for (IPreGamePluginService iPrePluginService : getPrePluginServices()) {
             iPrePluginService.start(gameData, mission);
         }

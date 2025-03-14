@@ -2,7 +2,7 @@ package org.sdu.sem4.g7.tank.parts;
 
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
-import org.sdu.sem4.g7.common.data.Mission;
+import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.data.Vector2;
 
 public abstract class Turret extends Entity {
@@ -55,5 +55,5 @@ public abstract class Turret extends Entity {
         this.attackSpeed = attackSpeed;
     }
 
-    abstract public void shoot(GameData gameData, Mission world);
+    abstract public void shoot(GameData gameData, WorldData world);
 }

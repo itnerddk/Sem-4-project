@@ -5,16 +5,16 @@ import java.util.Collection;
 import java.util.ServiceLoader;
 
 import org.sdu.sem4.g7.common.data.GameData;
-import org.sdu.sem4.g7.common.data.Mission;
+import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IEntityPluginService;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
 
 public class TestMissionPlugin implements IGamePluginService {
 
-    private Mission mission;
+    private WorldData mission;
 
     @Override
-    public void start(GameData gameData, Mission world) {
+    public void start(GameData gameData, WorldData world) {
         // Implement if needed
         this.mission = new TestMission();
 
@@ -24,11 +24,11 @@ public class TestMissionPlugin implements IGamePluginService {
 
         this.mission.load();
 
-        gameData.addMission(this.mission);
+        //gameData.addMission(this.mission);
     }
 
     @Override
-    public void stop(GameData gameData, Mission world) {
+    public void stop(GameData gameData, WorldData world) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'stop'");
     }
