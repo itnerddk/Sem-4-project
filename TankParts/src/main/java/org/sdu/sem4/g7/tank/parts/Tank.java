@@ -6,8 +6,11 @@ import java.util.List;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Mission;
+import org.sdu.sem4.g7.common.services.ICollidableService;
 
-public abstract class Tank extends Entity {
+import javafx.scene.shape.Shape;
+
+public abstract class Tank extends Entity implements ICollidableService {
     /**
      * The current forwards, backwards velocity of the tank
      */
@@ -18,6 +21,8 @@ public abstract class Tank extends Entity {
     private float rotationSpeed = 2;
 
     private Turret turret;
+
+    private Shape shape;
 
     public void processPosition(GameData gameData) {
         setSpeed(lerp(getSpeed(), 0, 0.1));
@@ -91,6 +96,14 @@ public abstract class Tank extends Entity {
 
     public double lerp(double a, double b, double f) {
         return a * (1.0 - f) + (b * f);
+    }
+
+    public Shape getShape() {
+        return shape;
+    }
+
+    public void setShape(Shape shape) {
+        this.shape = shape;
     }
 
 
