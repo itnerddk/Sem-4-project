@@ -8,35 +8,77 @@ import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.common.services.ICollidableService;
 
-import javafx.scene.shape.Shape;
+import javafx.geometry.Bounds;
 
 public abstract class Tank extends Entity implements ICollidableService {
     /**
      * The current forwards, backwards velocity of the tank
      */
     private double speed;
-    private double maxSpeed = 7.5;
+    private double maxSpeed = 0.5;
     private double acceleration = 1;
     private double deceleration = .5;
     private float rotationSpeed = 2;
 
     private Turret turret;
 
-    private Shape shape;
+    public Tank() {
+        super();
+        this.setCollision(true);
+    }
+
 
     public void processPosition(GameData gameData) {
         setSpeed(lerp(getSpeed(), 0, 0.1));
+        getVelocity().lerp(0, 0, 0.1);
 
         double changeY = Math.sin(Math.toRadians(getRotation() - 90));
         double changeX = Math.cos(Math.toRadians(getRotation() - 90));
 
         
         // Set position
-        setPosition(getPosition().getX() + (changeX * getSpeed()), getPosition().getY() + (changeY * getSpeed()));
+        // setPosition(getPosition().getX() + (changeX * getSpeed()), getPosition().getY() + (changeY * getSpeed()));
+        // Set velocity
+        getVelocity().add(changeX * getSpeed(), changeY * getSpeed());
+        // Apply velocity
+        getPosition().add(getVelocity());
+
         if (turret != null) {
             turret.setPosition(getPosition().getX(), getPosition().getY());
             turret.setRotation(getRotation());
         }
+    }
+
+    public void accelerate() {
+        this.setSpeed(
+            lerp(
+                this.getSpeed(),
+                Math.min(this.getSpeed() + (this.getAcceleration()), this.getMaxSpeed()),
+                0.7
+            )
+        );
+    }
+
+    public void decelerate() {
+        this.setSpeed(
+            lerp(
+                this.getSpeed(),
+                Math.max(this.getSpeed() - (this.getDeceleration()), -(this.getMaxSpeed()/2)),
+                0.5
+            )
+        );
+    }
+
+    public void turnLeft() {
+        this.setRotation(this.getRotation() - this.getRotationSpeed());
+        // Turn velocity
+        getVelocity().rotate(-this.getRotationSpeed());
+    }
+
+    public void turnRight() {
+        this.setRotation(this.getRotation() + this.getRotationSpeed());
+        // Turn velocity
+        getVelocity().rotate(this.getRotationSpeed());
     }
 
     public void shoot(GameData gameData, Mission mission) {
@@ -98,12 +140,8 @@ public abstract class Tank extends Entity implements ICollidableService {
         return a * (1.0 - f) + (b * f);
     }
 
-    public Shape getShape() {
-        return shape;
-    }
-
-    public void setShape(Shape shape) {
-        this.shape = shape;
+    public Bounds getBounds() {
+        return getSprite().getBoundsInParent();
     }
 
 

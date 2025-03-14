@@ -55,13 +55,20 @@ public class Vector2 {
         this.y = vector.getY();
     }
 
+
+    public Vector2 add(double x, double y) {
+        this.x += x;
+        this.y += y;
+        return this;
+    }
     /**
      * Add the x and y values of another vector to this vector
      * @param vector vector to add
      */
-    public void add(Vector2 vector) {
+    public Vector2 add(Vector2 vector) {
         this.x += vector.getX();
         this.y += vector.getY();
+        return this;
     }
 
     /**
@@ -105,5 +112,27 @@ public class Vector2 {
 
     public void setY(double y) {
         this.y = y;
+    }
+
+    public Vector2 lerp(double x, double y, double alpha) {
+        this.x = (1 - alpha) * this.x + alpha * x;
+        this.y = (1 - alpha) * this.y + alpha * y;
+        return this;
+    }
+
+    public Vector2 rotate(double degrees) {
+        double angle = Math.toRadians(degrees);
+        double cos = Math.cos(angle);
+        double sin = Math.sin(angle);
+        double x = this.x * cos - this.y * sin;
+        double y = this.x * sin + this.y * cos;
+        this.x = x;
+        this.y = y;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Vector2 {x=" + x + ", y=" + y + "}";
     }
 }

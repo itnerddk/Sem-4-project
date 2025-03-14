@@ -11,6 +11,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
     @Override
     public void process(GameData gameData, Mission world) {
         for (Entity entity : world.getEntities(Enemy.class)) {
+            gameData.addDebug("Enemy"+entity.getID(), entity.getVelocity().toString());
             Enemy enemy = (Enemy) entity;
             enemy.processPosition(gameData);
 

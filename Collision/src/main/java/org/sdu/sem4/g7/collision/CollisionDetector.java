@@ -21,7 +21,7 @@ public class CollisionDetector implements IPostEntityProcessingService {
             ICollidableService col1 = (ICollidableService) entity1;
             ICollidableService col2 = (ICollidableService) entity2;
 
-            return col1.getShape().intersects(col2.getShape().getBoundsInParent());
+            return col1.getBounds().intersects(col2.getBounds());
         }
         return false;
     }
@@ -30,24 +30,22 @@ public class CollisionDetector implements IPostEntityProcessingService {
     public void process(GameData gameData, Mission world) {
         // two for loops for all entities in the world 
         for (Entity entity1 : world.getEntities()) {
+            
+            if (!entity1.isCollision()) continue;
             for (Entity entity2 : world.getEntities()) {
-
                 // if the two entities are identical, skip the iteration
-                if (entity1.getID().equals(entity2.getID())) {
-                    continue;
-                }
+                if (!entity2.isCollision() || entity1.getID().equals(entity2.getID())) continue;
+
 
                 // check for collision
                 if (collision(entity1, entity2)) {
-                    System.out.println("Collision detected between " + entity1.getClass().getSimpleName() + " and " + entity2.getClass().getSimpleName());
+                    System.out.println("Collision detected between " + entity1.getClass().getSimpleName() + " and " + entity2.getClass().getSimpleName() + System.currentTimeMillis());
+                    // velocity vs velocity
+                    if (entity1.getVelocity() != null && entity2.getVelocity() != null) {
+                        entity1.setVelocity(entity1.getVelocity().add(entity2.getVelocity()));
+                        entity2.setVelocity(entity2.getVelocity().add(entity1.getVelocity()));
+                    }                    
                 }
-
-                // CollisionDetection
-/*                if (!entity1.getID().equals(entity2.getID())) {
-                    System.out.println("Collision between " + entity1 + " and " + entity2 + " detected");
-                    continue;
-                }
-            */
             }
         }
     }
