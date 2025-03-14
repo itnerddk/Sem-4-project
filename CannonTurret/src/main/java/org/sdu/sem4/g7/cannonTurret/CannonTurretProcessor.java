@@ -5,6 +5,7 @@ import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Mission;
+import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.tank.parts.Turret;
 
 public class CannonTurretProcessor implements IEntityProcessingService {
@@ -14,12 +15,14 @@ public class CannonTurretProcessor implements IEntityProcessingService {
 		// Implementation of the process method
         for (Entity e : mission.getEntities(CannonTurret.class)) {
             Turret t = (Turret) e;
-            t.setPosition(t.getTank().getPosition());
         }
 
         for (Entity e : mission.getEntities(CannonBullet.class)) {
             CannonBullet cb = (CannonBullet) e;
+            Vector2 velocity = cb.getVelocity();
             
+            // System.out.println("Bullet velocity: " + velocity);
+            cb.setPosition(velocity.getX() + cb.getPosition().getX(), velocity.getY() + cb.getPosition().getY());            
         }
 	}
 }
