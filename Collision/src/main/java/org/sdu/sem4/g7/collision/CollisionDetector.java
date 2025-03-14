@@ -18,9 +18,10 @@ public class CollisionDetector implements IPostEntityProcessingService {
                 }
 
                 // CollisionDetection
-                if (!entity1.getID().equals(entity2.getID())) {
+/*                if (!entity1.getID().equals(entity2.getID())) {
                     System.out.println("Collision between " + entity1 + " and " + entity2 + " detected");
                     continue;
+*/
                 }
             }
         }
