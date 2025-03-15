@@ -52,6 +52,16 @@
                 <version>5.12.0</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.18.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.18.3</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>    
     <build>
@@ -100,8 +110,9 @@
                         in "java.lang.module.FindException: Module monitor.observer.zero not found";
                         strange... -->
                         <!-- <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=127.0.0.1:8000</argument> -->
+                        <argument>--add-modules</argument>
+                        <argument>javafx.graphics,com.fasterxml.jackson.databind</argument>
                         <argument>--module=Core/org.sdu.sem4.g7.main.Main</argument>
-                        <argument>--add-modules javafx.graphics</argument>
                     </arguments>
                 </configuration>
             </plugin>

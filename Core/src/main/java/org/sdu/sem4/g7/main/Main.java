@@ -92,8 +92,8 @@ public class Main extends Application {
             iGamePlugin.start(gameData, mission);
         }
 
-        System.out.println("Missions loaded: " + gameData.getMissions().size());
-        this.mission = gameData.getMissions().get(0);
+        //System.out.println("Missions loaded: " + gameData.getMissions().size());
+        //this.mission = gameData.getMissions().get(0);
 
         // System.out.println("Turrets loaded: " + gameData.getTurrets().size());
 

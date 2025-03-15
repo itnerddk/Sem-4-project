@@ -1,6 +1,9 @@
 package org.sdu.sem4.g7.MissionLoader.services;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,12 +15,18 @@ import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+
+
 /*
  * Game plugin
  * 
  * This file is responsible for loading all missions
  */
 public class Loader implements IGamePluginService {
+
+	private final static ObjectMapper objectMapper = new ObjectMapper();
 
 	private final static File dataDir = new File("./data");
 	private final static File missionsDir = new File(dataDir, "missions");
@@ -29,16 +38,19 @@ public class Loader implements IGamePluginService {
 	private void createFileStructure() {
 		// Create datadir if it does not exists
 		if (!dataDir.isDirectory()) {
+			System.out.println(" - Creating data dir!");
 			dataDir.mkdirs();
 		}
 
 		// create missions dir if it does not exists
 		if (!missionsDir.isDirectory()) {
+			System.out.println(" - Creating missions dir!");
 			missionsDir.mkdir();
 		}
 
 		// create tiles dir if it does not exists
 		if (!tilesDir.isDirectory()) {
+			System.out.println(" - Creating tiles dir!");
 			tilesDir.mkdir();
 		}
 	}
@@ -46,8 +58,9 @@ public class Loader implements IGamePluginService {
 	/*
 	 * Creates a default tile, if it does not exists
 	 */
-	private void createDefaultTile() {
+	private void createDefaultTile() throws IOException {
 		if (!new File(tilesDir, "0.json").exists()) {
+			System.out.println(" - Creating default tile!");
 
 			// Create a new tile
 			TileObject tile = new TileObject();
@@ -58,7 +71,10 @@ public class Loader implements IGamePluginService {
 			tile.setImmoveable(true);
 			tile.setHealth(1);
 
-			// TODO: Serialize to json and save it
+			// Serialize and save as json
+			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(tilesDir, "0.json")));
+			writer.write(objectMapper.writeValueAsString(tile));
+			writer.close();
 		}
 	}
 
@@ -67,8 +83,9 @@ public class Loader implements IGamePluginService {
 	 * 
 	 * NOTE: I do this, in order to create a complete json file. With everything set just as the serializer expects it.
 	 */
-	private void createDefaultMission() {
+	private void createDefaultMission() throws IOException {
 		if (!new File(missionsDir, "0.json").exists()) {
+			System.out.println(" - Creating default mission!");
 
 			// Create a new enenmy start position
 			EnemyStartPositionObject espo = new EnemyStartPositionObject();
@@ -102,7 +119,7 @@ public class Loader implements IGamePluginService {
 			for (int y = 0; y < demoMapSize; y++) {
 				
 				// create x axis for y
-				ymap.set(y, new ArrayList<>());
+				ymap.add(new ArrayList<>());
 
 				List<Integer> xMap = ymap.get(y);
 
@@ -113,22 +130,31 @@ public class Loader implements IGamePluginService {
 			}
 			
 
-			// TODO: Serialize to json and save it
+			// Serialize and save as json
+			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(missionsDir, "0.json")));
+			writer.write(objectMapper.writeValueAsString(mo));
+			writer.close();
 		}
 	}
 
 
 	@Override
 	public void start(GameData gameData, WorldData world) {
+
+		try {
+			// Ensure file structure exists
+			createFileStructure();
+
+			// Create a default tile if it does not exists
+			createDefaultTile();
+
+			// Create a defualt mission if it does not exists
+			createDefaultMission();
+		} catch (IOException ex) {
+			System.err.println("Could not write default file(s) to disk! Please see the MissionLoader...");
+			ex.printStackTrace();
+		}
 		
-		// Ensure file structure exists
-		createFileStructure();
-
-		// Create a default tile if it does not exists
-		createDefaultTile();
-
-		// Create a defualt mission if it does not exists
-		createDefaultMission();
 
 		// TODO: Load a map of all tiles
 
