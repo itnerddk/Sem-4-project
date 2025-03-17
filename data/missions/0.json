@@ -1,21 +1,21 @@
 {
-    "id":0,
-    "name":"Demo",
-    "description":"This is a demo mission!",
-    "difficulty":5,
-    "player":{
-        "x":200,
-        "y":200
+    "id": 0,
+    "name": "Demo",
+    "description": "This is a demo mission!",
+    "difficulty": 5,
+    "player": {
+        "x": 200,
+        "y": 200
     },
-    "enemies":[
+    "enemies": [
         {
-            "entityType":"Enemies",
-            "x":100,
-            "y":100,
-            "health":100
+            "entityType": "Enemies",
+            "x": 100,
+            "y": 100,
+            "health": 100
         }
     ],
-    "map":[
+    "map": [
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
