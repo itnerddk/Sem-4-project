@@ -1,8 +1,11 @@
 package org.sdu.sem4.g7.common.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /*
  * Metadata for a mission
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Mission {
     
     /*

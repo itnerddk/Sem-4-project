@@ -8,8 +8,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class WorldData {
 
-    private final Map<String, Entity> entityMap = new ConcurrentHashMap<>();
-    private Map<String, List<Class<? extends Entity>>> entityTypes = new ConcurrentHashMap<>();
+    private final Map<String, Entity> entityMap;
+    private Map<String, List<Class<? extends Entity>>> entityTypes;
+
+    public WorldData() {
+        this.entityMap = new ConcurrentHashMap<>();
+        this.entityTypes = new ConcurrentHashMap<>();
+    }
 
     public void start() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -72,6 +77,4 @@ public abstract class WorldData {
         }
         entityTypes.put(key, entityList);
     }
-
-    public abstract void load();
 }

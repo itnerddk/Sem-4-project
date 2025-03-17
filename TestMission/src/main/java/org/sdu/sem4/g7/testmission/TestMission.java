@@ -12,7 +12,7 @@ public class TestMission extends WorldData {
     public TestMission() {
     }
 
-    @Override
+    //@Override
     public void load() {
 
         Entity floor = new Entity();

@@ -22,7 +22,7 @@ public class TestMissionPlugin implements IGamePluginService {
             plugin.start(gameData, this.mission);
         }
 
-        this.mission.load();
+        //this.mission.load();
 
         //gameData.addMission(this.mission);
     }

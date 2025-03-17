@@ -3,6 +3,8 @@ package org.sdu.sem4.g7.common.data;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.sdu.sem4.g7.common.services.IMissionLoaderService;
+
 import javafx.scene.Node;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -13,6 +15,9 @@ public class GameData {
     private int displayHeight = 800;
     private final GameKeys keys = new GameKeys();
     private double delta;
+
+    // TODO: This is maybe not the best way, but let's change it later
+    private IMissionLoaderService missionLoaderService;
 
     public GameKeys getKeys() {
         return keys;
@@ -92,5 +97,13 @@ public class GameData {
 
     public boolean isDebugMode() {
         return debugMode;
+    }
+
+    public IMissionLoaderService getMissionLoaderService() {
+        return missionLoaderService;
+    }
+
+    public void setMissionLoaderService(IMissionLoaderService missionLoaderService) {
+        this.missionLoaderService = missionLoaderService;
     }
 }

@@ -3,6 +3,7 @@ package org.sdu.sem4.g7.common.services;
 import java.util.List;
 
 import org.sdu.sem4.g7.common.data.Mission;
+import org.sdu.sem4.g7.common.data.WorldData;
 
 public interface IMissionLoaderService {
     
@@ -32,17 +33,11 @@ public interface IMissionLoaderService {
 
 
     /**
-     * Loads a specific mission into worldData, and returns it
+     * Loads a specific mission and returns it
      * 
      * @param id
-     * @return mission or null if not exists 
+     * @return WorldData or null if not exists 
      */
-    public Mission loadMission(int id);
-
-
-    /**
-     * Unloads the current mission from worldData
-     */
-    public void unloadMission();
+    public WorldData loadMission(int id);
 
 }
