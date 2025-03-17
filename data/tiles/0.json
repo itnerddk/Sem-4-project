@@ -2,7 +2,7 @@
     "id": 0,
     "image": "0.png",
     "z": 1,
-    "collision": true,
+    "collision": false,
     "immoveable": true,
     "health": 1
 }

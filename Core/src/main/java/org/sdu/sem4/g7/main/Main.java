@@ -97,7 +97,7 @@ public class Main extends Application {
 
         // Load worldData 0 for testing
         System.out.println("worldDatas available: " + gameData.getMissionLoaderService().missionCount());
-        this.worldData = gameData.getMissionLoaderService().loadMission(0); // Loading mission 0 for testing
+        this.worldData = gameData.getMissionLoaderService().loadMission(1); // Loading mission 0 for testing
         
 
         // System.out.println("Turrets loaded: " + gameData.getTurrets().size());
