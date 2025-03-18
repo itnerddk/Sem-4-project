@@ -18,7 +18,7 @@
             "entityType": "Enemies",
             "x": 512,
             "y": 128,
-            "health": 100
+            "health": 75
         },
         {
             "entityType": "Enemies",

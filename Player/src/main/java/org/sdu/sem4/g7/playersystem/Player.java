@@ -1,9 +1,6 @@
 package org.sdu.sem4.g7.playersystem;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.tank.TurretLoader;
 import org.sdu.sem4.g7.tank.parts.Tank;
 
@@ -19,8 +16,18 @@ public class Player extends Tank {
             e.printStackTrace();
         }
 
+        // Set health and max health for player
+        this.setHealth(100);
+        this.setMaxHealth(100);
 
         // Test code to load turret
         this.setTurret(TurretLoader.getTurrets().get(0).get());
+    }
+
+    // Take damage for a player
+    public void takeDamage(int damage) {
+        int newHealth = Math.max(0, this.getHealth() - damage); // Ensure health doesn't go below 0
+        this.setHealth(newHealth);
+        System.err.println("Player health: " + this.getHealth());
     }
 }

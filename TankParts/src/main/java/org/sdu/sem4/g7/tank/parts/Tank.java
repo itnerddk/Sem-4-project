@@ -165,19 +165,21 @@ public abstract class Tank extends Entity implements ICollidableService {
 
     // Calculate the position of the health bar
     double x = getPosition().getX() + getSprite().getImage().getWidth() / 2 - barWidth / 2;
-    double y = getPosition().getY() - 10; // Above the tank
+    double y = getPosition().getY() - 10; // Position above the tank
 
     // Draw the background of the health bar
     gc.setFill(Color.GRAY);
     gc.fillRect(x, y, barWidth, barHeight);
 
-    // Draw the (health) of the health bar
+    // Draw the health of the health bar
     gc.setFill(Color.RED);
     gc.fillRect(x, y, barWidth * healthPercentage, barHeight);
 
-    // Draw the border around the health bar
+    // Draw the border
     gc.setStroke(Color.BLACK);
     gc.strokeRect(x, y, barWidth, barHeight);
+
+    System.out.println("Health: " + getHealth() + ", MaxHealth: " + getMaxHealth());
 }
     
 }
