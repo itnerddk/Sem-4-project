@@ -17,9 +17,9 @@ public abstract class Tank extends Entity implements ICollidableService {
      */
     private double speed;
     private double maxSpeed = 0.5;
-    private double acceleration = 1;
-    private double deceleration = .5;
-    private float rotationSpeed = 2;
+    private double acceleration = 1.2;
+    private double deceleration = .8;
+    private double rotationSpeed = 3;
 
     private Turret turret;
 
@@ -71,13 +71,13 @@ public abstract class Tank extends Entity implements ICollidableService {
     }
 
     public void turnLeft() {
-        this.setRotation(this.getRotation() - this.getRotationSpeed());
+        this.setRotation((float)(this.getRotation() - this.getRotationSpeed()));
         // Turn velocity
         getVelocity().rotate(-this.getRotationSpeed());
     }
 
     public void turnRight() {
-        this.setRotation(this.getRotation() + this.getRotationSpeed());
+        this.setRotation((float)(this.getRotation() + this.getRotationSpeed()));
         // Turn velocity
         getVelocity().rotate(this.getRotationSpeed());
     }
@@ -120,11 +120,11 @@ public abstract class Tank extends Entity implements ICollidableService {
         this.deceleration = deceleration;
     }
 
-    public float getRotationSpeed() {
+    public double getRotationSpeed() {
         return rotationSpeed;
     }
 
-    public void setRotationSpeed(float rotationSpeed) {
+    public void setRotationSpeed(double rotationSpeed) {
         this.rotationSpeed = rotationSpeed;
     }
 

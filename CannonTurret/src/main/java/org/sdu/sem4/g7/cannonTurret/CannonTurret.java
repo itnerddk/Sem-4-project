@@ -13,7 +13,7 @@ public class CannonTurret extends Turret {
         setOffset(new Vector2(60, 60));
         try {
             System.out.println(this.getClass().getClassLoader().getResource("CannonTurret.png"));
-            this.setSprite(this.getClass().getClassLoader().getResource("CannonTurret.png").toURI());
+            this.setSprite(this.getClass().getClassLoader().getResource("CannonTurret.png").toURI(), 5);
             this.setzIndex(-10);
         } catch (URISyntaxException e) {
             // TODO Auto-generated catch block
