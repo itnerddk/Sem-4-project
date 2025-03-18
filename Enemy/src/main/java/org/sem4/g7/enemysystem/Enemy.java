@@ -13,7 +13,7 @@ public class Enemy extends Tank {
         super();
         try {
             System.out.println(this.getClass().getClassLoader().getResource("EnemyTank.png"));
-            this.setSprite(this.getClass().getClassLoader().getResource("EnemyTank.png").toURI());
+            this.setSprite(this.getClass().getClassLoader().getResource("EnemyTank.png").toURI(), 5);
             this.setzIndex(-3);
         } catch (URISyntaxException e) {
             // TODO Auto-generated catch block

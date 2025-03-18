@@ -44,9 +44,9 @@ public class PlayerControlSystem implements IEntityProcessingService {
 
             // Rotate
             if (gameData.getKeys().isDown(GameKeys.LEFT)) {
-                player.setRotation(player.getRotation() - player.getRotationSpeed());
+                player.setRotation((float) (player.getRotation() - player.getRotationSpeed()));
             } else if (gameData.getKeys().isDown(GameKeys.RIGHT)) {
-                player.setRotation(player.getRotation() + player.getRotationSpeed());
+                player.setRotation((float) (player.getRotation() + player.getRotationSpeed()));
             }
 
             // Shoot
