@@ -6,10 +6,11 @@ import java.util.List;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
-import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.common.services.ICollidableService;
 
 import javafx.geometry.Bounds;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 public abstract class Tank extends Entity implements ICollidableService {
     /**
@@ -154,4 +155,29 @@ public abstract class Tank extends Entity implements ICollidableService {
         }
         return children;
     }
+
+    public void drawHealthBar(GraphicsContext gc) {
+        // Width of the health bar
+        double barWidth = 50; 
+       // Height of the health bar
+        double barHeight = 5; 
+        double healthPercentage = (double) getHealth() / getMaxHealth();
+
+    // Calculate the position of the health bar
+    double x = getPosition().getX() + getSprite().getImage().getWidth() / 2 - barWidth / 2;
+    double y = getPosition().getY() - 10; // Above the tank
+
+    // Draw the background of the health bar
+    gc.setFill(Color.GRAY);
+    gc.fillRect(x, y, barWidth, barHeight);
+
+    // Draw the (health) of the health bar
+    gc.setFill(Color.LIMEGREEN);
+    gc.fillRect(x, y, barWidth * healthPercentage, barHeight);
+
+    // Draw the border around the health bar
+    gc.setStroke(Color.BLACK);
+    gc.strokeRect(x, y, barWidth, barHeight);
+}
+    
 }
