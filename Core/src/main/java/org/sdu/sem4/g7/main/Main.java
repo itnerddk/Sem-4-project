@@ -3,7 +3,7 @@ package org.sdu.sem4.g7.main;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.GameKeys;
-import org.sdu.sem4.g7.common.data.Mission;
+import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
 import org.sdu.sem4.g7.common.services.IPostEntityProcessingService;
@@ -28,7 +28,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     private final GameData gameData = new GameData();
-    private Mission mission;
+    private WorldData worldData;
     private final Map<Entity, Node> sprites = new ConcurrentHashMap<>();
     private final Pane gameWindow = new Pane();
 
@@ -83,21 +83,26 @@ public class Main extends Application {
 
         });
 
-        // Lookup all Game Plugins using ServiceLoader, this is also where missions load
+        // Lookup all Game Plugins using ServiceLoader
         for (IPreGamePluginService iPrePluginService : getPrePluginServices()) {
-            iPrePluginService.start(gameData, mission);
+            iPrePluginService.start(gameData, worldData);
         }
 
         for (IGamePluginService iGamePlugin : getPluginServices()) {
-            iGamePlugin.start(gameData, mission);
+            iGamePlugin.start(gameData, worldData);
         }
 
-        System.out.println("Missions loaded: " + gameData.getMissions().size());
-        this.mission = gameData.getMissions().get(0);
+        //System.out.println("worldDatas loaded: " + gameData.getworldDatas().size());
+        //this.worldData = gameData.getworldDatas().get(0);
+
+        // Load worldData 0 for testing
+        System.out.println("worldDatas available: " + gameData.getMissionLoaderService().missionCount());
+        this.worldData = gameData.getMissionLoaderService().loadMission(1); // Loading mission 0 for testing
+        
 
         // System.out.println("Turrets loaded: " + gameData.getTurrets().size());
 
-        for (Entity entity : mission.getEntities()) {
+        for (Entity entity : worldData.getEntities()) {
             sprites.put(entity, entity.getSprite());
             gameWindow.getChildren().add(entity.getSprite());
         }
@@ -117,7 +122,7 @@ public class Main extends Application {
                     update();
                     gameData.getKeys().update();
                     gameData.setDelta((now - lastTick) * 1.0e-9);
-                    gameData.addDebug("Entity Count", String.valueOf(mission.getEntities().size()));
+                    gameData.addDebug("Entity Count", String.valueOf(worldData.getEntities().size()));
                     gameData.addDebug("Delta", String.valueOf((Math.round(gameData.getDelta() * 10000) / 10.0))); // Turning nano seconds into ms
                     lastTick = now;
                     draw();
@@ -129,20 +134,20 @@ public class Main extends Application {
 
     private void update() {
         for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
-            entityProcessorService.process(gameData, mission);
+            entityProcessorService.process(gameData, worldData);
         }
         for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
-            postEntityProcessorService.process(gameData, mission);
+            postEntityProcessorService.process(gameData, worldData);
         }       
     }
 
     Group debugGroup = new Group();
 
     private void draw() {
-        if (mission != null) {
+        if (worldData != null) {
             // If the entity is gone from the world, remove the sprite and entity from the sprites buffer
             for (Entity spriteEntity : sprites.keySet()) {
-                if(!mission.getEntities().contains(spriteEntity)){   
+                if(!worldData.getEntities().contains(spriteEntity)){   
                     ImageView removedSprite = (ImageView) sprites.get(spriteEntity);               
                     sprites.remove(spriteEntity);
                     gameWindow.getChildren().remove(removedSprite);
@@ -160,7 +165,7 @@ public class Main extends Application {
             }
 
             // Iterate through all entities in the world and update their position and rotation
-            for (Entity entity : mission.getEntities()) {                      
+            for (Entity entity : worldData.getEntities()) {                      
                 ImageView sprite = (ImageView) sprites.get(entity);
                 if (sprite == null) {
                     sprite = entity.getSprite();

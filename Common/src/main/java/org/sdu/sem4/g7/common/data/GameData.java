@@ -1,8 +1,9 @@
 package org.sdu.sem4.g7.common.data;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.sdu.sem4.g7.common.services.IMissionLoaderService;
 
 import javafx.scene.Node;
 import javafx.scene.shape.Circle;
@@ -15,7 +16,8 @@ public class GameData {
     private final GameKeys keys = new GameKeys();
     private double delta;
 
-    private ArrayList<Mission> missions = new ArrayList<>();
+    // TODO: This is maybe not the best way, but let's change it later
+    private IMissionLoaderService missionLoaderService;
 
     public GameKeys getKeys() {
         return keys;
@@ -43,18 +45,6 @@ public class GameData {
 
     public void setDelta(double delta) {
         this.delta = delta;
-    }
-
-    public void addMission(Mission mission) {
-        missions.add(mission);
-    }
-
-    public ArrayList<Mission> getMissions() {
-        return missions;
-    }
-
-    public void setMissions(ArrayList<Mission> missions) {
-        this.missions = missions;
     }
 
     //#region Debug
@@ -107,5 +97,13 @@ public class GameData {
 
     public boolean isDebugMode() {
         return debugMode;
+    }
+
+    public IMissionLoaderService getMissionLoaderService() {
+        return missionLoaderService;
+    }
+
+    public void setMissionLoaderService(IMissionLoaderService missionLoaderService) {
+        this.missionLoaderService = missionLoaderService;
     }
 }

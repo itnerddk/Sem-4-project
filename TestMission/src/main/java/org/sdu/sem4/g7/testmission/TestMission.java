@@ -3,16 +3,16 @@ package org.sdu.sem4.g7.testmission;
 import java.net.URISyntaxException;
 
 import org.sdu.sem4.g7.common.data.Entity;
-import org.sdu.sem4.g7.common.data.Mission;
+import org.sdu.sem4.g7.common.data.WorldData;
 
 
-public class TestMission extends Mission {
+public class TestMission extends WorldData {
 
 
     public TestMission() {
     }
 
-    @Override
+    //@Override
     public void load() {
 
         Entity floor = new Entity();

@@ -11,7 +11,7 @@ import static java.util.stream.Collectors.toList;
 import java.lang.reflect.InvocationTargetException;
 
 import org.sdu.sem4.g7.common.data.GameData;
-import org.sdu.sem4.g7.common.data.Mission;
+import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
 import org.sdu.sem4.g7.tank.parts.Turret;
 
@@ -23,12 +23,12 @@ public class TurretLoader implements IGamePluginService {
     }
 
     @Override
-    public void start(GameData gameData, Mission world) {
+    public void start(GameData gameData, WorldData world) {
         loadTurrets().forEach(turrets::add);
     }
 
     @Override
-    public void stop(GameData gameData, Mission world) {
+    public void stop(GameData gameData, WorldData world) {
         turrets.clear();
     }
 

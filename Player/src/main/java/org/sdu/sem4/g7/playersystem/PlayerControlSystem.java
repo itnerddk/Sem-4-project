@@ -3,12 +3,12 @@ package org.sdu.sem4.g7.playersystem;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.GameKeys;
-import org.sdu.sem4.g7.common.data.Mission;
+import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 
 public class PlayerControlSystem implements IEntityProcessingService {
     @Override
-    public void process(GameData gameData, Mission world) {
+    public void process(GameData gameData, WorldData world) {
         for (Entity entity : world.getEntities(Player.class)) {
             // Controls
             Player player = (Player) entity;

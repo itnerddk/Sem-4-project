@@ -1,7 +1,7 @@
 package org.sdu.sem4.g7.common.services;
 
 import org.sdu.sem4.g7.common.data.GameData;
-import org.sdu.sem4.g7.common.data.Mission;
+import org.sdu.sem4.g7.common.data.WorldData;
 
 /**
  *
@@ -9,5 +9,5 @@ import org.sdu.sem4.g7.common.data.Mission;
  */
 public interface IPostEntityProcessingService {
 
-    void process(GameData gameData, Mission world);
+    void process(GameData gameData, WorldData world);
 }
