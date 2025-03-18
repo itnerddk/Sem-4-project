@@ -172,7 +172,7 @@ public abstract class Tank extends Entity implements ICollidableService {
     gc.fillRect(x, y, barWidth, barHeight);
 
     // Draw the (health) of the health bar
-    gc.setFill(Color.LIMEGREEN);
+    gc.setFill(Color.RED);
     gc.fillRect(x, y, barWidth * healthPercentage, barHeight);
 
     // Draw the border around the health bar

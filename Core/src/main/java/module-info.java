@@ -1,6 +1,7 @@
 module Core {
     requires Common;  
-    requires javafx.graphics;    
+    requires javafx.graphics;
+    requires TankParts;
     opens org.sdu.sem4.g7.main to javafx.graphics;
     uses org.sdu.sem4.g7.common.services.IPreGamePluginService;
     uses org.sdu.sem4.g7.common.services.IGamePluginService;

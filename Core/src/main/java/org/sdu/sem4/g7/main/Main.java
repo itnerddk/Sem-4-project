@@ -14,7 +14,7 @@ import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
 import org.sdu.sem4.g7.common.services.IPostEntityProcessingService;
 import org.sdu.sem4.g7.common.services.IPreGamePluginService;
-import org.sdu.sem4.g7.tankparts.parts.Tank;
+import org.sdu.sem4.g7.tank.parts.Tank;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -154,6 +154,7 @@ public class Main extends Application {
         GraphicsContext gc = overlayCanvas.getGraphicsContext2D();
         gc.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight()); // Clear previous drawings
 
+        // If the entity is gone from the world, we check if the entity is an instance of a tank, if so we cast it to the Tank type, and for each tank we draw a health bar
         if (worldData != null) {
             for (Entity entity : worldData.getEntities()) {
                 if (entity instanceof Tank) {
