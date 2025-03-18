@@ -14,6 +14,7 @@ import java.util.ServiceLoader;
 import org.sdu.sem4.g7.MissionLoader.config.Config;
 import org.sdu.sem4.g7.MissionLoader.objects.EnemyStartPositionObject;
 import org.sdu.sem4.g7.MissionLoader.objects.MissionObject;
+import org.sdu.sem4.g7.MissionLoader.objects.TileEntity;
 import org.sdu.sem4.g7.MissionLoader.objects.TileObject;
 import org.sdu.sem4.g7.MissionLoader.objects.WorldDataObject;
 import org.sdu.sem4.g7.common.data.Entity;
@@ -109,7 +110,7 @@ public class MissionLoaderService implements IMissionLoaderService {
 					TileObject tileInfo = tiles.get(map.get(y).get(x));
 
 				// Create a entity to render
-				Entity tileEntity = new Entity();
+				Entity tileEntity = new TileEntity();
 
 				// set sprite
 				tileEntity.setSprite(new File(Config.tilesDir, tileInfo.getImage()).toURI(), Config.tileSize);
