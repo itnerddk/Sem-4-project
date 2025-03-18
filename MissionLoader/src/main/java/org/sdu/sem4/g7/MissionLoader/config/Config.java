@@ -9,7 +9,7 @@ public class Config {
     /*
      * Pixel size of a tile
      */
-    public final static int tileSize = 128;
+    public final static int tileSize = 6;
 
     public final static File dataDir = new File("./data");
 	public final static File missionsDir = new File(dataDir, "missions");

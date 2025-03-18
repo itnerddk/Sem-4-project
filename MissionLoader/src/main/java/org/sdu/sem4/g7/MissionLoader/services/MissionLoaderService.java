@@ -111,8 +111,11 @@ public class MissionLoaderService implements IMissionLoaderService {
 				// Create a entity to render
 				Entity tileEntity = new Entity();
 
+				// set sprite
+				tileEntity.setSprite(new File(Config.tilesDir, tileInfo.getImage()).toURI(), Config.tileSize);
+
 				// set position
-				tileEntity.setPosition(x * Config.tileSize, y * Config.tileSize);
+				tileEntity.setPosition(x * tileEntity.getSprite().getImage().getWidth(), y * tileEntity.getSprite().getImage().getHeight());
 
 				// set z index
 				tileEntity.setzIndex(tileInfo.getZ());
@@ -125,9 +128,6 @@ public class MissionLoaderService implements IMissionLoaderService {
 
 				// set health of tile
 				tileEntity.setHealth(tileInfo.getHealth());
-				
-				// set sprite
-				tileEntity.setSprite(new File(Config.tilesDir, tileInfo.getImage()).toURI());
 
 				// add tile to world
 				world.addEntity(tileEntity);
