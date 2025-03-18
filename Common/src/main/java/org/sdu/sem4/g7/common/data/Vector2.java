@@ -71,6 +71,12 @@ public class Vector2 {
         return this;
     }
 
+    public Vector2 subtract(double x, double y) {
+        this.x -= x;
+        this.y -= y;
+        return this;
+    }
+
     /**
      * Subtract the x and y values of another vector from this vector
      * @param vector vector to subtract

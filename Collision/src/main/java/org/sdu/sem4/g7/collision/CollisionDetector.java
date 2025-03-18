@@ -4,6 +4,7 @@ import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.data.Mission;
+import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.services.ICollidableService;
 import org.sdu.sem4.g7.common.services.IPostEntityProcessingService;
 
@@ -45,12 +46,47 @@ public class CollisionDetector implements IPostEntityProcessingService {
                 // check for collision
                 if (collision(entity1, entity2)) {
                     System.out.println("Collision detected between " + entity1.getClass().getSimpleName() + " and " + entity2.getClass().getSimpleName() + System.currentTimeMillis());
-                    while (collision(entity1, entity2) && !((entity1.getVelocity().getX() == 0 && entity1.getVelocity().getY() == 0) && (entity2.getVelocity().getX() == 0 && entity2.getVelocity().getY() == 0))) {
-                        entity1.getPosition().subtract(entity1.getVelocity());
-                        entity2.getPosition().subtract(entity2.getVelocity());
+                    // while (collision(entity1, entity2) && !((entity1.getVelocity().getX() == 0 && entity1.getVelocity().getY() == 0) && (entity2.getVelocity().getX() == 0 && entity2.getVelocity().getY() == 0))) {
+                    //     entity1.getPosition().subtract(entity1.getVelocity());
+                    //     entity2.getPosition().subtract(entity2.getVelocity());
+                    // }
+                    // entity1.getVelocity().set(0, 0);
+                    // entity2.getVelocity().set(0, 0);
+
+                    Vector2 e1Pos = new Vector2(entity1.getPosition());
+                    Vector2 e2Pos = new Vector2(entity2.getPosition());
+                    Vector2 e1Vel = new Vector2(entity1.getVelocity());
+                    Vector2 e2Vel = new Vector2(entity2.getVelocity());
+
+                    entity1.getPosition().subtract(0, e1Vel.getY());
+                    if (!collision(entity1, entity2)) {
+                        entity1.setVelocity(e1Vel.getX(), 0.0d);
+                        continue;
                     }
-                    entity1.getVelocity().set(0, 0);
-                    entity2.getVelocity().set(0, 0);
+                    entity1.setPosition(e1Pos);
+
+                    entity1.getPosition().subtract(e1Vel.getX(), 0.0d);
+                    if (!collision(entity1, entity2)) {
+                        entity1.setVelocity(0, e1Vel.getY());
+                        continue;
+                    }
+                    entity1.setPosition(e1Pos);
+
+
+                    entity2.getPosition().subtract(0, e2Vel.getY());
+                    if (!collision(entity1, entity2)) {
+                        entity2.setVelocity(e2Vel.getX(), 0.0d);
+                        continue;
+                    }
+                    entity2.setPosition(e2Pos);
+
+                    entity2.getPosition().subtract(e2Vel.getX(), 0.0d);
+                    if (!collision(entity1, entity2)) {
+                        entity2.setVelocity(0, e2Vel.getY());
+                        continue;
+                    }
+                    entity2.setPosition(e2Pos);
+
 
                     // if (entity1.getVelocity() != null && entity2.getVelocity() != null) {
                     //     Vector2 transferredVelocity = new Vector2();
