@@ -18,10 +18,14 @@ public class CollisionDetector implements IPostEntityProcessingService {
      */
     private boolean collision(Entity entity1, Entity entity2) {
         if (entity1 instanceof ICollidableService && entity2 instanceof ICollidableService) {
-            ICollidableService col1 = (ICollidableService) entity1;
-            ICollidableService col2 = (ICollidableService) entity2;
+            // ICollidableService col1 = (ICollidableService) entity1;
+            // ICollidableService col2 = (ICollidableService) entity2;
 
-            return col1.getBounds().intersects(col2.getBounds());
+            // return col1.getBounds().intersects(col2.getBounds());
+            return entity1.getPosition().getX() < entity2.getPosition().getX() + 60 &&
+                entity1.getPosition().getX() + 60 > entity2.getPosition().getX() &&
+                entity1.getPosition().getY() < entity2.getPosition().getY() + 60 &&
+                entity1.getPosition().getY() + 60 > entity2.getPosition().getY();
         }
         return false;
     }
@@ -40,11 +44,20 @@ public class CollisionDetector implements IPostEntityProcessingService {
                 // check for collision
                 if (collision(entity1, entity2)) {
                     System.out.println("Collision detected between " + entity1.getClass().getSimpleName() + " and " + entity2.getClass().getSimpleName() + System.currentTimeMillis());
-                    // velocity vs velocity
-                    if (entity1.getVelocity() != null && entity2.getVelocity() != null) {
-                        entity1.setVelocity(entity1.getVelocity().add(entity2.getVelocity()));
-                        entity2.setVelocity(entity2.getVelocity().add(entity1.getVelocity()));
-                    }                    
+                    while (collision(entity1, entity2) && !((entity1.getVelocity().getX() == 0 && entity1.getVelocity().getY() == 0) && (entity2.getVelocity().getX() == 0 && entity2.getVelocity().getY() == 0))) {
+                        entity1.getPosition().subtract(entity1.getVelocity());
+                        entity2.getPosition().subtract(entity2.getVelocity());
+                    }
+                    entity1.getVelocity().set(0, 0);
+                    entity2.getVelocity().set(0, 0);
+
+                    // if (entity1.getVelocity() != null && entity2.getVelocity() != null) {
+                    //     Vector2 transferredVelocity = new Vector2();
+                    //     transferredVelocity = transferredVelocity.add(entity1.getVelocity()).add(entity2.getVelocity());
+                    //     transferredVelocity.set(transferredVelocity.getX() / 2, transferredVelocity.getY() / 2);
+                    //     entity1.getVelocity().set(transferredVelocity);
+                    //     entity2.getVelocity().set(transferredVelocity);
+                    // }
                 }
             }
         }
