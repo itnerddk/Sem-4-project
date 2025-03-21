@@ -28,9 +28,9 @@ public class EnemyControlSystem implements IEntityProcessingService {
             double dy = player.getPosition().getY() - enemy.getPosition().getY();
             double distance = Math.sqrt(dx * dx + dy * dy);
 
-            // Check if the enemy is within 5 tiles of the player
-            double tileSize = 32; // Assuming each tile is 32x32 pixels
-            if (distance <= 7 * tileSize) {
+            // Check if the enemy is within x amount tiles of the player
+            double tileSize = 96; // Each tile is 96x96 pixels
+            if (distance <= 2 * tileSize) {
                 // Calculate the angle to face the player
                 double angle = Math.toDegrees(Math.atan2(dy, dx));
 
