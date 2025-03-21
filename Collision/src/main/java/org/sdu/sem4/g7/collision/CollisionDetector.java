@@ -1,5 +1,9 @@
 package org.sdu.sem4.g7.collision;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
@@ -18,84 +22,57 @@ public class CollisionDetector implements IPostEntityProcessingService {
      * @param entity2
      * @return true if the overlap
      */
-    private boolean collision(Entity entity1, Entity entity2) {
+    private void processCollision(Entity entity1, Entity entity2) {
         if (entity1 instanceof ICollidableService && entity2 instanceof ICollidableService) {
-            // ICollidableService col1 = (ICollidableService) entity1;
-            // ICollidableService col2 = (ICollidableService) entity2;
+            ICollidableService col1 = (ICollidableService) entity1;
+            ICollidableService col2 = (ICollidableService) entity2;
 
-            // return col1.getBounds().intersects(col2.getBounds());
-            return entity1.getPosition().getX() < entity2.getPosition().getX() + 60 &&
-                entity1.getPosition().getX() + 60 > entity2.getPosition().getX() &&
-                entity1.getPosition().getY() < entity2.getPosition().getY() + 60 &&
-                entity1.getPosition().getY() + 60 > entity2.getPosition().getY();
+            Vector2 collisionVector = col1.getHitbox().collides(col2.getHitbox());
+            if (collisionVector != null) {
+                handleCollision(entity1, entity2, collisionVector);
+            }
+            // return entity1.getPosition().getX() < entity2.getPosition().getX() + 60 &&
+            //     entity1.getPosition().getX() + 60 > entity2.getPosition().getX() &&
+            //     entity1.getPosition().getY() < entity2.getPosition().getY() + 60 &&
+            //     entity1.getPosition().getY() + 60 > entity2.getPosition().getY();
         }
-        return false;
+    }
+
+    public void handleCollision(Entity entity1, Entity entity2, Vector2 collisionVector) {
+        System.out.println(collisionVector);
+        // Check which is smaller
+        if (true) {
+            if (collisionVector.getX() < collisionVector.getY()) {
+                // X is smaller
+                // Set x multiplier to -1 if entity1 is to the left of entity2
+                int xMult = entity1.getPosition().getX() < entity2.getPosition().getX() ? -1 : 1;
+                // Move entity1 out of entity2
+                entity1.getPosition().setX(entity1.getPosition().getX() + collisionVector.getX() * xMult);
+            } else {
+                // Y is smaller
+                // Set y multiplier to -1 if entity1 is above entity2
+                int yMult = entity1.getPosition().getY() < entity2.getPosition().getY() ? -1 : 1;
+                // Move entity1 out of entity2
+                entity1.getPosition().setY(entity1.getPosition().getY() + collisionVector.getY() * yMult);
+            }
+        }
     }
 
     @Override
     public void process(GameData gameData, WorldData world) {
+        // Get all entities and sort them by their z index
+        Collection<Entity> entities = world.getEntities();
+        List<Entity> sortedEntities = new ArrayList<>(entities);
+        sortedEntities.sort((e1, e2) -> e1.getzIndex() - e2.getzIndex());
+
         // two for loops for all entities in the world
-        for (Entity entity1 : world.getEntities()) {
-            
-            if (!entity1.isCollision()) continue;
-            for (Entity entity2 : world.getEntities()) {
+        for (Entity entity1 : sortedEntities) {
+            if (!entity1.isCollision() || entity1.isImmoveable()) continue;
+            for (Entity entity2 : sortedEntities) {
                 // if the two entities are identical, skip the iteration
                 if (!entity2.isCollision() || entity1.getID().equals(entity2.getID())) continue;
-
-
-                // check for collision
-                if (collision(entity1, entity2)) {
-                    System.out.println("Collision detected between " + entity1.getClass().getSimpleName() + " and " + entity2.getClass().getSimpleName() + System.currentTimeMillis());
-                    // while (collision(entity1, entity2) && !((entity1.getVelocity().getX() == 0 && entity1.getVelocity().getY() == 0) && (entity2.getVelocity().getX() == 0 && entity2.getVelocity().getY() == 0))) {
-                    //     entity1.getPosition().subtract(entity1.getVelocity());
-                    //     entity2.getPosition().subtract(entity2.getVelocity());
-                    // }
-                    // entity1.getVelocity().set(0, 0);
-                    // entity2.getVelocity().set(0, 0);
-
-                    Vector2 e1Pos = new Vector2(entity1.getPosition());
-                    Vector2 e2Pos = new Vector2(entity2.getPosition());
-                    Vector2 e1Vel = new Vector2(entity1.getVelocity());
-                    Vector2 e2Vel = new Vector2(entity2.getVelocity());
-
-                    entity1.getPosition().subtract(0, e1Vel.getY());
-                    if (!collision(entity1, entity2)) {
-                        entity1.setVelocity(e1Vel.getX(), 0.0d);
-                        continue;
-                    }
-                    entity1.setPosition(e1Pos);
-
-                    entity1.getPosition().subtract(e1Vel.getX(), 0.0d);
-                    if (!collision(entity1, entity2)) {
-                        entity1.setVelocity(0, e1Vel.getY());
-                        continue;
-                    }
-                    entity1.setPosition(e1Pos);
-
-
-                    entity2.getPosition().subtract(0, e2Vel.getY());
-                    if (!collision(entity1, entity2)) {
-                        entity2.setVelocity(e2Vel.getX(), 0.0d);
-                        continue;
-                    }
-                    entity2.setPosition(e2Pos);
-
-                    entity2.getPosition().subtract(e2Vel.getX(), 0.0d);
-                    if (!collision(entity1, entity2)) {
-                        entity2.setVelocity(0, e2Vel.getY());
-                        continue;
-                    }
-                    entity2.setPosition(e2Pos);
-
-
-                    // if (entity1.getVelocity() != null && entity2.getVelocity() != null) {
-                    //     Vector2 transferredVelocity = new Vector2();
-                    //     transferredVelocity = transferredVelocity.add(entity1.getVelocity()).add(entity2.getVelocity());
-                    //     transferredVelocity.set(transferredVelocity.getX() / 2, transferredVelocity.getY() / 2);
-                    //     entity1.getVelocity().set(transferredVelocity);
-                    //     entity2.getVelocity().set(transferredVelocity);
-                    // }
-                }
+                
+                processCollision(entity1, entity2);
             }
         }
     }

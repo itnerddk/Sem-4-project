@@ -81,27 +81,49 @@ public class Vector2 {
      * Subtract the x and y values of another vector from this vector
      * @param vector vector to subtract
      */
-    public void subtract(Vector2 vector) {
+    public Vector2 subtract(Vector2 vector) {
         this.x -= vector.getX();
         this.y -= vector.getY();
+        return this;
     }
 
     /**
      * Multiply the x and y values of this vector with another vector
      * @param vector vector to multiply with
      */
-    public void multiply(Vector2 vector) {
+    public Vector2 multiply(Vector2 vector) {
         this.x *= vector.getX();
         this.y *= vector.getY();
+        return this;
     }
 
     /**
      * Divide the x and y values of this vector with another vector
      * @param vector vector to divide with
      */
-    public void divide(Vector2 vector) {
+    public Vector2 divide(Vector2 vector) {
         this.x /= vector.getX();
         this.y /= vector.getY();
+        return this;
+    }
+
+    public Vector2 normalize() {
+        double length = Math.sqrt(x * x + y * y);
+        if (length != 0) {
+            x /= length;
+            y /= length;
+        }
+        return this;
+    }
+
+    public double dot(Vector2 vector) {
+        return x * vector.getX() + y * vector.getY();
+    }
+
+    public double distance(Vector2 vector) {
+        double dx = x - vector.getX();
+        double dy = y - vector.getY();
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     public double getX() {

@@ -1,7 +1,7 @@
 package org.sdu.sem4.g7.common.services;
 
-import javafx.geometry.Bounds;
+import org.sdu.sem4.g7.common.data.Hitbox;
 
 public interface ICollidableService {    
-    public Bounds getBounds();
+    public Hitbox getHitbox();
 }

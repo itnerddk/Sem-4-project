@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
+import org.sdu.sem4.g7.common.data.Hitbox;
+import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.ICollidableService;
 
@@ -142,8 +144,9 @@ public abstract class Tank extends Entity implements ICollidableService {
         return a * (1.0 - f) + (b * f);
     }
 
-    public Bounds getBounds() {
-        return getSprite().getBoundsInParent();
+    public Hitbox getHitbox() {
+        Vector2 size = new Vector2(getSprite().getImage().getWidth(), getSprite().getImage().getHeight());
+        return new Hitbox(new Vector2(getPosition()), size, getRotation());
     }
 
 
@@ -163,23 +166,38 @@ public abstract class Tank extends Entity implements ICollidableService {
         double barHeight = 5; 
         double healthPercentage = (double) getHealth() / getMaxHealth();
 
-    // Calculate the position of the health bar
-    double x = getPosition().getX() + getSprite().getImage().getWidth() / 2 - barWidth / 2;
-    double y = getPosition().getY() - 10; // Position above the tank
+        // Calculate the position of the health bar
+        double x = getPosition().getX() - barWidth / 2;
+        double y = getPosition().getY() - 10; // Position above the tank
 
-    // Draw the background of the health bar
-    gc.setFill(Color.GRAY);
-    gc.fillRect(x, y, barWidth, barHeight);
+        // Draw the background of the health bar
+        gc.setFill(Color.GRAY);
+        gc.fillRect(x, y, barWidth, barHeight);
 
-    // Draw the health of the health bar
-    gc.setFill(Color.RED);
-    gc.fillRect(x, y, barWidth * healthPercentage, barHeight);
+        // Draw the health of the health bar
+        gc.setFill(Color.RED);
+        gc.fillRect(x, y, barWidth * healthPercentage, barHeight);
 
-    // Draw the border
-    gc.setStroke(Color.BLACK);
-    gc.strokeRect(x, y, barWidth, barHeight);
+        // Draw the border
+        gc.setStroke(Color.BLACK);
+        gc.strokeRect(x, y, barWidth, barHeight);
 
-    System.out.println("Health: " + getHealth() + ", MaxHealth: " + getMaxHealth());
-}
+        // System.out.println("Health: " + getHealth() + ", MaxHealth: " + getMaxHealth());
+    }
     
+    @Override
+    public void render(GraphicsContext gc) {
+        super.render(gc);
+        drawHealthBar(gc);
+
+        // Draw bounds in parent of sprite
+        gc.save();
+        gc.setStroke(Color.RED);
+        Bounds bounds = getSprite().getBoundsInParent();
+        // gc.strokeRect(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight());
+        gc.restore();
+
+        this.getHitbox().render(gc);
+    }
+
 }
