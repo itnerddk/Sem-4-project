@@ -1,5 +1,11 @@
 package org.sdu.sem4.g7.main;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.ServiceLoader;
+import java.util.concurrent.ConcurrentHashMap;
+import static java.util.stream.Collectors.toList;
+
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.GameKeys;
@@ -8,17 +14,15 @@ import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
 import org.sdu.sem4.g7.common.services.IPostEntityProcessingService;
 import org.sdu.sem4.g7.common.services.IPreGamePluginService;
+import org.sdu.sem4.g7.tank.parts.Tank;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.concurrent.ConcurrentHashMap;
-import static java.util.stream.Collectors.toList;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
@@ -31,6 +35,7 @@ public class Main extends Application {
     private WorldData worldData;
     private final Map<Entity, Node> sprites = new ConcurrentHashMap<>();
     private final Pane gameWindow = new Pane();
+    private final Canvas overlayCanvas = new Canvas(gameData.getDisplayWidth(), gameData.getDisplayHeight());
 
     public static void main(String[] args) {
         launch(Main.class);
@@ -42,6 +47,8 @@ public class Main extends Application {
     public void start(Stage window) {
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         gameWindow.getChildren().add(debugText);
+        // Draw the overlay canvas for health bar
+        gameWindow.getChildren().add(overlayCanvas);
 
         Scene scene = new Scene(gameWindow);
 
@@ -144,7 +151,18 @@ public class Main extends Application {
     Group debugGroup = new Group();
 
     private void draw() {
+        GraphicsContext gc = overlayCanvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight()); // Clear previous drawings
+
+        // If the entity is gone from the world, we check if the entity is an instance of a tank, if so we cast it to the Tank type, and for each tank we draw a health bar
         if (worldData != null) {
+            for (Entity entity : worldData.getEntities()) {
+                if (entity instanceof Tank) {
+                    Tank tank = (Tank) entity;
+                    tank.drawHealthBar(gc);
+                }
+            }
+
             // If the entity is gone from the world, remove the sprite and entity from the sprites buffer
             for (Entity spriteEntity : sprites.keySet()) {
                 if(!worldData.getEntities().contains(spriteEntity)){   

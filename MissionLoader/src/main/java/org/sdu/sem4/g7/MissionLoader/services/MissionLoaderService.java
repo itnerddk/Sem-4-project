@@ -1,7 +1,5 @@
 package org.sdu.sem4.g7.MissionLoader.services;
 
-import static java.util.stream.Collectors.toList;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import static java.util.stream.Collectors.toList;
 
 import org.sdu.sem4.g7.MissionLoader.config.Config;
 import org.sdu.sem4.g7.MissionLoader.objects.EnemyStartPositionObject;
@@ -183,6 +182,14 @@ public class MissionLoaderService implements IMissionLoaderService {
 				enemy = world.getEntityTypes().get(espo.getEntityType()).get(0).getDeclaredConstructor().newInstance();
 				enemy.setPosition(espo.getX(), espo.getY());
 				enemy.setHealth(espo.getHealth());
+				enemy.setMaxHealth(100);
+				System.out.println("set enemy health from mission: " + espo.getHealth());
+				
+				// Set maxHealth to the same value as health if not explicitly defined
+        		if (enemy.getMaxHealth() == 0) {
+            	enemy.setMaxHealth(espo.getHealth());
+}
+				
 				world.addEntity(enemy);
 				world.addEntity(enemy.getChildren());
 			} catch (Exception ex) {
