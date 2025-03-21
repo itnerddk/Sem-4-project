@@ -5,7 +5,9 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import static java.util.stream.Collectors.toList;
-
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.GameKeys;
@@ -16,6 +18,12 @@ import org.sdu.sem4.g7.common.services.IPostEntityProcessingService;
 import org.sdu.sem4.g7.common.services.IPreGamePluginService;
 import org.sdu.sem4.g7.tank.parts.Tank;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.ServiceLoader;
+import java.util.concurrent.ConcurrentHashMap;
+import static java.util.stream.Collectors.toList;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -25,7 +33,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -36,6 +43,7 @@ public class Main extends Application {
     private final Map<Entity, Node> sprites = new ConcurrentHashMap<>();
     private final Pane gameWindow = new Pane();
     private final Canvas overlayCanvas = new Canvas(gameData.getDisplayWidth(), gameData.getDisplayHeight());
+    private final Pane introWindow = new Pane();
 
     public static void main(String[] args) {
         launch(Main.class);
@@ -45,6 +53,44 @@ public class Main extends Application {
 
     @Override
     public void start(Stage window) {
+        Image backgroundImage = new Image(Objects.requireNonNull(getClass().getResource("/background.jpg")).toExternalForm());
+        BackgroundImage background = new BackgroundImage(
+                backgroundImage,
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100, 100, true, true, true, false)
+        );
+
+        introWindow.setBackground(new Background(background));
+        introWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
+
+        Image startImage = new Image(Objects.requireNonNull(getClass().getResource("/PlayButton.png")).toExternalForm());
+        ImageView startButtonView = new ImageView(startImage);
+        startButtonView.setFitWidth(400);
+        startButtonView.setPreserveRatio(true);
+
+        Button startButton = new Button();
+        startButton.setGraphic(startButtonView);
+        startButton.setStyle("-fx-background-color: transparent;");
+        startButton.setOnAction(event -> startGame(window));
+
+        Pane introLayout = new Pane();
+        introLayout.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
+
+        startButton.setLayoutX((double) (gameData.getDisplayWidth() - 400) / 2);
+        startButton.setLayoutY(gameData.getDisplayHeight() - 200);
+        introLayout.getChildren().add(startButton);
+
+
+        introWindow.getChildren().add(introLayout);
+        Scene introScene = new Scene(introWindow);
+
+        window.setScene(introScene);
+        window.setTitle("TANK WARS");
+        window.show();
+    }
+
+    public void startGame(Stage window) {
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         gameWindow.getChildren().add(debugText);
         // Draw the overlay canvas for health bar
