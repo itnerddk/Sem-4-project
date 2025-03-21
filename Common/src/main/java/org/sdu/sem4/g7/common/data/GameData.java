@@ -1,8 +1,9 @@
 package org.sdu.sem4.g7.common.data;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.sdu.sem4.g7.common.services.IMissionLoaderService;
 
 import javafx.scene.Node;
 import javafx.scene.shape.Circle;
@@ -15,7 +16,8 @@ public class GameData {
     private final GameKeys keys = new GameKeys();
     private double delta;
 
-    private ArrayList<Mission> missions = new ArrayList<>();
+    // TODO: This is maybe not the best way, but let's change it later
+    private IMissionLoaderService missionLoaderService;
 
     public GameKeys getKeys() {
         return keys;
@@ -45,20 +47,22 @@ public class GameData {
         this.delta = delta;
     }
 
-    public void addMission(Mission mission) {
-        missions.add(mission);
+    private long startTime;
+
+    public GameData() {
+        // Initialize the start time when the game begins
+        startTime = System.currentTimeMillis();
     }
 
-    public ArrayList<Mission> getMissions() {
-        return missions;
+    // Get the elapsed time in seconds
+    public double getTime() {
+        // Get the current time in milliseconds and convert to seconds
+        long currentTime = System.currentTimeMillis();
+        return (currentTime - startTime) / 1000.0;
     }
 
-    public void setMissions(ArrayList<Mission> missions) {
-        this.missions = missions;
-    }
 
     //#region Debug
-
     public Map<String, Node> debugEntities = new ConcurrentHashMap<>();
     public Map<String, String> debugMap = new ConcurrentHashMap<>();
     private final boolean debugMode = true;
@@ -107,5 +111,13 @@ public class GameData {
 
     public boolean isDebugMode() {
         return debugMode;
+    }
+
+    public IMissionLoaderService getMissionLoaderService() {
+        return missionLoaderService;
+    }
+
+    public void setMissionLoaderService(IMissionLoaderService missionLoaderService) {
+        this.missionLoaderService = missionLoaderService;
     }
 }
