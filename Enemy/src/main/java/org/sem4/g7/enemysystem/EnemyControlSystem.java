@@ -9,6 +9,9 @@ import org.sdu.sem4.g7.playersystem.Player;
 
 public class EnemyControlSystem implements IEntityProcessingService {
 
+    // Constant for shoot interval in seconds
+    private static final double SHOOT_INTERVAL = 3.5; // 3.5 seconds
+
     @Override
     public void process(GameData gameData, WorldData world) {
         for (Entity entity : world.getEntities(Enemy.class)) {
@@ -36,6 +39,16 @@ public class EnemyControlSystem implements IEntityProcessingService {
 
                 // Update the enemy's rotation
                 enemy.setRotation((float) angle);
+
+                // Check if enough time has passed to shoot
+                double currentTime = gameData.getTime(); // Assuming `gameData.getTime()` returns time in seconds
+                double lastShotTime = enemy.getLastShotTime(); // Assuming enemy has a field for last shot time
+
+                // If 2 seconds have passed, shoot and update last shot time
+                if (currentTime - lastShotTime >= SHOOT_INTERVAL) {
+                    enemy.shoot(gameData, world); // Trigger the shoot action
+                    enemy.setLastShotTime(currentTime); // Update the last shot time
+                }
             }
 
             // Process the enemy's position
