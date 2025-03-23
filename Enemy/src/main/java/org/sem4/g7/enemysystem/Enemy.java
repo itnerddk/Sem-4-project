@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Enemy extends Tank {
+
+    private double lastShotTime = 0.0; // Initialize last shot time to 0
+
     public Enemy() {
         super();
         try {
@@ -22,5 +25,14 @@ public class Enemy extends Tank {
 
         // Test code to load turret
         this.setTurret(TurretLoader.getTurrets().get(0).get());
+    }
+
+    // Getters and setters for last shot time
+    public double getLastShotTime() {
+        return lastShotTime;
+    }
+
+    public void setLastShotTime(double lastShotTime) {
+        this.lastShotTime = lastShotTime;
     }
 }
