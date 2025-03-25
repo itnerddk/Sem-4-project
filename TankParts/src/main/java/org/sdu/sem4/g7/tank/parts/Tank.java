@@ -144,7 +144,14 @@ public abstract class Tank extends Entity implements ICollidableService {
         return a * (1.0 - f) + (b * f);
     }
 
+    private Hitbox hitbox;
+
     public Hitbox getHitbox() {
+        if (this.hitbox != null) {
+            this.hitbox.setPosition(new Vector2(getPosition()));
+            this.hitbox.setRotation(getRotation());
+            return this.hitbox;
+        }
         Vector2 size = new Vector2(getSprite().getImage().getWidth(), getSprite().getImage().getHeight());
         return new Hitbox(new Vector2(getPosition()), size, getRotation());
     }

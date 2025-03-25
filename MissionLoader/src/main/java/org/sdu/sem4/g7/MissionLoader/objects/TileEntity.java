@@ -9,10 +9,16 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class TileEntity extends Entity implements ICollidableService {
 
+    private Hitbox hitbox;
+
     @Override
     public Hitbox getHitbox() {
+        if (this.hitbox != null) {
+            return this.hitbox;
+        }
         Vector2 size = new Vector2(getSprite().getImage().getWidth(), getSprite().getImage().getHeight());
-        return new Hitbox(new Vector2(getPosition()), size, getRotation());
+        this.hitbox = new Hitbox(new Vector2(getPosition()), size, getRotation());
+        return this.hitbox;
     }
 
     @Override
