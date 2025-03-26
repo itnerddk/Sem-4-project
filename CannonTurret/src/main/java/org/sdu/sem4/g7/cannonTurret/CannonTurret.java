@@ -27,6 +27,9 @@ public class CannonTurret extends Turret {
         bullet.setPosition(this.getPosition());
         // bullet.getPosition().add(this.getOffset());
         bullet.setRotation(this.getRotation());
+
+        // set the tank as the createdBy
+        bullet.setCreatedBy(this.getTank());
         
         float rotationInRadians = bullet.getRotation() - 90;
         rotationInRadians = (float) Math.toRadians(rotationInRadians);

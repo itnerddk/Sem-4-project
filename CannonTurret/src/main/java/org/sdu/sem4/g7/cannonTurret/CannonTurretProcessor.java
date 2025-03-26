@@ -7,6 +7,7 @@ import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.data.Vector2;
+import org.sdu.sem4.g7.tank.parts.Bullet;
 import org.sdu.sem4.g7.tank.parts.Turret;
 
 public class CannonTurretProcessor implements IEntityProcessingService {
@@ -44,12 +45,15 @@ public class CannonTurretProcessor implements IEntityProcessingService {
         }
 
         // check for entities getting hit
-        for (Entity bullet : mission.getEntities(CannonBullet.class)) {
+        for (Bullet bullet : mission.getEntities(CannonBullet.class)) {
 
             for (Entity e : mission.getEntities()) {
 
                 // skip itself
                 if (bullet.equals(e)) { continue; }
+
+                // skip createdBy entity
+                if (bullet.getCreatedBy().equals(e)) {continue; }
 
                 // check collission
                 if (collision(bullet, e)) {

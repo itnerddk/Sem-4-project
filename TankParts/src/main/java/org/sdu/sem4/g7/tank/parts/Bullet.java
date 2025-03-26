@@ -12,6 +12,13 @@ public abstract class Bullet extends Entity {
      */
     private int damage;
 
+    /*
+     * Defines the entity that have created the entity
+     * 
+     * Usefull, to ensure the bullet does not collide with the entity that have "created" it
+     */
+    private Entity createdBy;
+
     public Bullet() {
         super();
     }
@@ -29,5 +36,12 @@ public abstract class Bullet extends Entity {
         this.damage = damage;
     }
 
+    public Entity getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Entity createdBy) {
+        this.createdBy = createdBy;
+    }
 
 }
