@@ -8,13 +8,13 @@ import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Hitbox;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
-import org.sdu.sem4.g7.common.services.ICollidableService;
+import org.sdu.sem4.g7.common.services.IRigidbodyService;
 
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public abstract class Tank extends Entity implements ICollidableService {
+public abstract class Tank extends Entity implements IRigidbodyService {
     /**
      * The current forwards, backwards velocity of the tank
      */

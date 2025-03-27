@@ -9,7 +9,7 @@ import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.common.data.Vector2;
-import org.sdu.sem4.g7.common.services.ICollidableService;
+import org.sdu.sem4.g7.common.services.IRigidbodyService;
 import org.sdu.sem4.g7.common.services.IPostEntityProcessingService;
 
 public class CollisionDetector implements IPostEntityProcessingService {
@@ -23,9 +23,9 @@ public class CollisionDetector implements IPostEntityProcessingService {
      * @return true if the overlap
      */
     private void processCollision(Entity entity1, Entity entity2) {
-        if (entity1 instanceof ICollidableService && entity2 instanceof ICollidableService) {
-            ICollidableService col1 = (ICollidableService) entity1;
-            ICollidableService col2 = (ICollidableService) entity2;
+        if (entity1 instanceof IRigidbodyService && entity2 instanceof IRigidbodyService) {
+            IRigidbodyService col1 = (IRigidbodyService) entity1;
+            IRigidbodyService col2 = (IRigidbodyService) entity2;
 
             Vector2 collisionVector = col1.getHitbox().collides(col2.getHitbox());
             if (collisionVector != null) {
