@@ -9,7 +9,7 @@ public class CannonBullet extends Bullet {
     public CannonBullet() {
         super(1); // TODO: Find a better way to set bullet damage #HACKFIX
         try {
-            System.out.println(this.getClass().getClassLoader().getResource("CannonBullet.png"));
+            // System.out.println(this.getClass().getClassLoader().getResource("CannonBullet.png"));
             this.setSprite(this.getClass().getClassLoader().getResource("CannonBullet.png").toURI(), 2);
         } catch (URISyntaxException e) {
             // TODO Auto-generated catch block
