@@ -55,6 +55,7 @@ public class CollisionDetector implements IPostEntityProcessingService {
                 // Move entity1 out of entity2
                 entity1.getPosition().setY(entity1.getPosition().getY() + collisionVector.getY() * yMult);
             }
+            entity1.subProcess();
         }
     }
 

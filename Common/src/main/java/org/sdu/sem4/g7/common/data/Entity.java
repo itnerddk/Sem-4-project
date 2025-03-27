@@ -195,6 +195,10 @@ public class Entity implements Serializable {
         return new ArrayList<Entity>();
     }
 
+    public void subProcess() {
+        return;
+    }
+
     public void render(GraphicsContext gc) {
         sprite.setTranslateX(this.getPosition().getX() - (sprite.getImage().getWidth() / 2));
         sprite.setTranslateY(this.getPosition().getY() - (sprite.getImage().getHeight() / 2));

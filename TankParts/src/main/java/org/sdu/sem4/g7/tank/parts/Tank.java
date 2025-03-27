@@ -47,6 +47,10 @@ public abstract class Tank extends Entity implements IRigidbodyService {
         // Apply velocity
         getPosition().add(getVelocity());
 
+        processTurret();
+    }
+
+    private void processTurret() {
         if (turret != null) {
             turret.setPosition(getPosition().getX(), getPosition().getY());
             turret.setRotation(getRotation());
@@ -166,10 +170,15 @@ public abstract class Tank extends Entity implements IRigidbodyService {
         return children;
     }
 
+    @Override
+    public void subProcess() {
+        processTurret();
+    }
+
     public void drawHealthBar(GraphicsContext gc) {
         // Width of the health bar
         double barWidth = 50; 
-       // Height of the health bar
+        // Height of the health bar
         double barHeight = 5; 
         double healthPercentage = (double) getHealth() / getMaxHealth();
 
