@@ -40,4 +40,20 @@ public interface IMissionLoaderService {
      */
     public WorldData loadMission(int id);
 
+
+    /**
+     * Returns the x axis size of the map
+     * 
+     * @return int size
+     */
+    public int getMapSizeX();
+
+
+    /**
+     * Returns the y axis size of the map
+     * 
+     * @return int size
+     */
+    public int getMapSizeY();
+
 }

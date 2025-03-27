@@ -5,8 +5,9 @@ import java.net.URISyntaxException;
 import org.sdu.sem4.g7.tank.parts.Bullet;
 
 public class CannonBullet extends Bullet {
+
     public CannonBullet() {
-        super();
+        super(1); // TODO: Find a better way to set bullet damage #HACKFIX
         try {
             System.out.println(this.getClass().getClassLoader().getResource("CannonBullet.png"));
             this.setSprite(this.getClass().getClassLoader().getResource("CannonBullet.png").toURI(), 2);

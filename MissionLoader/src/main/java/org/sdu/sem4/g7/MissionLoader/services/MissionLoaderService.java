@@ -47,6 +47,12 @@ public class MissionLoaderService implements IMissionLoaderService {
 	 */
 	private Map<Integer, TileObject> tiles;
 
+	/*
+	 * Size of the map (filled by the render method)
+	 */
+	private int mapSizeX;
+	private int mapSizeY;
+
 
 	public MissionLoaderService(GameData gameData) throws IOException {
 		this.gameData = gameData;
@@ -102,11 +108,18 @@ public class MissionLoaderService implements IMissionLoaderService {
 	 * Render the map tiles
 	 */
 	private void renderMapTiles(List<List<Integer>> map, WorldData world) {
+
+			// set map size properties
+			this.mapSizeX = map.get(0).size() * 96; // TODO: Change tile size to be dynamic
+			this.mapSizeY = map.size() * 96; // TODO: Change tile size to be dynamic
+
+			// Render the map
 			for (int y = 0; y < map.size(); y++) {
+
 				for (int x = 0; x < map.get(y).size(); x++) {
 	
-					// get tile information
-					TileObject tileInfo = tiles.get(map.get(y).get(x));
+				// get tile information
+				TileObject tileInfo = tiles.get(map.get(y).get(x));
 
 				// Create a entity to render
 				Entity tileEntity = new TileEntity();
@@ -217,5 +230,15 @@ public class MissionLoaderService implements IMissionLoaderService {
 	private Collection<? extends IEntityPluginService> getPluginServices() {
         return ServiceLoader.load(IEntityPluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
+
+	@Override
+	public int getMapSizeX() {
+		return mapSizeX;
+	}
+
+	@Override
+	public int getMapSizeY() {
+		return mapSizeY;
+	}
     
 }
