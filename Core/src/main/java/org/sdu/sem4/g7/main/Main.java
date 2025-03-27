@@ -48,6 +48,7 @@ public class Main extends Application {
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         gameWindow.getChildren().add(debugText);
         // Draw the overlay canvas for health bar
+        overlayCanvas.setViewOrder(-9999);
         gameWindow.getChildren().add(overlayCanvas);
 
         Scene scene = new Scene(gameWindow);
@@ -156,13 +157,6 @@ public class Main extends Application {
 
         // If the entity is gone from the world, we check if the entity is an instance of a tank, if so we cast it to the Tank type, and for each tank we draw a health bar
         if (worldData != null) {
-            for (Entity entity : worldData.getEntities()) {
-                if (entity instanceof Tank) {
-                    Tank tank = (Tank) entity;
-                    tank.drawHealthBar(gc);
-                }
-            }
-
             // If the entity is gone from the world, remove the sprite and entity from the sprites buffer
             for (Entity spriteEntity : sprites.keySet()) {
                 if(!worldData.getEntities().contains(spriteEntity)){   
@@ -183,16 +177,14 @@ public class Main extends Application {
             }
 
             // Iterate through all entities in the world and update their position and rotation
-            for (Entity entity : worldData.getEntities()) {                      
+            for (Entity entity : worldData.getEntities()) {          
                 ImageView sprite = (ImageView) sprites.get(entity);
                 if (sprite == null) {
                     sprite = entity.getSprite();
                     sprites.put(entity, sprite);
                     gameWindow.getChildren().add(sprite);
                 }
-                sprite.setTranslateX(entity.getPosition().getX());
-                sprite.setTranslateY(entity.getPosition().getY());
-                sprite.setRotate(entity.getRotation());
+                entity.render(gc);
             }
         }
         debugText.setText("");

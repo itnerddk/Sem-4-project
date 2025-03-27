@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -73,11 +74,6 @@ public class Entity implements Serializable {
      * Weight of the entity, used when collision occurs
      */
     private int weight;
-
-    /**
-     * Radius of collision circle
-     */
-    private float radius;
             
 
     public String getID() {
@@ -197,5 +193,11 @@ public class Entity implements Serializable {
 
     public List<Entity> getChildren() {
         return new ArrayList<Entity>();
+    }
+
+    public void render(GraphicsContext gc) {
+        sprite.setTranslateX(this.getPosition().getX() - (sprite.getImage().getWidth() / 2));
+        sprite.setTranslateY(this.getPosition().getY() - (sprite.getImage().getHeight() / 2));
+        sprite.setRotate(this.getRotation());
     }
 }

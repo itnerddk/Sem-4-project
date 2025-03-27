@@ -1,7 +1,7 @@
 package org.sdu.sem4.g7.cannonTurret;
 
 import org.sdu.sem4.g7.common.data.Entity;
-import org.sdu.sem4.g7.common.services.ICollidableService;
+import org.sdu.sem4.g7.common.services.IRigidbodyService;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 
 import org.sdu.sem4.g7.common.data.GameData;
@@ -20,7 +20,7 @@ public class CannonTurretProcessor implements IEntityProcessingService {
      * @return true if the overlap
      */
     private boolean collision(Entity bullet, Entity entity) {
-        if (entity instanceof ICollidableService) {
+        if (entity instanceof IRigidbodyService) {
             return bullet.getPosition().getX() < entity.getPosition().getX() + 60 &&
                 bullet.getPosition().getX() + 60 > entity.getPosition().getX() &&
                 bullet.getPosition().getY() < entity.getPosition().getY() + 60 &&

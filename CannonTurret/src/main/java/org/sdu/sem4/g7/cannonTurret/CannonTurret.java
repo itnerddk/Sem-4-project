@@ -7,10 +7,13 @@ import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.tank.parts.Turret;
 
+import javafx.scene.canvas.GraphicsContext;
+
 public class CannonTurret extends Turret {
     public CannonTurret() {
         super();
-        setOffset(new Vector2(60, 60));
+        setOffset(new Vector2(0, 0));
+        setMuzzle(new Vector2(0, -25));
         try {
             System.out.println(this.getClass().getClassLoader().getResource("CannonTurret.png"));
             this.setSprite(this.getClass().getClassLoader().getResource("CannonTurret.png").toURI(), 5);
@@ -26,6 +29,10 @@ public class CannonTurret extends Turret {
         CannonBullet bullet = new CannonBullet();
         bullet.setPosition(this.getPosition());
         // bullet.getPosition().add(this.getOffset());
+        Vector2 rotatedMuzzle = new Vector2(this.getMuzzle().getX(), this.getMuzzle().getY());
+        rotatedMuzzle.rotate(this.getRotation());
+        bullet.getPosition().add(rotatedMuzzle);
+        
         bullet.setRotation(this.getRotation());
 
         // set the tank as the createdBy
@@ -39,14 +46,24 @@ public class CannonTurret extends Turret {
 
         // bullet.getPosition().add(new Vector2(-4, -4));
 
-        Vector2 size = new Vector2(getTank().getSprite().getImage().getWidth(), getTank().getSprite().getImage().getHeight());
-        bullet.getPosition().add(new Vector2(size.getX() / 2, size.getY() / 2));
+        // Vector2 size = new Vector2(getTank().getSprite().getImage().getWidth(), getTank().getSprite().getImage().getHeight());
+        // bullet.getPosition().add(new Vector2(size.getX() / 2, size.getY() / 2));
 
-        Vector2 bulletSize = new Vector2(bullet.getSprite().getImage().getWidth(), bullet.getSprite().getImage().getHeight());
-        bullet.getPosition().subtract(new Vector2(bulletSize.getX() / 2, bulletSize.getY() / 2));
+        // Vector2 bulletSize = new Vector2(bullet.getSprite().getImage().getWidth(), bullet.getSprite().getImage().getHeight());
+        // bullet.getPosition().subtract(new Vector2(bulletSize.getX() / 2, bulletSize.getY() / 2));
 
         bullet.setVelocity(Math.cos(rotationInRadians) * 8, Math.sin(rotationInRadians) * 8);
 
         mission.addEntity(bullet);
+    }
+
+    @Override
+    public void render(GraphicsContext gc) {
+        super.render(gc);
+        gc.save();
+        gc.translate(this.getPosition().getX(), this.getPosition().getY());
+        gc.rotate(this.getRotation());
+        gc.strokeOval(this.getMuzzle().getX(), this.getMuzzle().getY(), 5, 5);
+        gc.restore();
     }
 }
