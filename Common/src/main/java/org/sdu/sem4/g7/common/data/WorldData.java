@@ -39,6 +39,9 @@ public abstract class WorldData {
 
     public void removeEntity(Entity entity) {
         entityMap.remove(entity.getID());
+        for (Entity e : entity.getChildren()) {
+            removeEntity(e);
+        }
     }
 
     public Collection<Entity> getEntities() {
