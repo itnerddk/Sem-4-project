@@ -19,6 +19,7 @@
         <module>Enemy</module>
         <module>Collision</module>
         <module>MissionLoader</module>
+        <module>Currency</module>
         <!-- <module>Collision</module> -->
     </modules>
     <properties>
