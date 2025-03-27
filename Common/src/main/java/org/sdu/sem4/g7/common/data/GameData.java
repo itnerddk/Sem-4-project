@@ -47,8 +47,22 @@ public class GameData {
         this.delta = delta;
     }
 
-    //#region Debug
+    private long startTime;
 
+    public GameData() {
+        // Initialize the start time when the game begins
+        startTime = System.currentTimeMillis();
+    }
+
+    // Get the elapsed time in seconds
+    public double getTime() {
+        // Get the current time in milliseconds and convert to seconds
+        long currentTime = System.currentTimeMillis();
+        return (currentTime - startTime) / 1000.0;
+    }
+
+
+    //#region Debug
     public Map<String, Node> debugEntities = new ConcurrentHashMap<>();
     public Map<String, String> debugMap = new ConcurrentHashMap<>();
     private final boolean debugMode = true;
