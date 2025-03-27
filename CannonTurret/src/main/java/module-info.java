@@ -7,6 +7,7 @@ import org.sdu.sem4.g7.tank.parts.Turret;
 module CannonTurret {
     requires Common;
     requires TankParts;
+    requires javafx.graphics;
     provides org.sdu.sem4.g7.common.services.IEntityProcessingService with CannonTurretProcessor;
 
     // provides IEntityProcessingService with CannonTurretProcessor;

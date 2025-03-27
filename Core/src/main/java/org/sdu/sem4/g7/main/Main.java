@@ -48,6 +48,7 @@ public class Main extends Application {
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         gameWindow.getChildren().add(debugText);
         // Draw the overlay canvas for health bar
+        overlayCanvas.setViewOrder(-9999);
         gameWindow.getChildren().add(overlayCanvas);
 
         Scene scene = new Scene(gameWindow);
