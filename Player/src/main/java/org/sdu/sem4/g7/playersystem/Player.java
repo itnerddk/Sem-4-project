@@ -1,6 +1,7 @@
 package org.sdu.sem4.g7.playersystem;
 import java.net.URISyntaxException;
 
+import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.tank.TurretLoader;
 import org.sdu.sem4.g7.tank.parts.Tank;
 
@@ -15,6 +16,9 @@ public class Player extends Tank {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+        // Set entity type
+        setEntityType(EntityType.PLAYER);
 
         // Set health and max health for player
         this.setHealth(100);

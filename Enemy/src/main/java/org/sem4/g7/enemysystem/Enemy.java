@@ -1,6 +1,7 @@
 package org.sem4.g7.enemysystem;
 
 import org.sdu.sem4.g7.common.data.Entity;
+import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.tank.TurretLoader;
 import org.sdu.sem4.g7.tank.parts.Tank;
 
@@ -22,6 +23,9 @@ public class Enemy extends Tank {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+        // Set entity type
+        setEntityType(EntityType.ENEMY);
 
         // Test code to load turret
         this.setTurret(TurretLoader.getTurrets().get(0).get());

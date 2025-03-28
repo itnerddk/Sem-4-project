@@ -1,6 +1,7 @@
 package org.sdu.sem4.g7.tank.parts;
 
 import org.sdu.sem4.g7.common.data.Entity;
+import org.sdu.sem4.g7.common.enums.EntityType;
 
 /*
  * Shootable and renderable bullet
@@ -21,11 +22,17 @@ public abstract class Bullet extends Entity {
 
     public Bullet() {
         super();
+
+        // Set entity type
+        setEntityType(EntityType.BULLET);
     }
 
     public Bullet(int damage) {
         super();
         this.damage = damage;
+
+        // Set entity type
+        setEntityType(EntityType.BULLET);
     }
 
     public int getDamage() {

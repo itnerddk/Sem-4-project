@@ -38,7 +38,7 @@ public class Loader implements IGamePluginService {
 
 		// Create an instance of MissionLoaderService and set the reference in gameData
 		try {
-			gameData.setMissionLoaderService(new MissionLoaderService(gameData));
+			gameData.setMissionLoaderService(new MissionLoaderService(gameData, world));
 		} catch (IOException e) {
 			System.err.println("Could not create a MissionLoaderService!");
 			e.printStackTrace();
