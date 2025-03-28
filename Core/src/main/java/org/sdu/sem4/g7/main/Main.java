@@ -9,7 +9,9 @@ import static java.util.stream.Collectors.toList;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.GameData.Keys;
+import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
+import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
 import org.sdu.sem4.g7.common.services.IPostEntityProcessingService;
@@ -34,7 +36,7 @@ public class Main extends Application {
     private WorldData worldData;
     private final Map<Entity, Node> sprites = new ConcurrentHashMap<>();
     private final Pane gameWindow = new Pane();
-    private final Canvas overlayCanvas = new Canvas(gameData.getDisplayWidth(), gameData.getDisplayHeight());
+    private final Canvas gameCanvas = new Canvas(gameData.getDisplayWidth(), gameData.getDisplayHeight());
 
     public static void main(String[] args) {
         launch(Main.class);
@@ -47,10 +49,11 @@ public class Main extends Application {
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         gameWindow.getChildren().add(debugText);
         // Draw the overlay canvas for health bar
-        overlayCanvas.setViewOrder(-9999);
-        gameWindow.getChildren().add(overlayCanvas);
+        gameCanvas.setViewOrder(-9999);
+        gameWindow.getChildren().add(gameCanvas);
 
         Scene scene = new Scene(gameWindow);
+        scene.setFill(javafx.scene.paint.Color.BLACK);
 
         scene.getStylesheets().add(this.getClass().getClassLoader().getResource("style.css").toExternalForm());
 
@@ -72,6 +75,15 @@ public class Main extends Application {
         // Load worldData 0 for testing
         System.out.println("worldDatas available: " + gameData.getMissionLoaderService().missionCount());
         this.worldData = gameData.getMissionLoaderService().loadMission(1); // Loading mission 0 for testing
+        gameCanvas.setWidth(gameData.getMissionLoaderService().getMapSizeX());
+        gameCanvas.setHeight(gameData.getMissionLoaderService().getMapSizeY());
+
+        window.widthProperty().addListener((obs, oldVal, newVal) -> {
+            gameData.setDisplayWidth(newVal.intValue());
+        });
+        window.heightProperty().addListener((obs, oldVal, newVal) -> {
+            gameData.setDisplayHeight(newVal.intValue());
+        });
         
 
         // System.out.println("Turrets loaded: " + gameData.getTurrets().size());
@@ -144,10 +156,25 @@ public class Main extends Application {
     Group debugGroup = new Group();
 
     private void draw() {
-        GraphicsContext gc = overlayCanvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight()); // Clear previous drawings
+        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight()); // Clear previous drawings
 
-        // If the entity is gone from the world, we check if the entity is an instance of a tank, if so we cast it to the Tank type, and for each tank we draw a health bar
+        // Center the game window on the player
+        for (Entity entity : worldData.getEntities()) {
+            if (entity.getEntityType() == EntityType.PLAYER) {
+                Vector2 playerPos = new Vector2(entity.getPosition()).multiply(-1);
+                playerPos.add(gameData.getDisplayWidth() / 2, gameData.getDisplayHeight() / 2);
+
+                Vector2 windowPos = new Vector2(gameWindow.getTranslateX(), gameWindow.getTranslateY());
+
+                windowPos.lerp(playerPos, 5 * gameData.getDelta());
+                System.out.println(gameData.getDelta() * 5);
+
+                gameWindow.setTranslateX(windowPos.getX());
+                gameWindow.setTranslateY(windowPos.getY());
+            }
+        }
+
         if (worldData != null) {
             // If the entity is gone from the world, remove the sprite and entity from the sprites buffer
             for (Entity spriteEntity : sprites.keySet()) {

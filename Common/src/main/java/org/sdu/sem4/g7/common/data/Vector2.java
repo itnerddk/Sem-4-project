@@ -98,6 +98,16 @@ public class Vector2 {
     }
 
     /**
+     * Multiply the x and y values of this vector with a scalar
+     * @param scalar scalar to multiply with
+     */
+    public Vector2 multiply(double scalar) {
+        this.x *= scalar;
+        this.y *= scalar;
+        return this;
+    }
+
+    /**
      * Divide the x and y values of this vector with another vector
      * @param vector vector to divide with
      */
@@ -140,6 +150,12 @@ public class Vector2 {
 
     public void setY(double y) {
         this.y = y;
+    }
+
+    public Vector2 lerp(Vector2 vector, double alpha) {
+        this.x = (1 - alpha) * this.x + alpha * vector.getX();
+        this.y = (1 - alpha) * this.y + alpha * vector.getY();
+        return this;
     }
 
     public Vector2 lerp(double x, double y, double alpha) {
