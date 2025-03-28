@@ -6,6 +6,7 @@ import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 
 public class PlayerControlSystem implements IEntityProcessingService {
+
     @Override
     public void process(GameData gameData, WorldData world) {
         // Borrowing some process space... TODO: Fjern denne linje

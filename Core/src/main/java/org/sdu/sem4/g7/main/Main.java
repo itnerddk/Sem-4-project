@@ -168,7 +168,6 @@ public class Main extends Application {
                 Vector2 windowPos = new Vector2(gameWindow.getTranslateX(), gameWindow.getTranslateY());
 
                 windowPos.lerp(playerPos, 5 * gameData.getDelta());
-                System.out.println(gameData.getDelta() * 5);
 
                 gameWindow.setTranslateX(windowPos.getX());
                 gameWindow.setTranslateY(windowPos.getY());
