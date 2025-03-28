@@ -8,6 +8,7 @@ import static java.util.stream.Collectors.toList;
 
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
+import org.sdu.sem4.g7.common.data.GameData.Keys;
 import org.sdu.sem4.g7.common.data.GameKeys;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
@@ -25,6 +26,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -55,41 +57,8 @@ public class Main extends Application {
 
         scene.getStylesheets().add(this.getClass().getClassLoader().getResource("style.css").toExternalForm());
 
-        scene.setOnKeyPressed(event -> {
-            if (event.getCode().equals(KeyCode.LEFT)) {
-                gameData.getKeys().setKey(GameKeys.LEFT, true);
-            }
-            if (event.getCode().equals(KeyCode.RIGHT)) {
-                gameData.getKeys().setKey(GameKeys.RIGHT, true);
-            }
-            if (event.getCode().equals(KeyCode.UP)) {
-                gameData.getKeys().setKey(GameKeys.UP, true);
-            }
-            if (event.getCode().equals(KeyCode.DOWN)) {
-                gameData.getKeys().setKey(GameKeys.DOWN, true);
-            }
-            if (event.getCode().equals(KeyCode.SPACE)) {
-                gameData.getKeys().setKey(GameKeys.SPACE, true);
-            }
-        });
-        scene.setOnKeyReleased(event -> {
-            if (event.getCode().equals(KeyCode.LEFT)) {
-                gameData.getKeys().setKey(GameKeys.LEFT, false);
-            }
-            if (event.getCode().equals(KeyCode.RIGHT)) {
-                gameData.getKeys().setKey(GameKeys.RIGHT, false);
-            }
-            if (event.getCode().equals(KeyCode.UP)) {
-                gameData.getKeys().setKey(GameKeys.UP, false);
-            }
-            if (event.getCode().equals(KeyCode.DOWN)) {
-                gameData.getKeys().setKey(GameKeys.DOWN, false);
-            }
-            if (event.getCode().equals(KeyCode.SPACE)) {
-                gameData.getKeys().setKey(GameKeys.SPACE, false);
-            }
-
-        });
+        scene.setOnKeyPressed(event -> setupKeys(event, true));
+        scene.setOnKeyReleased(event -> setupKeys(event, false));
 
         // Lookup all Game Plugins using ServiceLoader
         for (IPreGamePluginService iPrePluginService : getPrePluginServices()) {
@@ -120,6 +89,32 @@ public class Main extends Application {
         window.show();
     }
 
+    void setupKeys(KeyEvent event, boolean pressed) {
+        switch(event.getCode()) {
+            case UP:
+            case W:
+                this.gameData.setPressed(Keys.UP, pressed);
+                break;
+            case RIGHT:
+            case D:
+                this.gameData.setPressed(Keys.RIGHT, pressed);
+                break;
+            case DOWN:
+            case S:
+                this.gameData.setPressed(Keys.DOWN, pressed);
+                break;
+            case LEFT:
+            case A:
+                this.gameData.setPressed(Keys.LEFT, pressed);
+                break;
+            case SPACE:
+                this.gameData.setPressed(Keys.SPACE, pressed);
+                break;
+                default:
+                break;
+        }
+    }
+
     private void render() {
         new AnimationTimer() {
             long lastTick;
@@ -128,7 +123,7 @@ public class Main extends Application {
                 // Framerate cap
                 if (now - lastTick >= 28_000_000) {
                     update();
-                    gameData.getKeys().update();
+                    gameData.updateKeys();
                     gameData.setDelta((now - lastTick) * 1.0e-9);
                     gameData.addDebug("Entity Count", String.valueOf(worldData.getEntities().size()));
                     gameData.addDebug("Delta", String.valueOf((Math.round(gameData.getDelta() * 10000) / 10.0))); // Turning nano seconds into ms

@@ -2,7 +2,6 @@ package org.sdu.sem4.g7.playersystem;
 
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
-import org.sdu.sem4.g7.common.data.GameKeys;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 
@@ -24,21 +23,21 @@ public class PlayerControlSystem implements IEntityProcessingService {
             }
             
             // Forward and backward
-            if (gameData.getKeys().isDown(GameKeys.UP)) {
+            if (gameData.isDown(GameData.Keys.UP)) {
                 player.accelerate();
-            } else if (gameData.getKeys().isDown(GameKeys.DOWN)) {
+            } else if (gameData.isDown(GameData.Keys.DOWN)) {
                 player.decelerate();
             }
 
             // Rotate
-            if (gameData.getKeys().isDown(GameKeys.LEFT)) {
+            if (gameData.isDown(GameData.Keys.LEFT)) {
                 player.turnLeft();
-            } else if (gameData.getKeys().isDown(GameKeys.RIGHT)) {
+            } else if (gameData.isDown(GameData.Keys.RIGHT)) {
                 player.turnRight();
             }
 
             // Shoot
-            if (gameData.getKeys().isPressed(GameKeys.SPACE)) {
+            if (gameData.isPressed(GameData.Keys.SPACE)) {
                 player.shoot(gameData, world);
             }
 

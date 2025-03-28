@@ -1,5 +1,6 @@
 package org.sdu.sem4.g7.common.data;
 
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,15 +14,10 @@ public class GameData {
 
     private int displayWidth  = 800;
     private int displayHeight = 800;
-    private final GameKeys keys = new GameKeys();
     private double delta;
 
     // TODO: This is maybe not the best way, but let's change it later
     private IMissionLoaderService missionLoaderService;
-
-    public GameKeys getKeys() {
-        return keys;
-    }
 
     public void setDisplayWidth(int width) {
         this.displayWidth = width;
@@ -52,6 +48,12 @@ public class GameData {
     public GameData() {
         // Initialize the start time when the game begins
         startTime = System.currentTimeMillis();
+
+        // Initialize the keys
+        for (Keys key : Keys.values()) {
+            keys.put(key, false);
+            keysLast.put(key, false);
+        }
     }
 
     // Get the elapsed time in seconds
@@ -61,6 +63,35 @@ public class GameData {
         return (currentTime - startTime) / 1000.0;
     }
 
+
+    // Key handling
+    // Key data
+    public enum Keys {
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN,
+        SPACE
+    }
+    
+    EnumMap<Keys, Boolean> keys = new EnumMap<>(Keys.class);
+    EnumMap<Keys, Boolean> keysLast = new EnumMap<>(Keys.class);
+    
+    public void setPressed(Keys key, boolean pressed) {
+        this.keys.put(key, pressed);
+    }
+    public boolean isDown(Keys key) {
+        return keys.get(key);
+    }
+    public boolean isPressed(Keys key) {
+        return keys.get(key) && !keysLast.get(key);
+    }
+    public boolean isReleased(Keys key) {
+        return !keys.get(key) && keysLast.get(key);
+    }
+    public void updateKeys() {
+        keysLast.putAll(keys);
+    }
 
     //#region Debug
     public Map<String, Node> debugEntities = new ConcurrentHashMap<>();
