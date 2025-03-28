@@ -56,4 +56,19 @@ public interface IMissionLoaderService {
      */
     public int getMapSizeY();
 
+    /**
+     * Returns if player has died, an thereby lost the game
+     * 
+     * @return true if lost
+     */
+    public boolean isGameLost();
+
+
+    /**
+     * Returns if player have won, player wins when there is no more enemies alive
+     * 
+     * @return true if won
+     */
+    public boolean isGameWon();
+
 }

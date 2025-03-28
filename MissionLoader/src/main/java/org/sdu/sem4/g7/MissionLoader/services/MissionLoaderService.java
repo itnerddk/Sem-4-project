@@ -20,6 +20,7 @@ import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.common.data.WorldData;
+import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.common.services.IEntityPluginService;
 import org.sdu.sem4.g7.common.services.IMissionLoaderService;
 
@@ -35,7 +36,12 @@ public class MissionLoaderService implements IMissionLoaderService {
 	/*
 	 * Gamedata
 	 */
-	private final GameData gameData;
+	private GameData gameData;
+
+	/*
+	 * WorldData
+	 */
+	private WorldData worldData;
 
 	/*
 	 * All missions metadata
@@ -54,8 +60,9 @@ public class MissionLoaderService implements IMissionLoaderService {
 	private int mapSizeY;
 
 
-	public MissionLoaderService(GameData gameData) throws IOException {
+	public MissionLoaderService(GameData gameData, WorldData worldData) throws IOException {
 		this.gameData = gameData;
+		this.worldData = worldData;
 		this.missions = new ArrayList<>();
 		this.tiles = new HashMap<>();
 
@@ -224,12 +231,9 @@ public class MissionLoaderService implements IMissionLoaderService {
 			return null;
 		}
 
+		this.worldData = world; // I think it's needed, because im pretty sure the constructor won't get a reference. Because it is null, until this method have been invoked.
 		return world;
 	}
-
-	private Collection<? extends IEntityPluginService> getPluginServices() {
-        return ServiceLoader.load(IEntityPluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
-    }
 
 	@Override
 	public int getMapSizeX() {
@@ -240,5 +244,29 @@ public class MissionLoaderService implements IMissionLoaderService {
 	public int getMapSizeY() {
 		return mapSizeY;
 	}
-    
+
+	@Override
+	public boolean isGameLost() {
+		for (Entity e : worldData.getEntities()) {
+			if (e.getEntityType().equals(EntityType.PLAYER)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public boolean isGameWon() {
+		for (Entity e : worldData.getEntities()) {
+			if (e.getEntityType().equals(EntityType.ENEMY)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private Collection<? extends IEntityPluginService> getPluginServices() {
+        return ServiceLoader.load(IEntityPluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+    }
+
 }

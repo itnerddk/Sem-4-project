@@ -1,11 +1,12 @@
 package org.sdu.sem4.g7.common.data;
 
-import java.io.File;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import org.sdu.sem4.g7.common.enums.EntityType;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -20,7 +21,12 @@ public class Entity implements Serializable {
      * Unique id for the entity
      */
     private final UUID ID = UUID.randomUUID();
-    
+
+    /**
+     * Entity type
+     */
+    private EntityType type = EntityType.OTHER; // Other is the default value
+
     /**
      * Position of the entity
      */
@@ -189,6 +195,14 @@ public class Entity implements Serializable {
 
     public void setWeight(int weight) {
         this.weight = weight;
+    }
+
+    public EntityType getEntityType() {
+        return type;
+    }
+
+    public void setEntityType(EntityType type) {
+        this.type = type;
     }
 
     public List<Entity> getChildren() {
