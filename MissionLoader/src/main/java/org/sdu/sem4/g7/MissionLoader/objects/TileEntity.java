@@ -21,13 +21,24 @@ public class TileEntity extends Entity implements IRigidbodyService {
         return this.hitbox;
     }
 
+    boolean superRendered = false;
+
     @Override
     public void render(GraphicsContext gc) {
-        super.render(gc);
+        if (!superRendered) {
+            super.render(gc);
+            superRendered = true;
+        }
+        // super.render(gc);
 
         // Draw hitbox
-        if (isCollision()) {
-            getHitbox().render(gc);
-        }
+        // if (isCollision()) {
+        //     getHitbox().render(gc);
+        // }
+    }
+
+    @Override
+    public boolean onCollision(IRigidbodyService other) {
+        return false;
     }
 }

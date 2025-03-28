@@ -1,6 +1,6 @@
 module Enemy {
-    requires TankParts;
-    requires Common;
+    requires transitive TankParts;
+    requires transitive Common;
     requires Player;
     exports org.sem4.g7.enemysystem;
     provides org.sdu.sem4.g7.common.services.IEntityProcessingService with org.sem4.g7.enemysystem.EnemyControlSystem;

@@ -9,9 +9,7 @@
           <version>1.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.sdu.sem4.g7</groupId>
     <artifactId>MissionLoader</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>MissionLoader</name>
 

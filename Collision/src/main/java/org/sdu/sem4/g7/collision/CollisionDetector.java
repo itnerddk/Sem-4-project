@@ -7,7 +7,6 @@ import java.util.List;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
-import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.services.IRigidbodyService;
 import org.sdu.sem4.g7.common.services.IPostEntityProcessingService;
@@ -29,7 +28,9 @@ public class CollisionDetector implements IPostEntityProcessingService {
 
             Vector2 collisionVector = col1.getHitbox().collides(col2.getHitbox());
             if (collisionVector != null) {
-                handleCollision(entity1, entity2, collisionVector);
+                if (!col1.onCollision(col2) && !col2.onCollision(col1)) {
+                    handleCollision(entity1, entity2, collisionVector);
+                }
             }
             // return entity1.getPosition().getX() < entity2.getPosition().getX() + 60 &&
             //     entity1.getPosition().getX() + 60 > entity2.getPosition().getX() &&

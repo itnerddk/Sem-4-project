@@ -1,13 +1,10 @@
 package org.sem4.g7.enemysystem;
 
-import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.tank.TurretLoader;
 import org.sdu.sem4.g7.tank.parts.Tank;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Enemy extends Tank {
 

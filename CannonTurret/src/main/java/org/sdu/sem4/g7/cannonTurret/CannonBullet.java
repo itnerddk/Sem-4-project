@@ -8,6 +8,8 @@ public class CannonBullet extends Bullet {
 
     public CannonBullet() {
         super(1); // TODO: Find a better way to set bullet damage #HACKFIX
+        setCollision(true);
+        setHealth(1);
         try {
             // System.out.println(this.getClass().getClassLoader().getResource("CannonBullet.png"));
             this.setSprite(this.getClass().getClassLoader().getResource("CannonBullet.png").toURI(), 2);

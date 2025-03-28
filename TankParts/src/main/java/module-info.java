@@ -1,5 +1,5 @@
 module TankParts {
-    requires Common;
+    requires transitive Common;
     requires transitive javafx.graphics;
     exports org.sdu.sem4.g7.tank.parts;
     exports org.sdu.sem4.g7.tank;

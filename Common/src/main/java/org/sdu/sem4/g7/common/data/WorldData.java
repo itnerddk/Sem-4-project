@@ -50,6 +50,7 @@ public abstract class WorldData {
         return entityMap.values();
     }
 
+    @SuppressWarnings("unchecked")
     public <E extends Entity> List<E> getEntities(Class<E> entityType) {
         List<E> r = new ArrayList<>();
         for (Entity e : getEntities()) {

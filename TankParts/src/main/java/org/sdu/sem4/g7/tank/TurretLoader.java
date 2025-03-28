@@ -8,8 +8,6 @@ import java.util.ServiceLoader.Provider;
 
 import static java.util.stream.Collectors.toList;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IGamePluginService;

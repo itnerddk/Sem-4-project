@@ -10,7 +10,6 @@ import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IRigidbodyService;
 
-import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -160,6 +159,11 @@ public abstract class Tank extends Entity implements IRigidbodyService {
         return new Hitbox(new Vector2(getPosition()), size, getRotation());
     }
 
+    @Override
+    public boolean onCollision(IRigidbodyService other) {
+        return false;
+    }
+
 
     @Override
     public List<Entity> getChildren() {
@@ -206,14 +210,7 @@ public abstract class Tank extends Entity implements IRigidbodyService {
         super.render(gc);
         drawHealthBar(gc);
 
-        // Draw bounds in parent of sprite
-        gc.save();
-        gc.setStroke(Color.RED);
-        Bounds bounds = getSprite().getBoundsInParent();
-        // gc.strokeRect(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight());
-        gc.restore();
-
-        this.getHitbox().render(gc);
+        // this.getHitbox().render(gc);
     }
 
 }
