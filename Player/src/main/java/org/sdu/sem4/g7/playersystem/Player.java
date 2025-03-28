@@ -17,7 +17,7 @@ public class Player extends Tank {
             e.printStackTrace();
         }
 
-        // Set type
+        // Set entity type
         setEntityType(EntityType.PLAYER);
 
         // Set health and max health for player

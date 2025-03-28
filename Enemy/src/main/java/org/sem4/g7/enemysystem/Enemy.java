@@ -24,7 +24,7 @@ public class Enemy extends Tank {
             e.printStackTrace();
         }
 
-        // set type
+        // Set entity type
         setEntityType(EntityType.ENEMY);
 
         // Test code to load turret

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.sdu.sem4.g7.common.enums.EntityType;
+
 public abstract class WorldData {
 
     private final Map<String, Entity> entityMap;
@@ -80,4 +82,32 @@ public abstract class WorldData {
         }
         entityTypes.put(key, entityList);
     }
+
+    /**
+     * Returns if the player has lost the game
+     * 
+     * @return true if player has lost
+     */
+	public boolean isGameLost() {
+		for (Entity e : this.getEntities()) {
+			if (e.getEntityType().equals(EntityType.PLAYER)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+    /**
+     * returns of the player has won the game
+     * 
+     * @return true if player has won
+     */
+	public boolean isGameWon() {
+		for (Entity e : this.getEntities()) {
+			if (e.getEntityType().equals(EntityType.ENEMY)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

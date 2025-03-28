@@ -245,26 +245,6 @@ public class MissionLoaderService implements IMissionLoaderService {
 		return mapSizeY;
 	}
 
-	@Override
-	public boolean isGameLost() {
-		for (Entity e : worldData.getEntities()) {
-			if (e.getEntityType().equals(EntityType.PLAYER)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	@Override
-	public boolean isGameWon() {
-		for (Entity e : worldData.getEntities()) {
-			if (e.getEntityType().equals(EntityType.ENEMY)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	private Collection<? extends IEntityPluginService> getPluginServices() {
         return ServiceLoader.load(IEntityPluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
