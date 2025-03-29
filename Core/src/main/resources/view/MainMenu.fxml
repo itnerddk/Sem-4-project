@@ -1,33 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.image.Image?>
 
-<AnchorPane fx:controller="org.sdu.sem4.g7.UI.controllers.MainMenuController"
-            xmlns:fx="http://javafx.com/fxml"
-            prefWidth="800" prefHeight="800"
-            style="-fx-background-color: transparent;">
+<AnchorPane prefHeight="800" prefWidth="800" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.sdu.sem4.g7.UI.controllers.MainMenuController">
 
     <!-- Background Image -->
-    <ImageView fx:id="backgroundImage" fitWidth="800" fitHeight="800" preserveRatio="false" />
+    <ImageView fx:id="backgroundImage" fitHeight="800" fitWidth="800" layoutX="14.0" layoutY="10.0" preserveRatio="false" />
 
 
     <!-- Play Button -->
-    <Button layoutX="320" layoutY="400" prefWidth="160" prefHeight="30"
-            text="Play" onAction="#handleStartGame" />
+    <Button layoutX="247.0" layoutY="393.0" onAction="#handleStartGame" prefHeight="60.0" prefWidth="320.0" styleClass="button-custom" stylesheets="@MainMenuStyle.css" text="Play" />
 
     <!-- Settings Button -->
-    <Button layoutX="320" layoutY="440" prefWidth="160" prefHeight="30"
-            text="Settings" onAction="#handleSettings" />
+    <Button layoutX="247.0" layoutY="462.0" onAction="#handleSettings" prefHeight="60.0" prefWidth="320.0" styleClass="button-custom" stylesheets="@MainMenuStyle.css" text="Settings" />
 
     <!-- Credits Button -->
-    <Button layoutX="320" layoutY="480" prefWidth="160" prefHeight="30"
-            text="Credits" onAction="#handleCredits" />
+    <Button layoutX="247.0" layoutY="532.0" onAction="#handleCredits" prefHeight="60.0" prefWidth="155.0" styleClass="button-custom" stylesheets="@MainMenuStyle.css" text="Credits" />
 
     <!-- Quit Button -->
-    <Button layoutX="320" layoutY="520" prefWidth="160" prefHeight="30"
-            text="Quit Game" onAction="#handleQuitGame" />
+    <Button layoutX="414.0" layoutY="532.0" onAction="#handleQuitGame" prefHeight="60.0" prefWidth="155.0" styleClass="button-custom" stylesheets="@MainMenuStyle.css" text="Exit" />
 
 </AnchorPane>
