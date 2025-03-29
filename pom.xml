@@ -116,7 +116,7 @@
                         strange... -->
                         <!-- <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=127.0.0.1:8000</argument> -->
                         <argument>--add-modules</argument>
-                        <argument>javafx.graphics,com.fasterxml.jackson.databind</argument>
+                        <argument>javafx.controls,javafx.graphics,javafx.fxml,com.fasterxml.jackson.databind</argument>
                         <argument>--module=Core/org.sdu.sem4.g7.main.Main</argument>
                     </arguments>
                 </configuration>
