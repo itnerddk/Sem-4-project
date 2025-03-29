@@ -26,10 +26,10 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private void handleStartGame(ActionEvent event) {
-        GameInstance game = new GameInstance();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        GameInstance game = new GameInstance(stage);
         Scene gameScene = game.getScene();
 
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(gameScene);
         stage.setTitle("Tank Wars");
         stage.show();

@@ -3,8 +3,7 @@ package org.sem4.g7.enemysystem;
 import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.tank.TurretLoader;
 import org.sdu.sem4.g7.tank.parts.Tank;
-
-import java.net.URISyntaxException;
+import org.sdu.sem4.g7.tank.parts.Turret;
 
 public class Enemy extends Tank {
 
@@ -12,20 +11,22 @@ public class Enemy extends Tank {
 
     public Enemy() {
         super();
-        try {
-            System.out.println(this.getClass().getClassLoader().getResource("EnemyTank.png"));
-            this.setSprite(this.getClass().getClassLoader().getResource("EnemyTank.png").toURI(), 5);
-            this.setzIndex(-3);
-        } catch (URISyntaxException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        this.getSprite().setEffect(new javafx.scene.effect.ColorAdjust(0, 0, 0, 0));
+        this.getSprite().setCacheHint(javafx.scene.CacheHint.SPEED);
+        this.setzIndex(-3);
 
         // Set entity type
         setEntityType(EntityType.ENEMY);
 
         // Test code to load turret
         this.setTurret(TurretLoader.getTurrets().get(0).get());
+    }
+
+    @Override
+    public void setTurret(Turret turret) {
+        super.setTurret(turret);
+        turret.getSprite().setEffect(new javafx.scene.effect.ColorAdjust(0.0, 0, 0, 0));
+        turret.getSprite().setCacheHint(javafx.scene.CacheHint.SPEED);
     }
 
     // Getters and setters for last shot time

@@ -1,21 +1,16 @@
 package org.sdu.sem4.g7.playersystem;
-import java.net.URISyntaxException;
 
 import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.tank.TurretLoader;
 import org.sdu.sem4.g7.tank.parts.Tank;
+import org.sdu.sem4.g7.tank.parts.Turret;
 
 public class Player extends Tank {
     public Player() {
         super();
-        try {
-            System.out.println(this.getClass().getClassLoader().getResource("Player.png"));
-            this.setSprite(this.getClass().getClassLoader().getResource("Player.png").toURI(), 5);
-            this.setzIndex(-5);
-        } catch (URISyntaxException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        this.getSprite().setEffect(new javafx.scene.effect.ColorAdjust(0.45, 0, 0, 0));
+        this.getSprite().setCacheHint(javafx.scene.CacheHint.SPEED);
+        this.setzIndex(-5);
 
         // Set entity type
         setEntityType(EntityType.PLAYER);
@@ -26,6 +21,13 @@ public class Player extends Tank {
 
         // Test code to load turret
         this.setTurret(TurretLoader.getTurrets().get(0).get());
+    }
+
+    @Override
+    public void setTurret(Turret turret) {
+        super.setTurret(turret);
+        turret.getSprite().setEffect(new javafx.scene.effect.ColorAdjust(0.45, 0, 0, 0));
+        turret.getSprite().setCacheHint(javafx.scene.CacheHint.SPEED);
     }
 
     // Take damage for a player

@@ -28,6 +28,12 @@ public abstract class Tank extends Entity implements IRigidbodyService {
     public Tank() {
         super();
         this.setCollision(true);
+        try {
+            System.out.println(this.getClass().getClassLoader().getResource("Tank.png"));
+            this.setSprite(this.getClass().getClassLoader().getResource("Tank.png").toURI(), 5);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
 
 

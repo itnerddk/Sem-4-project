@@ -10,11 +10,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.GameData.Keys;
+import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
+import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
 import org.sdu.sem4.g7.common.services.IPostEntityProcessingService;
@@ -33,15 +36,15 @@ public class GameInstance {
     private WorldData worldData;
     private final Map<Entity, Node> sprites = new ConcurrentHashMap<>();
     private final Pane gameWindow = new Pane();
-    private final Canvas overlayCanvas = new Canvas(gameData.getDisplayWidth(), gameData.getDisplayHeight());
+    private final Canvas gameCanvas = new Canvas(gameData.getDisplayWidth(), gameData.getDisplayHeight());
     public static Text debugText = new Text(10, 20, "");
     private final Group debugGroup = new Group();
 
-    public GameInstance() {
+    public GameInstance(Stage window) {
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         gameWindow.getChildren().add(debugText);
-        overlayCanvas.setViewOrder(-9999);
-        gameWindow.getChildren().add(overlayCanvas);
+        gameCanvas.setViewOrder(-9999);
+        gameWindow.getChildren().add(gameCanvas);
 
         for (IPreGamePluginService plugin : getPrePluginServices()) {
             plugin.start(gameData, worldData);
@@ -51,6 +54,16 @@ public class GameInstance {
         }
 
         this.worldData = gameData.getMissionLoaderService().loadMission(1);
+
+        gameCanvas.setWidth(gameData.getMissionLoaderService().getMapSizeX());
+        gameCanvas.setHeight(gameData.getMissionLoaderService().getMapSizeY());
+
+        window.widthProperty().addListener((obs, oldVal, newVal) -> {
+            gameData.setDisplayWidth(newVal.intValue());
+        });
+        window.heightProperty().addListener((obs, oldVal, newVal) -> {
+            gameData.setDisplayHeight(newVal.intValue());
+        });
 
         for (Entity entity : worldData.getEntities()) {
             sprites.put(entity, entity.getSprite());
@@ -63,6 +76,7 @@ public class GameInstance {
     public Scene getScene() {
         Scene scene = new Scene(gameWindow);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        scene.setFill(javafx.scene.paint.Color.BLACK);
         scene.setOnKeyPressed(event -> setupKeys(event, true));
         scene.setOnKeyReleased(event -> setupKeys(event, false));
         return scene;
@@ -122,8 +136,23 @@ public class GameInstance {
     }
 
     private void draw() {
-        GraphicsContext gc = overlayCanvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
+        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
+
+        // Center the camera on the player
+        for (Entity entity : worldData.getEntities()) {
+            if (entity.getEntityType() == EntityType.PLAYER) {
+                Vector2 playerPos = new Vector2(entity.getPosition()).multiply(-1);
+                playerPos.add(gameData.getDisplayWidth() / 2, gameData.getDisplayHeight() / 2);
+
+                Vector2 windowPos = new Vector2(gameWindow.getTranslateX(), gameWindow.getTranslateY());
+
+                windowPos.lerp(playerPos, Math.min(5 * gameData.getDelta(), 1));
+
+                gameWindow.setTranslateX(windowPos.getX());
+                gameWindow.setTranslateY(windowPos.getY());
+            }
+        }
 
         if (worldData != null) {
             for (Entity spriteEntity : sprites.keySet()) {
