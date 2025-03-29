@@ -45,6 +45,7 @@ public class GameInstance {
         gameWindow.getChildren().add(debugText);
         gameCanvas.setViewOrder(-9999);
         gameWindow.getChildren().add(gameCanvas);
+        gameWindow.setStyle("-fx-background-color: black;");
 
         for (IPreGamePluginService plugin : getPrePluginServices()) {
             plugin.start(gameData, worldData);
