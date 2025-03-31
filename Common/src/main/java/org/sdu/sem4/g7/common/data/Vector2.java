@@ -117,6 +117,16 @@ public class Vector2 {
         return this;
     }
 
+    /**
+     * Divide the x and y values of this vector with a scalar
+     * @param scalar scalar to divide with
+     */
+    public Vector2 divide(double scalar) {
+        this.x /= scalar;
+        this.y /= scalar;
+        return this;
+    }
+
     public Vector2 normalize() {
         double length = Math.sqrt(x * x + y * y);
         if (length != 0) {
@@ -174,6 +184,12 @@ public class Vector2 {
         this.y = y;
         return this;
     }
+
+    public static Vector2 round(Vector2 vector) {
+        return new Vector2(Math.round(vector.getX()), Math.round(vector.getY()));
+    }
+
+
 
     @Override
     public String toString() {

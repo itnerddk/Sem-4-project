@@ -6,10 +6,10 @@ import java.util.List;
 
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
-import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.data.Vector2;
-import org.sdu.sem4.g7.common.services.IRigidbodyService;
+import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IPostEntityProcessingService;
+import org.sdu.sem4.g7.common.services.IRigidbodyService;
 
 public class CollisionDetector implements IPostEntityProcessingService {
 
@@ -43,18 +43,23 @@ public class CollisionDetector implements IPostEntityProcessingService {
         System.out.println(collisionVector);
         // Check which is smaller
         if (true) {
+            // If the two values of the vector are equal or close (+-5), move both
             if (collisionVector.getX() < collisionVector.getY()) {
                 // X is smaller
                 // Set x multiplier to -1 if entity1 is to the left of entity2
                 int xMult = entity1.getPosition().getX() < entity2.getPosition().getX() ? -1 : 1;
                 // Move entity1 out of entity2
                 entity1.getPosition().setX(entity1.getPosition().getX() + collisionVector.getX() * xMult);
+                // Kill some velocity in the name of friction!
+                entity1.getVelocity().setX(entity1.getVelocity().getX() * 0.5f);
             } else {
                 // Y is smaller
                 // Set y multiplier to -1 if entity1 is above entity2
                 int yMult = entity1.getPosition().getY() < entity2.getPosition().getY() ? -1 : 1;
                 // Move entity1 out of entity2
                 entity1.getPosition().setY(entity1.getPosition().getY() + collisionVector.getY() * yMult);
+                // Kill some velocity in the name of friction!
+                entity1.getVelocity().setY(entity1.getVelocity().getY() * 0.5f);
             }
             entity1.subProcess();
         }
