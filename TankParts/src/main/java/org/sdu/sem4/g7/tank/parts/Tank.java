@@ -8,6 +8,7 @@ import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Hitbox;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
+import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.IRigidbodyService;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -97,7 +98,7 @@ public abstract class Tank extends Entity implements IRigidbodyService {
     public void shoot(GameData gameData, WorldData mission) {
         if (turret != null) {
             turret.shoot(gameData, mission);
-            gameData.playAudio("Shoot", 1.0f);
+            gameData.playAudio(SoundType.SHOOT, 1.0f);
         }
     }
 
@@ -167,7 +168,7 @@ public abstract class Tank extends Entity implements IRigidbodyService {
     }
 
     @Override
-    public boolean onCollision(IRigidbodyService other) {
+    public boolean onCollision(IRigidbodyService other, GameData gameData) {
         return false;
     }
 
