@@ -20,13 +20,14 @@
         <module>Collision</module>
         <module>MissionLoader</module>
         <module>Currency</module>
+        <module>Audio</module>
         <!-- <module>Collision</module> -->
     </modules>
     <properties>
         <java>java</java>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>        
-        <maven.compiler.source>1.9</maven.compiler.source>
-        <maven.compiler.target>1.9</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
     </properties>
     
     <dependencyManagement>
@@ -44,6 +45,11 @@
             <dependency>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-base</artifactId>
+                <version>21.0.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-media</artifactId>
                 <version>21.0.2</version>
             </dependency>
             <dependency>
@@ -116,7 +122,7 @@
                         strange... -->
                         <!-- <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=127.0.0.1:8000</argument> -->
                         <argument>--add-modules</argument>
-                        <argument>javafx.controls,javafx.graphics,javafx.fxml,com.fasterxml.jackson.databind</argument>
+                        <argument>javafx.controls,javafx.graphics,javafx.fxml,javafx.media,com.fasterxml.jackson.databind</argument>
                         <argument>--module=Core/org.sdu.sem4.g7.main.Main</argument>
                     </arguments>
                 </configuration>

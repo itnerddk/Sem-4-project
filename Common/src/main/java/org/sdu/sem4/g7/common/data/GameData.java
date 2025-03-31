@@ -4,6 +4,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.sdu.sem4.g7.common.services.IAudioProcessingService;
 import org.sdu.sem4.g7.common.services.IMissionLoaderService;
 
 import javafx.scene.Node;
@@ -18,6 +19,7 @@ public class GameData {
 
     // TODO: This is maybe not the best way, but let's change it later
     private IMissionLoaderService missionLoaderService;
+    private IAudioProcessingService audioProcessingService;
 
     public void setDisplayWidth(int width) {
         this.displayWidth = width;
@@ -150,5 +152,26 @@ public class GameData {
 
     public void setMissionLoaderService(IMissionLoaderService missionLoaderService) {
         this.missionLoaderService = missionLoaderService;
+    }
+
+    public IAudioProcessingService getAudioProcessingService() {
+        return audioProcessingService;
+    }
+    
+    public void setAudioProcessingService(IAudioProcessingService audioProcessingService) {
+        this.audioProcessingService = audioProcessingService;
+    }
+
+    /**
+     * Plays an audio file with the given name and volume.
+     * @param soundName the name of the sound file to play (without extension)
+     * @param volume the volume level (0.0 to 1.0)
+     */
+    public void playAudio(String soundName, float volume) {
+        if (audioProcessingService != null) {
+            audioProcessingService.playSound(soundName, volume);
+        } else {
+            System.err.println("Audio processing service is not set.");
+        }
     }
 }
