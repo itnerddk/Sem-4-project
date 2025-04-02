@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.media.MediaView?>
+
+
+<StackPane prefHeight="800" prefWidth="800" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.sdu.sem4.g7.UI.controllers.IntroMediaController">
+    <MediaView fx:id="mediaView" fitWidth="800" fitHeight="800" preserveRatio="false" />
+</StackPane>

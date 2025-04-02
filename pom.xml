@@ -47,6 +47,11 @@
                 <version>21.0.2</version>
             </dependency>
             <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-media</artifactId>
+                <version>21.0.2</version>
+            </dependency>
+            <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
                 <version>5.12.0</version>
@@ -100,14 +105,16 @@
                     <workingDirectory>.</workingDirectory>
                     <longModulepath>false</longModulepath>
                     <arguments>
-                        <!--                        
+                        <!--
                                                 On Mac Devices this line should not be commented out
                                                 <argument>-XstartOnFirstThread</argument>
                         -->
                         <argument>-Dorg.lwjgl.util.Debug=true</argument>
                         <argument>-Djava.library.path=libs</argument>
-                        <argument>--module-path=mods-mvn</argument>
-                        <argument>--class-path=libs/*</argument>
+                        <argument>--module-path</argument>
+                        <argument>mods-mvn</argument>
+
+
                         <!-- because spark.core is an automatic module and actually required,
                         monitor.observer.zero would be resolved as well and does not need
                         to be added explicitly;
@@ -116,8 +123,10 @@
                         strange... -->
                         <!-- <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=127.0.0.1:8000</argument> -->
                         <argument>--add-modules</argument>
-                        <argument>javafx.controls,javafx.graphics,javafx.fxml,com.fasterxml.jackson.databind</argument>
-                        <argument>--module=Core/org.sdu.sem4.g7.main.Main</argument>
+                        <argument>javafx.media,javafx.controls,javafx.graphics,javafx.fxml,com.fasterxml.jackson.databind</argument>
+                        <argument>--module</argument>
+                        <argument>Core/org.sdu.sem4.g7.main.Main</argument>
+
                     </arguments>
                 </configuration>
             </plugin>

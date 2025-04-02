@@ -76,7 +76,7 @@ public class GameInstance {
 
     public Scene getScene() {
         Scene scene = new Scene(gameWindow);
-        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
         scene.setFill(javafx.scene.paint.Color.BLACK);
         scene.setOnKeyPressed(event -> setupKeys(event, true));
         scene.setOnKeyReleased(event -> setupKeys(event, false));

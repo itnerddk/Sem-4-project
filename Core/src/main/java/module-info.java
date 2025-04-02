@@ -3,6 +3,8 @@ module Core {
     requires javafx.graphics;
     requires TankParts;
     requires javafx.fxml;
+    requires javafx.media;
+    requires java.desktop;
 
     opens org.sdu.sem4.g7.main to javafx.graphics;
     opens org.sdu.sem4.g7.UI.controllers to javafx.fxml;

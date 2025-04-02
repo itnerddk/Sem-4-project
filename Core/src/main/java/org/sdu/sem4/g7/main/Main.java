@@ -10,11 +10,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainMenu.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/IntroMedia.fxml"));
         Parent root = loader.load();
-        Scene mainMenuScene = new Scene(root);
-        primaryStage.setScene(mainMenuScene);
-        primaryStage.setTitle("Tank Wars - Main Menu");
+        Scene IntroMediaScene = new Scene(root);
+        primaryStage.setScene(IntroMediaScene);
+        primaryStage.setTitle("Tank Wars");
         primaryStage.show();
     }
 
