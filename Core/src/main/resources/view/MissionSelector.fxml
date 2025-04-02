@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.sdu.sem4.g7.UI.controllers.MissionSelectorController">
+   <children>
+      <ListView fx:id="missionListView" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" />
+      <Button mnemonicParsing="false" onAction="#handleStartMission" text="Button" />
+   </children>
+</StackPane>

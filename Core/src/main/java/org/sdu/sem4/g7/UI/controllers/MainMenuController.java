@@ -12,6 +12,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import org.sdu.sem4.g7.MissionLoader.services.MissionLoaderService;
+import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.main.GameInstance;
 
 import java.net.URL;
@@ -70,11 +72,16 @@ public class MainMenuController implements Initializable {
 
     private void showMissionSelector(){
         try {
-            System.out.println("Loading Mission Selector");
+            GameData gameData = new GameData();
+            // Set up the game data so it has a mission loader
+            MissionLoaderService missionLoader = new MissionLoaderService(gameData, null);
+            gameData.setMissionLoaderService(missionLoader);
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MissionSelector.fxml"));
             Pane missionSelectorPane = loader.load();
-
+            
             MissionSelectorController controller = loader.getController();
+            controller.init(gameData);
             controller.setStage(stage);
 
             Scene missionSelectorScene = new Scene(missionSelectorPane);
