@@ -17,6 +17,8 @@ import org.sdu.sem4.g7.common.data.GameData.Keys;
 import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.common.services.*;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -33,8 +35,7 @@ public class GameInstance {
     private static final Text debugText = new Text(10, 20, "");
 
     private final Collection<IGamePluginService> pluginServices;
-    private final Collection<IEntityProcessingService> entityProcessors;
-    private final Collection<IPostEntityProcessingService> postProcessors;
+   
 
     public GameInstance(GameData gameData, WorldData worldData) {
         this.gameData = gameData;
@@ -42,9 +43,7 @@ public class GameInstance {
 
         this.gameCanvas = new Canvas(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         this.pluginServices = loadServices(IGamePluginService.class);
-        this.entityProcessors = loadServices(IEntityProcessingService.class);
-        this.postProcessors = loadServices(IPostEntityProcessingService.class);
-
+      
         setupCanvas();
         startPlugins();
         loadEntities();
@@ -82,19 +81,22 @@ public class GameInstance {
             public void handle(long now) {
                 if (now - lastTick >= 28_000_000) {
                     update();
-                    draw();
+                    gameData.updateKeys();
+                    gameData.setDelta((now - lastTick) * 1.0e-9);
+                    gameData.addDebug("Entity Count", String.valueOf(worldData.getEntities().size()));
+                    gameData.addDebug("Delta", String.valueOf((Math.round(gameData.getDelta() * 10000) / 10.0)));
                     lastTick = now;
+                    draw();
                 }
             }
         }.start();
     }
 
     private void update() {
-        gameData.updateKeys();
-        for (IEntityProcessingService processor : entityProcessors) {
+        for (IEntityProcessingService processor : getEntityProcessingServices()) {
             processor.process(gameData, worldData);
         }
-        for (IPostEntityProcessingService processor : postProcessors) {
+        for (IPostEntityProcessingService processor : getPostEntityProcessingServices()) {
             processor.process(gameData, worldData);
         }
     }
@@ -201,10 +203,17 @@ public class GameInstance {
                 break;
             case SPACE:
                 this.gameData.setPressed(Keys.SPACE, pressed);
-                System.out.println("Shooting");
                 break;
             default:
                 break;
         }
+    }
+
+    private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
+        return ServiceLoader.load(IEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+    }
+
+    private Collection<? extends IPostEntityProcessingService> getPostEntityProcessingServices() {
+        return ServiceLoader.load(IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 }
