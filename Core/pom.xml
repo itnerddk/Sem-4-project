@@ -69,6 +69,7 @@
                     <include>**/*.fxml</include>
                     <include>**/*.css</include>
                     <include>**/*.mp4</include>
+                    <include>**/*.gif</include>
                 </includes>
             </resource>
         </resources>

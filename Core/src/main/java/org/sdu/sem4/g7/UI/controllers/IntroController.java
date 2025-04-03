@@ -1,64 +1,80 @@
 package org.sdu.sem4.g7.UI.controllers;
 
-import javafx.application.Platform;
+import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.sdu.sem4.g7.main.GameInstance;
 
-import javafx.geometry.Rectangle2D;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.image.WritableImage;
-import javafx.application.Platform;
+
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
+
 
 
 public class IntroController implements Initializable {
 
     @FXML
-    private ImageView backgroundImage;
+    private ImageView gifView;
 
     @FXML
-    private ImageView blurredSnapshot;
+    private ImageView backgroundImage;
 
     @FXML
     private AnchorPane rootPane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Background image
         Image img = new Image(getClass().getResource("/images/intro_image.png").toExternalForm());
         backgroundImage.setImage(img);
 
-        // Delay snapshot to ensure layout is complete
-        Platform.runLater(() -> {
-            SnapshotParameters params = new SnapshotParameters();
-            params.setFill(Color.TRANSPARENT);
-            params.setViewport(new Rectangle2D(210, 360, 380, 250));
-            WritableImage snapshot = backgroundImage.snapshot(params, null);
-            blurredSnapshot.setImage(snapshot);
-
+        // Logo Intro GIF
+        Image logoGif = new Image(getClass().getResource("/images/test.gif").toExternalForm());
+        Image LogoPng = new Image(getClass().getResource("/images/test.png").toExternalForm());
+        gifView.setImage(logoGif);
+        // Replace after 3 seconds
+        PauseTransition delay = new PauseTransition(Duration.seconds(1.5));
+        delay.setOnFinished(event -> {
+            gifView.setImage(LogoPng);
         });
-    }
+        delay.play();
+
+        }
 
     @FXML
     private void handleStartGame(ActionEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        GameInstance game = new GameInstance(stage);
-        Scene gameScene = game.getScene();
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), rootPane);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+        fadeOut.setOnFinished(e -> {
+            try {
+                // Load MainMenu.fxml
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainMenu.fxml"));
+                Parent mainMenuRoot = loader.load();
 
-        stage.setScene(gameScene);
-        stage.setTitle("Tank Wars");
-        stage.show();
+                // Skift scene
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Scene scene = new Scene(mainMenuRoot);
+                stage.setScene(scene);
+                stage.setTitle("Tank Wars - Main Menu");
+                stage.show();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        fadeOut.play();
     }
 
     public void handleSettings(ActionEvent actionEvent) {
