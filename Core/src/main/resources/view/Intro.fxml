@@ -21,4 +21,20 @@
     <!-- Quit Button -->
     <Button layoutX="414.0" layoutY="532.0" onAction="#handleQuitGame" prefHeight="60.0" prefWidth="155.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="Exit" />
 
+    <!-- SETTINGS PANE -->
+    <AnchorPane fx:id="settingsPane"
+                prefWidth="350" prefHeight="500"
+                layoutX="225" layoutY="150"
+                style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #cccccc; -fx-border-width: 2;"
+                visible="false">
+
+        <Button text="X"
+                layoutX="315" layoutY="10"
+                prefWidth="25" prefHeight="25"
+                style="-fx-background-color: red; -fx-text-fill: white; -fx-background-radius: 100%; -fx-font-weight: bold; -fx-cursor: hand;"
+                onAction="#handleCloseSettings" />
+
+    </AnchorPane>
+
+
 </AnchorPane>
