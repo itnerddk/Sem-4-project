@@ -39,13 +39,19 @@ public class MainMenuController implements Initializable {
         Image img = new Image(getClass().getResource("/images/intro_image.png").toExternalForm());
         backgroundImage.setImage(img);
 
+        // Show Coins from Currency using ServiceLocator -> if module is not present remove currency display
         ServiceLocator.getCurrencyService().ifPresentOrElse(service -> {
             coinDisplay.setText("Coins: " + service.getCurrency());
         }, () -> {
-            coinDisplay.setText("Coins: N/A");
+            coinDisplay.setVisible(false);
         });
 
-        levelDisplay.setText("Level: [kommer senere]");
+        // Show Level from Level using Service Locator -> if module is not present remove level display
+        ServiceLocator.getLevelService().ifPresentOrElse(service -> {
+            levelDisplay.setText("Level: " + service.getLevel());
+        }, () -> {
+            levelDisplay.setVisible(false);
+        });
     }
 
     @FXML
