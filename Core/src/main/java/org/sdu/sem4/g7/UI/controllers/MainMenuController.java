@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.sdu.sem4.g7.common.services.ServiceLocator;
 import org.sdu.sem4.g7.main.GameInstance;
 import javafx.scene.control.Label;
 
@@ -38,8 +39,13 @@ public class MainMenuController implements Initializable {
         Image img = new Image(getClass().getResource("/images/intro_image.png").toExternalForm());
         backgroundImage.setImage(img);
 
-        coinDisplay.setText("Coins: " + " *Method to see level* " );
-        levelDisplay.setText("Level: " + " *Method to see level* ");
+        ServiceLocator.getCurrencyService().ifPresentOrElse(service -> {
+            coinDisplay.setText("Coins: " + service.getCurrency());
+        }, () -> {
+            coinDisplay.setText("Coins: N/A");
+        });
+
+        levelDisplay.setText("Level: [kommer senere]");
     }
 
     @FXML

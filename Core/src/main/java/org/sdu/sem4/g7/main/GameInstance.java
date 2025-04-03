@@ -22,6 +22,7 @@ import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
 import org.sdu.sem4.g7.common.services.IPostEntityProcessingService;
 import org.sdu.sem4.g7.common.services.IPreGamePluginService;
+import org.sdu.sem4.g7.common.services.ICurrencyService;
 
 import java.util.Collection;
 import java.util.Map;
@@ -33,6 +34,7 @@ import static java.util.stream.Collectors.toList;
 public class GameInstance {
 
     private final GameData gameData = new GameData();
+    private ICurrencyService currencyService;
     private WorldData worldData;
     private final Map<Entity, Node> sprites = new ConcurrentHashMap<>();
     private final Pane gameWindow = new Pane();
@@ -46,6 +48,7 @@ public class GameInstance {
         gameCanvas.setViewOrder(-9999);
         gameWindow.getChildren().add(gameCanvas);
         gameWindow.setStyle("-fx-background-color: black;");
+
 
         for (IPreGamePluginService plugin : getPrePluginServices()) {
             plugin.start(gameData, worldData);
