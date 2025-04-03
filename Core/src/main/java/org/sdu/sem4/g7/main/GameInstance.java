@@ -77,6 +77,7 @@ public class GameInstance {
     private void startRenderLoop() {
         new AnimationTimer() {
             long lastTick = 0;
+
             @Override
             public void handle(long now) {
                 if (now - lastTick >= 28_000_000) {
@@ -104,14 +105,14 @@ public class GameInstance {
 
         // Follow player
         worldData.getEntities().stream()
-            .filter(e -> e.getEntityType() == EntityType.PLAYER)
-            .findFirst()
-            .ifPresent(player -> {
-                Vector2 pos = new Vector2(player.getPosition()).multiply(-1)
-                    .add(gameData.getDisplayWidth() / 2, gameData.getDisplayHeight() / 2);
-                gameWindow.setTranslateX(pos.getX());
-                gameWindow.setTranslateY(pos.getY());
-            });
+                .filter(e -> e.getEntityType() == EntityType.PLAYER)
+                .findFirst()
+                .ifPresent(player -> {
+                    Vector2 pos = new Vector2(player.getPosition()).multiply(-1)
+                            .add(gameData.getDisplayWidth() / 2, gameData.getDisplayHeight() / 2);
+                    gameWindow.setTranslateX(pos.getX());
+                    gameWindow.setTranslateY(pos.getY());
+                });
 
         // Sync entities and render
         for (Entity entity : worldData.getEntities()) {
@@ -120,7 +121,9 @@ public class GameInstance {
                 sprite = entity.getSprite();
                 if (sprite != null) {
                     sprites.put(entity, sprite);
-                    gameWindow.getChildren().add(sprite);
+                    if (!gameWindow.getChildren().contains(sprite)) {
+                        gameWindow.getChildren().add(sprite);
+                    }
                 }
             }
             entity.render(gc);
@@ -129,18 +132,26 @@ public class GameInstance {
         // Remove deleted entities
         sprites.keySet().removeIf(entity -> {
             if (!worldData.getEntities().contains(entity)) {
-                gameWindow.getChildren().remove(sprites.get(entity));
+                Node sprite = sprites.remove(entity);
+                if (sprite != null) {
+                    gameWindow.getChildren().remove(sprite);
+                }
                 return true;
             }
             return false;
         });
 
+
+
+        // Games doesn't load properly if debug is removed.
         // Debug overlay
         debugGroup.getChildren().clear();
         debugGroup.setViewOrder(999);
         if (gameData.isDebugMode()) {
             debugGroup.getChildren().addAll(gameData.debugEntities.values());
-            gameWindow.getChildren().add(debugGroup);
+            if (!gameWindow.getChildren().contains(debugGroup)) {
+                gameWindow.getChildren().add(debugGroup);
+            }
         }
 
         // Debug text
@@ -189,6 +200,7 @@ public class GameInstance {
                 break;
             case SPACE:
                 this.gameData.setPressed(Keys.SPACE, pressed);
+                System.out.println("Shooting");
                 break;
             default:
                 break;
