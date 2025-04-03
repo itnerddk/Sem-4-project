@@ -31,6 +31,7 @@ public class Main extends Application {
         StackPane pane = loader.load();
 
         MainMenuController controller = loader.getController();
+        controller.setGameData(gameData);
 
         controller.setScene(primaryStage);
 

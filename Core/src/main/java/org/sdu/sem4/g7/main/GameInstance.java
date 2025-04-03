@@ -145,20 +145,21 @@ public class GameInstance {
 
         // Games doesn't load properly if debug is removed.
         // Debug overlay
-        debugGroup.getChildren().clear();
-        debugGroup.setViewOrder(999);
         if (gameData.isDebugMode()) {
-            debugGroup.getChildren().addAll(gameData.debugEntities.values());
-            if (!gameWindow.getChildren().contains(debugGroup)) {
-                gameWindow.getChildren().add(debugGroup);
+            debugGroup.getChildren().clear();
+            debugGroup.viewOrderProperty().set(1000);
+            gameWindow.getChildren().remove(debugGroup);
+            for (Node node : gameData.debugEntities.values()) {
+                debugGroup.getChildren().add(node);
             }
+            gameWindow.getChildren().add(debugGroup);
         }
 
         // Debug text
-        String debug = gameData.debugMap.entrySet().stream()
-                .map(e -> e.getKey() + ": " + e.getValue())
-                .collect(Collectors.joining("\n"));
-        debugText.setText(debug);
+        debugText.setText("");
+        for (String key : gameData.debugMap.keySet()) {
+            debugText.setText(debugText.getText() + key + ": " + gameData.debugMap.get(key) + "\n");
+        }
     }
 
     private <T> Collection<T> loadServices(Class<T> type) {

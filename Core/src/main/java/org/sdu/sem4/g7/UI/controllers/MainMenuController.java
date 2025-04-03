@@ -4,7 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,14 +13,13 @@ import javafx.stage.Stage;
 
 import org.sdu.sem4.g7.MissionLoader.services.MissionLoaderService;
 import org.sdu.sem4.g7.common.data.GameData;
-import org.sdu.sem4.g7.main.GameInstance;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainMenuController implements Initializable {
 
     private Stage stage;
+    private GameData gameData;
 
     @FXML
     private StackPane mainMenuPane;
@@ -72,7 +70,7 @@ public class MainMenuController implements Initializable {
 
     private void showMissionSelector(){
         try {
-            GameData gameData = new GameData();
+            
             // Set up the game data so it has a mission loader
             MissionLoaderService missionLoader = new MissionLoaderService(gameData, null);
             gameData.setMissionLoaderService(missionLoader);
@@ -91,6 +89,8 @@ public class MainMenuController implements Initializable {
         }
     }
 
-
+    public void setGameData(GameData gameData) {
+        this.gameData = gameData;
+    }
 
 }
