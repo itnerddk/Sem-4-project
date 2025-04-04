@@ -1,0 +1,19 @@
+.mission-button {
+    -fx-background-color: #f4d57c;
+    -fx-font-size: 24px;
+    -fx-min-width: 150px;
+    -fx-min-height: 150px;
+    -fx-background-radius: 12;
+    -fx-text-fill: #5c4200;
+    -fx-border-width: 5;
+    -fx-border-color: #964b00;
+}
+
+.mission-button:hover {
+    -fx-background-color: #ffe089;
+}
+
+.locked {
+    -fx-background-color: gray;
+    -fx-text-fill: white;
+}

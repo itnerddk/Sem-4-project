@@ -3,8 +3,8 @@ package org.sdu.sem4.g7.UI.controllers;
 import java.util.List;
 import java.util.ServiceLoader;
 
-
-
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.common.data.WorldData;
@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.GridPane;
 
 public class MissionSelectorController {
 
@@ -27,48 +28,47 @@ public class MissionSelectorController {
     private WorldData worldData;
     private Stage stage;
 
-    @FXML ListView<Mission> missionListView;
+    private Mission selectedMission = null;
 
     @FXML
-    private StackPane missionSelectorStackPane;
+    private GridPane missionGrid;
 
     public void init(GameData gameData) {
         this.gameData = gameData;
         List<Mission> missions = gameData.getMissionLoaderService().getMissions();
-        missionListView.getItems().setAll(missions);
-    }
 
-    @FXML
-    private void handleStartMission() {
+        int cols = 3;
+        for (int i = 0; i < missions.size(); i++) {
+            Mission mission = missions.get(i);
+            Button levelButton = new Button(String.valueOf(mission.getId()));
+            levelButton.getStyleClass().add("mission-button");
 
-        Mission selectedMission = missionListView.getSelectionModel().getSelectedItem();
-        if (selectedMission != null) {
-            System.out.println("Selected mission: " + selectedMission.getId());
-            ServiceLoader.load(IGamePluginService.class)
-                .stream()
-                .map(ServiceLoader.Provider::get)
-                .forEach(plugin -> plugin.start(gameData, worldData));
-            
-            worldData = gameData.getMissionLoaderService().loadMission(selectedMission.getId());
-            System.out.println(selectedMission.getId());
-            
-            GameInstance game = new GameInstance(gameData, worldData);
-            Stage gameStage = (Stage) missionListView.getScene().getWindow();
-            gameStage.setScene(game.getScene());
+            int col = i % cols;
+            int row = i / cols;
+            missionGrid.add(levelButton, col, row);
+
+            // handle click
+            levelButton.setOnAction(e -> {
+                selectedMission = mission;
+                System.out.println("Selected: " + mission.getName());
+
+                if (selectedMission != null) {
+                    ServiceLoader.load(IGamePluginService.class)
+                            .stream()
+                            .map(ServiceLoader.Provider::get)
+                            .forEach(plugin -> plugin.start(gameData, worldData));
+
+                    worldData = gameData.getMissionLoaderService().loadMission(selectedMission.getId());
+                    GameInstance game = new GameInstance(gameData, worldData);
+                    Stage gameStage = (Stage) missionGrid.getScene().getWindow();
+                    gameStage.setScene(game.getScene());
+                }
+            });
         }
-
-
-
-        
-
-        
     }
+
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-
-
-    
 }
