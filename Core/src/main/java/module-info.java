@@ -3,6 +3,9 @@ module Core {
     requires javafx.graphics;
     requires TankParts;
     requires javafx.fxml;
+    requires javafx.media;
+    requires java.desktop;
+    requires javafx.controls;
 
     opens org.sdu.sem4.g7.main to javafx.graphics;
     opens org.sdu.sem4.g7.UI.controllers to javafx.fxml;
@@ -12,6 +15,7 @@ module Core {
     uses org.sdu.sem4.g7.common.services.IEntityProcessingService;
     uses org.sdu.sem4.g7.common.services.IPostEntityProcessingService;
     uses org.sdu.sem4.g7.tank.parts.Tank;
+    uses org.sdu.sem4.g7.common.services.ICurrencyService;
 
     exports org.sdu.sem4.g7.main;
     exports org.sdu.sem4.g7.UI.controllers to javafx.fxml;

@@ -1,31 +1,22 @@
 package org.sdu.sem4.g7.currency;
 
-public class CurrencyManager {
-    private int currency;
+import org.sdu.sem4.g7.common.services.ICurrencyService;
 
+public class CurrencyManager implements ICurrencyService {
+    private int currency = 100;
 
-// Start with 0 currency
-    public CurrencyManager() {
-        this.currency = 0;
-    }
-
+    @Override
     public int getCurrency() {
         return currency;
     }
 
+    @Override
     public void addCurrency(int amount) {
-        if (amount > 0) {
-            currency += amount;
-            System.out.println("Added " + amount + " currency. Total: " + currency);
-        }
+        if (amount > 0) currency += amount;
     }
 
+    @Override
     public void subtractCurrency(int amount) {
-        if (amount > 0 && currency >= amount) {
-            currency -= amount;
-            System.out.println("Subtracted " + amount + " currency. Total: " + currency);
-        } else {
-            System.out.println("Not enough currency to subtract " + amount);
-        }
+        if (amount > 0 && currency >= amount) currency -= amount;
     }
 }

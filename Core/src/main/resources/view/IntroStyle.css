@@ -1,0 +1,34 @@
+.button-custom {
+    -fx-font-family: "Comic Sans MS", "Arial Black", sans-serif;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+
+    /* Red button with gradient */
+    -fx-background-color: linear-gradient(to bottom, #556B2F, #3E4E1C);
+    -fx-background-radius: 30;
+    -fx-border-color: #2e3a15;
+    -fx-border-width: 2;
+    -fx-border-radius: 30;
+
+    -fx-padding: 12 28;
+
+    /* Drop shadow for text */
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.6), 4, 0, 0, 2);
+
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+
+.button-custom:hover {
+    -fx-background-color: linear-gradient(to bottom, #6B8E23, #556B2F);
+    -fx-cursor: hand;
+}
+
+.button-custom:pressed {
+    -fx-background-color: linear-gradient(to bottom, #3E4E1C, #556B2F);
+    -fx-translate-y: 2;
+}
+
+
+
