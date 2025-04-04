@@ -20,6 +20,10 @@ module Core {
     exports org.sdu.sem4.g7.main;
     exports org.sdu.sem4.g7.UI.controllers to javafx.fxml;
 
+    provides org.sdu.sem4.g7.common.services.IUpgradeService
+            with org.sdu.sem4.g7.main.UpgradePlaceholderService;
+
+
 }
 
 

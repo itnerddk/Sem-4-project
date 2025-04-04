@@ -12,7 +12,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         ServiceLocator.loadServices();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/IntroMedia.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Intro.fxml"));
         Parent root = loader.load();
         Scene IntroMediaScene = new Scene(root);
         primaryStage.setScene(IntroMediaScene);
