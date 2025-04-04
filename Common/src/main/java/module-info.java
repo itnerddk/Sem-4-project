@@ -8,6 +8,5 @@ module Common {
 
     uses org.sdu.sem4.g7.common.services.ICurrencyService;
     uses org.sdu.sem4.g7.common.services.ILevelService;
-    uses org.sdu.sem4.g7.common.services.IUpgradeService;
 
 }

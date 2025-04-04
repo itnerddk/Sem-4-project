@@ -21,8 +21,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        ServiceLocator.loadServices();
-
         GameData gameData = new GameData();
 
         // Load pregame plugins
@@ -32,7 +30,6 @@ public class Main extends Application {
                 .forEach(plugin -> plugin.start(gameData, null));
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/IntroMedia.fxml"));
-
         Parent root = loader.load();
 
 
