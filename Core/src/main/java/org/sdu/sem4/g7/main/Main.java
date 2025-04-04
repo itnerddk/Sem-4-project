@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.sdu.sem4.g7.common.services.ServiceLocator;
 
 public class Main extends Application {
 

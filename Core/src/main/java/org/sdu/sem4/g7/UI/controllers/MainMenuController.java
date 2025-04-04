@@ -1,5 +1,6 @@
 package org.sdu.sem4.g7.UI.controllers;
 
+import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
 import javafx.scene.control.Label;
 
@@ -32,13 +34,9 @@ public class MainMenuController implements Initializable {
     @FXML private Label coinDisplay, levelDisplay;
     @FXML private AnchorPane settingsPane, upgradePane, shopPane;
     @FXML private ImageView backgroundImage;
+    @FXML private Parent mainMenuPane;
     private Stage stage;
     private GameData gameData;
-    @FXML
-    private Parent mainMenuPane;
-    @FXML
-    private ImageView backgroundImage;
-
 
 
     // Health upgrade UI
@@ -109,7 +107,7 @@ public class MainMenuController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+    }
    
 
     @FXML private void showUpgrades() {
