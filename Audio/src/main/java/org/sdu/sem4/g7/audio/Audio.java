@@ -10,6 +10,7 @@ public class Audio {
     private float volume;
 
     public Audio(SoundType soundType, String soundName, URI soundUri, float volume) {
+        this.soundType = soundType;
         this.soundName = soundName;
         this.soundURI = soundUri;
         this.volume = volume;
