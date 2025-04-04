@@ -6,6 +6,7 @@ module Core {
     requires javafx.media;
     requires java.desktop;
     requires javafx.controls;
+    requires MissionLoader;
 
     opens org.sdu.sem4.g7.main to javafx.graphics;
     opens org.sdu.sem4.g7.UI.controllers to javafx.fxml;
