@@ -87,7 +87,6 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private void handleStartGame(ActionEvent event) {
-
         try {
             GameData gameData = new GameData();
             // Set up the game data so it has a mission loader

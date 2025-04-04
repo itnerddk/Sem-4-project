@@ -1,19 +1,99 @@
-.mission-button {
-    -fx-background-color: #f4d57c;
-    -fx-font-size: 24px;
-    -fx-min-width: 150px;
-    -fx-min-height: 150px;
-    -fx-background-radius: 12;
-    -fx-text-fill: #5c4200;
-    -fx-border-width: 5;
-    -fx-border-color: #964b00;
+/* === Titel === */
+.title-label {
+    -fx-font-size: 42px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f7b733;
+    -fx-effect: dropshadow(one-pass-box, black, 3, 0.8, 0, 2);
+    -fx-font-family: "Comic Sans MS", "Arial", sans-serif; /* cartoon-feel */
 }
 
-.mission-button:hover {
-    -fx-background-color: #ffe089;
+
+/* === Grid === */
+#missionGrid {
+    -fx-padding: 40;
+    -fx-hgap: 30;
+    -fx-vgap: 30;
+    -fx-alignment: center;
 }
 
+
+/* === Mission-tile === */
+.mission-tile {
+    -fx-min-width: 100px;
+    -fx-min-height: 100px;
+    -fx-max-width: 100px;
+    -fx-max-height: 100px;
+    -fx-background-color: linear-gradient(#c2c2c2, #9e9e9e);
+    -fx-background-radius: 14;
+    -fx-border-color: #5a5a5a;
+    -fx-border-width: 2;
+    -fx-border-radius: 14;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 2, 2);
+    -fx-alignment: center;
+    -fx-cursor: hand;
+    -fx-padding: 5;
+    -fx-spacing: 5;
+}
+
+
+/* === Hover === */
+.mission-tile:hover {
+    -fx-background-color: linear-gradient(#d4d4d4, #b3b3b3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 230, 100, 0.6), 8, 0, 0, 0);
+}
+
+
+/* === Tal === */
+.mission-number {
+    -fx-font-size: 34px;
+    -fx-font-weight: bold;
+    -fx-text-fill: orange;
+    -fx-effect: dropshadow(one-pass-box, black, 2, 0.5, 0, 1);
+}
+
+
+/* === Låste levels === */
 .locked {
-    -fx-background-color: gray;
+    -fx-background-color: linear-gradient(#aaaaaa, #888888);
+    -fx-opacity: 0.85;
+    -fx-cursor: default;
+}
+
+.content-pane {
+    -fx-background-color: #556B2F; /* military green */
+    -fx-border-color: #2e3a15;
+    -fx-border-width: 3;
+    -fx-background-radius: 0 0 5 5;
+    -fx-border-radius: 5 5 5 5;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 2, 4);
+}
+
+
+/* === Custom Button Styling For Back === */
+.button-custom {
+    -fx-font-family: "Comic Sans MS", "Arial Black", sans-serif;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
     -fx-text-fill: white;
+    -fx-background-color: linear-gradient(to bottom, #556B2F, #3E4E1C);
+    -fx-background-radius: 30;
+    -fx-border-color: #2e3a15;
+    -fx-border-width: 2;
+    -fx-border-radius: 30;
+    -fx-padding: 12 28;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.6), 4, 0, 0, 2);
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+
+.button-custom:hover {
+    -fx-background-color: linear-gradient(to bottom, #6B8E23, #556B2F);
+    -fx-cursor: hand;
+}
+
+.button-custom:pressed {
+    -fx-background-color: linear-gradient(to bottom, #3E4E1C, #556B2F);
+    -fx-translate-y: 2;
 }

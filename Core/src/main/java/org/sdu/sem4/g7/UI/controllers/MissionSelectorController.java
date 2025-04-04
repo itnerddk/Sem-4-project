@@ -1,9 +1,18 @@
 package org.sdu.sem4.g7.UI.controllers;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.ServiceLoader;
 
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Mission;
@@ -22,7 +31,10 @@ import javafx.scene.layout.GridPane;
 public class MissionSelectorController {
 
     @FXML
-    private StackPane missionSelectorPane;
+    private StackPane contentWrapper;
+
+    @FXML
+    private ImageView backgroundImage;
 
     private GameData gameData;
     private WorldData worldData;
@@ -34,41 +46,84 @@ public class MissionSelectorController {
     private GridPane missionGrid;
 
     public void init(GameData gameData) {
+        backgroundImage.setImage(new Image(getClass().getResource("/images/MainMenuBackground.png").toExternalForm()));
+
         this.gameData = gameData;
         List<Mission> missions = gameData.getMissionLoaderService().getMissions();
 
         int cols = 3;
+        int highestUnlockedId = 2;
+
         for (int i = 0; i < missions.size(); i++) {
             Mission mission = missions.get(i);
-            Button levelButton = new Button(String.valueOf(mission.getId()));
-            levelButton.getStyleClass().add("mission-button");
+            VBox tile = new VBox();
+            tile.setAlignment(Pos.CENTER);
+            tile.setSpacing(5);
+            tile.getStyleClass().add("mission-tile");
+
+            Label number = new Label(String.valueOf(i + 1)); // i er loop-indeks
+            number.getStyleClass().add("mission-number");
+
+            boolean isLocked = i > highestUnlockedId;
+
+            if (isLocked) {
+                tile.getStyleClass().add("locked");
+
+                ImageView lockIcon = new ImageView();
+                lockIcon.setImage(new Image(
+                        Objects.requireNonNull(getClass().getResource("/images/lock.png")).toExternalForm()
+                ));
+                lockIcon.setFitWidth(30);
+                lockIcon.setFitHeight(30);
+
+                tile.getChildren().add(lockIcon); // 👈 Kun lås, intet tal
+                tile.setDisable(true);
+            } else {
+                tile.getChildren().add(number);
+                tile.setOnMouseClicked(e -> {
+                    selectedMission = mission;
+                    System.out.println("Selected: " + mission.getName());
+
+                    if (selectedMission != null) {
+                        ServiceLoader.load(IGamePluginService.class)
+                                .stream()
+                                .map(ServiceLoader.Provider::get)
+                                .forEach(plugin -> plugin.start(gameData, worldData));
+
+                        worldData = gameData.getMissionLoaderService().loadMission(selectedMission.getId());
+                        GameInstance game = new GameInstance(gameData, worldData);
+                        Stage gameStage = (Stage) missionGrid.getScene().getWindow();
+                        gameStage.setScene(game.getScene());
+                    }
+                });
+            }
 
             int col = i % cols;
             int row = i / cols;
-            missionGrid.add(levelButton, col, row);
-
-            // handle click
-            levelButton.setOnAction(e -> {
-                selectedMission = mission;
-                System.out.println("Selected: " + mission.getName());
-
-                if (selectedMission != null) {
-                    ServiceLoader.load(IGamePluginService.class)
-                            .stream()
-                            .map(ServiceLoader.Provider::get)
-                            .forEach(plugin -> plugin.start(gameData, worldData));
-
-                    worldData = gameData.getMissionLoaderService().loadMission(selectedMission.getId());
-                    GameInstance game = new GameInstance(gameData, worldData);
-                    Stage gameStage = (Stage) missionGrid.getScene().getWindow();
-                    gameStage.setScene(game.getScene());
-                }
-            });
+            missionGrid.add(tile, col, row);
         }
     }
 
 
+
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    @FXML private void handleBack(ActionEvent event) {
+        loadScene(event, "/view/MainMenu.fxml", "Main Menu");
+    }
+
+    private void loadScene(ActionEvent event, String fxmlPath, String title) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle(title);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
