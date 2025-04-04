@@ -12,7 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import org.sdu.sem4.g7.main.GameInstance;
+
+
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -32,6 +33,7 @@ public class IntroController implements Initializable {
 
     @FXML
     private AnchorPane rootPane;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -54,6 +56,7 @@ public class IntroController implements Initializable {
 
     @FXML
     private void handleStartGame(ActionEvent event) {
+
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), rootPane);
         fadeOut.setFromValue(1.0);
         fadeOut.setToValue(0.0);

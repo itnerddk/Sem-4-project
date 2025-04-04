@@ -1,5 +1,6 @@
 import org.sdu.sem4.g7.common.services.IEntityPluginService;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
+import org.sdu.sem4.g7.common.services.IPreGamePluginService;
 
 
 module MissionLoader {
@@ -11,5 +12,5 @@ module MissionLoader {
     uses IEntityPluginService;
     exports org.sdu.sem4.g7.MissionLoader.objects to com.fasterxml.jackson.databind;
     exports org.sdu.sem4.g7.MissionLoader.services;
-    provides IGamePluginService with org.sdu.sem4.g7.MissionLoader.services.Loader;
+    provides IPreGamePluginService with org.sdu.sem4.g7.MissionLoader.services.Loader;
 }

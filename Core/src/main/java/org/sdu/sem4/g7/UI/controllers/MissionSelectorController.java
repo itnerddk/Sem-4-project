@@ -1,70 +1,74 @@
 package org.sdu.sem4.g7.UI.controllers;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
+import java.util.List;
+import java.util.ServiceLoader;
+
+
+
+import org.sdu.sem4.g7.common.data.GameData;
+import org.sdu.sem4.g7.common.data.Mission;
+import org.sdu.sem4.g7.common.data.WorldData;
+import org.sdu.sem4.g7.common.services.IGamePluginService;
 import org.sdu.sem4.g7.main.GameInstance;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.scene.control.ListView;
 
-public class MissionSelectorController implements Initializable {
+public class MissionSelectorController {
 
     @FXML
-    private ImageView backgroundImage;
+    private StackPane missionSelectorPane;
+
+    private GameData gameData;
+    private WorldData worldData;
+    private Stage stage;
+
+    @FXML ListView<Mission> missionListView;
 
     @FXML
-    private Button mission2Button;
+    private StackPane missionSelectorStackPane;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        // Load background image
-        Image img = new Image(getClass().getResource("/images/intro_image.png").toExternalForm());
-        backgroundImage.setImage(img);
-
-        // Simulating to check if mission 1 is complete
-        boolean mission1Completed = checkMission1Completed();
-
-        // Unlock mission 2 if mission 1 was completed
-        mission2Button.setDisable(!mission1Completed);
-    }
-
-    private boolean checkMission1Completed() {
-        // TODO:
-        return false;
+    public void init(GameData gameData) {
+        this.gameData = gameData;
+        List<Mission> missions = gameData.getMissionLoaderService().getMissions();
+        missionListView.getItems().setAll(missions);
     }
 
     @FXML
-    private void handleMission1(ActionEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        GameInstance game = new GameInstance(stage);
-        Scene gameScene = game.getScene();
+    private void handleStartMission() {
 
-        stage.setScene(gameScene);
-        stage.setTitle("Tank Wars - Mission 1");
-        stage.show();
-    }
-
-    @FXML
-    private void handleBack(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainMenu.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Main Menu");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        Mission selectedMission = missionListView.getSelectionModel().getSelectedItem();
+        if (selectedMission != null) {
+            System.out.println("Selected mission: " + selectedMission.getId());
+            ServiceLoader.load(IGamePluginService.class)
+                .stream()
+                .map(ServiceLoader.Provider::get)
+                .forEach(plugin -> plugin.start(gameData, worldData));
+            
+            worldData = gameData.getMissionLoaderService().loadMission(selectedMission.getId());
+            System.out.println(selectedMission.getId());
+            
+            GameInstance game = new GameInstance(gameData, worldData);
+            Stage gameStage = (Stage) missionListView.getScene().getWindow();
+            gameStage.setScene(game.getScene());
         }
+
+
+
+        
+
+        
     }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+
+
+    
 }

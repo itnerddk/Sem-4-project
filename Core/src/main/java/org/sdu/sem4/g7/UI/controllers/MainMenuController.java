@@ -1,6 +1,5 @@
 package org.sdu.sem4.g7.UI.controllers;
 
-import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,17 +10,24 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
-import org.sdu.sem4.g7.main.GameInstance;
 import javafx.scene.control.Label;
 
 
 import java.io.IOException;
+
+import org.sdu.sem4.g7.MissionLoader.services.MissionLoaderService;
+import org.sdu.sem4.g7.common.data.GameData;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainMenuController implements Initializable {
+
+    private Stage stage;
+    private GameData gameData;
+
+    @FXML
+    private Parent mainMenuPane;
 
     @FXML
     private ImageView backgroundImage;
@@ -56,23 +62,34 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private void handleStartGame(ActionEvent event) {
-            try {
-                // Load MainMenu.fxml
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MissionSelector.fxml"));
-                Parent mainMenuRoot = loader.load();
 
-                // Skift scene
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Scene scene = new Scene(mainMenuRoot);
-                stage.setScene(scene);
-                stage.setTitle("Tank Wars - Mission Selector");
-                stage.show();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        };
+        try {
+            GameData gameData = new GameData();
+            // Set up the game data so it has a mission loader
+            MissionLoaderService missionLoader = new MissionLoaderService(gameData, null);
+            gameData.setMissionLoaderService(missionLoader);
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MissionSelector.fxml"));
+            Parent missionSelectorPane = loader.load();
+            
+            MissionSelectorController controller = loader.getController();
+            controller.init(gameData);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            controller.setStage(stage);
 
-    @FXML private void handleShop(ActionEvent event) {
+            Scene missionSelectorScene = new Scene(missionSelectorPane);
+            stage.setScene(missionSelectorScene);
+        } catch (Exception e) {
+            System.out.println("Error loading MissionSelector.fxml: ");
+        }
+
+   
+
+    }
+
+    @FXML
+    private  void handleShop(ActionEvent event){
+
     }
 
     @FXML private void handleSave(ActionEvent event) {
@@ -97,4 +114,14 @@ public class MainMenuController implements Initializable {
             e.printStackTrace();
         }
     }
+
+    public void setScene(Stage stage) {
+        this.stage = stage;
+    }
+
+
+    public void setGameData(GameData gameData) {
+        this.gameData = gameData;
+    }
+
 }
