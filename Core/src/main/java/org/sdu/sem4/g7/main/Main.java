@@ -5,16 +5,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.sdu.sem4.g7.common.services.ServiceLocator;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainMenu.fxml"));
+        ServiceLocator.loadServices();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/IntroMedia.fxml"));
         Parent root = loader.load();
-        Scene mainMenuScene = new Scene(root);
-        primaryStage.setScene(mainMenuScene);
-        primaryStage.setTitle("Tank Wars - Main Menu");
+        Scene IntroMediaScene = new Scene(root);
+        primaryStage.setScene(IntroMediaScene);
+        primaryStage.setTitle("Tank Wars");
         primaryStage.show();
     }
 

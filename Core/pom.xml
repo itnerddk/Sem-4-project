@@ -25,6 +25,11 @@
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>21.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
             <version>21.0.2</version>
         </dependency>
@@ -36,6 +41,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-media</artifactId>
+            <version>21.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.sdu.sem4.g7</groupId>
@@ -52,11 +58,6 @@
             <version>1.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>22.0.1</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -67,6 +68,8 @@
                     <include>**/*.png</include>
                     <include>**/*.fxml</include>
                     <include>**/*.css</include>
+                    <include>**/*.mp4</include>
+                    <include>**/*.gif</include>
                 </includes>
             </resource>
         </resources>
@@ -76,6 +79,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>3.3.0</version>
                 <executions>
+                    <!-- Kopiér alle nødvendige JavaFX moduler til mods-mvn -->
                     <execution>
                         <id>copy-dependencies</id>
                         <phase>package</phase>
@@ -83,29 +87,16 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeArtifactIds>javafx-fxml,javafx-controls,javafx-graphics,javafx-base,javafx-media</includeArtifactIds>
+                            <includeArtifactIds>
+                                javafx-fxml,javafx-controls,javafx-graphics,javafx-base,javafx-media
+                            </includeArtifactIds>
                             <outputDirectory>../mods-mvn</outputDirectory>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>copy</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.openjfx</groupId>
-                                    <artifactId>javafx-controls</artifactId>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>../libs</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
                 </executions>
-            </plugin><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><configuration><source>9</source><target>9</target></configuration></plugin>
+            </plugin>
+
+            <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><configuration><source>9</source><target>9</target></configuration></plugin>
         </plugins>
     </build>
 </project>

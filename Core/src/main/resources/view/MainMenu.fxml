@@ -4,22 +4,33 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
+<?import javafx.scene.control.Label?>
 <AnchorPane prefHeight="800" prefWidth="800" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.sdu.sem4.g7.UI.controllers.MainMenuController">
 
     <!-- Background Image -->
-    <ImageView fx:id="backgroundImage" fitHeight="800" fitWidth="800" layoutX="14.0" layoutY="10.0" preserveRatio="false" />
+    <ImageView fx:id="backgroundImage" fitHeight="800" fitWidth="800" layoutY="1.0"/>
+
+    <Label fx:id="coinDisplay" layoutX="14.0" layoutY="20.0" prefHeight="40.0" prefWidth="202.0" text="Coins: 0" style="-fx-font-size: 16px;" />
+
+    <Label fx:id="levelDisplay" layoutX="14.0" layoutY="66.0" prefHeight="40.0" prefWidth="202.0" text="Level: 1" style="-fx-font-size: 16px;" />
 
 
-    <!-- Play Button -->
-    <Button layoutX="247.0" layoutY="393.0" onAction="#handleStartGame" prefHeight="60.0" prefWidth="320.0" styleClass="button-custom" stylesheets="@MainMenuStyle.css" text="Play" />
+    <!-- Missions Button -->
+    <Button layoutX="240.0" layoutY="226.0" onAction="#handleStartGame" prefHeight="60.0" prefWidth="320.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="Missions" />
 
-    <!-- Settings Button -->
-    <Button layoutX="247.0" layoutY="462.0" onAction="#handleSettings" prefHeight="60.0" prefWidth="320.0" styleClass="button-custom" stylesheets="@MainMenuStyle.css" text="Settings" />
+    <!-- Difficulty Button -->
+    <Button layoutX="240.0" layoutY="510.0" onAction="#handleDifficulty" prefHeight="65.0" prefWidth="192.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="Difficulty" />
 
-    <!-- Credits Button -->
-    <Button layoutX="247.0" layoutY="532.0" onAction="#handleCredits" prefHeight="60.0" prefWidth="155.0" styleClass="button-custom" stylesheets="@MainMenuStyle.css" text="Credits" />
+    <!-- Back Button -->
+    <Button layoutX="440.0" layoutY="510.0" onAction="#handleBack" prefHeight="65.0" prefWidth="120.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="Back" />
 
-    <!-- Quit Button -->
-    <Button layoutX="414.0" layoutY="532.0" onAction="#handleQuitGame" prefHeight="60.0" prefWidth="155.0" styleClass="button-custom" stylesheets="@MainMenuStyle.css" text="Exit" />
+    <!-- Upgrade Shop Button -->
+    <Button layoutX="240.0" layoutY="297.0" onAction="#handleShop" prefHeight="65.0" prefWidth="320.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="Upgrade Shop" />
+
+    <!-- Load Save Button -->
+    <Button layoutX="240.0" layoutY="437.0" onAction="#handleLoadSave" prefHeight="65.0" prefWidth="320.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="Load Save" />
+
+    <!-- Save Button -->
+    <Button layoutX="240.0" layoutY="367.0" onAction="#handleSave" prefHeight="65.0" prefWidth="320.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="Save" />
 
 </AnchorPane>
