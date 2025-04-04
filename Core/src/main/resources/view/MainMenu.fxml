@@ -1,37 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 
-<?import javafx.scene.control.Label?>
-<AnchorPane prefHeight="800" prefWidth="800" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.sdu.sem4.g7.UI.controllers.MainMenuController">
+<AnchorPane prefHeight="800" prefWidth="800" style="-fx-background-color: transparent;" stylesheets="@IntroStyle.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.sdu.sem4.g7.UI.controllers.MainMenuController">
 
     <!-- Background Image -->
-    <ImageView fx:id="backgroundImage" fitHeight="800" fitWidth="800" layoutY="1.0"/>
+    <ImageView fx:id="backgroundImage" fitHeight="800" fitWidth="800" layoutY="1.0" />
 
-    <Label fx:id="coinDisplay" layoutX="14.0" layoutY="20.0" prefHeight="40.0" prefWidth="202.0" text="Coins: 0" style="-fx-font-size: 16px;" />
+    <!-- Currency Display -->
+    <HBox alignment="CENTER_LEFT" layoutX="50.0" layoutY="35.0" spacing="8" styleClass="status-box">
+        <ImageView fx:id="coinIcon" fitHeight="24" fitWidth="24" />
+        <Label fx:id="coinDisplay" styleClass="status-label" text="999" />
+    </HBox>
 
-    <Label fx:id="levelDisplay" layoutX="14.0" layoutY="66.0" prefHeight="40.0" prefWidth="202.0" text="Level: 1" style="-fx-font-size: 16px;" />
+    <!-- Level Display -->
+    <HBox alignment="CENTER_LEFT" layoutX="50.0" layoutY="100.0" spacing="8" styleClass="status-box">
+        <ImageView fx:id="levelIcon" fitHeight="24" fitWidth="24" />
+        <Label fx:id="levelDisplay" styleClass="status-label" text="Level 1" />
+    </HBox>
 
-    <!-- Missions Button -->
-    <Button layoutX="240.0" layoutY="226.0" onAction="#handleStartGame" prefHeight="60.0" prefWidth="320.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="Missions" />
+    <!-- HBox for Tabs -->
+    <HBox alignment="CENTER" layoutY="170.0" prefWidth="800" spacing="0">
+        <Button fx:id="upgradeTabBtn" onAction="#showUpgrades" styleClass="tab-button" text="Upgrades" />
+        <Button fx:id="shopTabBtn" onAction="#showShop" prefWidth="400.0" styleClass="tab-button" text="Shop" />
+    </HBox>
 
-    <!-- Difficulty Button -->
-    <Button layoutX="240.0" layoutY="510.0" onAction="#handleDifficulty" prefHeight="65.0" prefWidth="192.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="Difficulty" />
+    <!-- Content panes -->
+    <AnchorPane fx:id="upgradePane" layoutX="50.0" layoutY="220.0" prefHeight="450.0" prefWidth="700.0">
+        <VBox fx:id="healthUpgradeBox" prefWidth="150" prefHeight="200" layoutX="75" layoutY="100" alignment="CENTER" spacing="10" styleClass="upgrade-box">
+            <ImageView fx:id="healthIcon" fitHeight="48" fitWidth="48" preserveRatio="true" />
+            <Label fx:id="healthUpgradeText" styleClass="upgrade-label" text="Health"/>
+            <HBox alignment="CENTER" spacing="8">
+                <Circle fx:id="healthCircle1" radius="8"/>
+                <Circle fx:id="healthCircle2" radius="8"/>
+                <Circle fx:id="healthCircle3" radius="8"/>
+                <Circle fx:id="healthCircle4" radius="8"/>
+                <Circle fx:id="healthCircle5" radius="8"/>
+            </HBox>
+            <Button fx:id="healthPriceButton" text="2000$" onAction="#handleHealthUpgrade" focusTraversable="false" styleClass="price-button"/>
+        </VBox>
 
-    <!-- Back Button -->
-    <Button layoutX="440.0" layoutY="510.0" onAction="#handleBack" prefHeight="65.0" prefWidth="120.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="Back" />
+        <VBox fx:id="armorUpgradeBox" prefWidth="150" prefHeight="200" layoutX="275" layoutY="100" alignment="CENTER" spacing="10" styleClass="upgrade-box">
+            <ImageView fx:id="armorIcon" fitHeight="48" fitWidth="48" preserveRatio="true" />
+            <Label fx:id="armorUpgradeText" styleClass="upgrade-label" text="Armor"/>
+            <HBox alignment="CENTER" spacing="8">
+                <Circle fx:id="armorCircle1" radius="8"/>
+                <Circle fx:id="armorCircle2" radius="8"/>
+                <Circle fx:id="armorCircle3" radius="8"/>
+                <Circle fx:id="armorCircle4" radius="8"/>
+                <Circle fx:id="armorCircle5" radius="8"/>
+            </HBox>
+            <Button fx:id="armorPriceButton" text="2000$" onAction="#handleArmorUpgrade" focusTraversable="false" styleClass="price-button"/>
+        </VBox>
 
-    <!-- Upgrade Shop Button -->
-    <Button layoutX="240.0" layoutY="297.0" onAction="#handleShop" prefHeight="65.0" prefWidth="320.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="Upgrade Shop" />
+        <VBox fx:id="speedUpgradeBox" prefWidth="150" prefHeight="200" layoutX="475" layoutY="100" alignment="CENTER" spacing="10" styleClass="upgrade-box">
+            <ImageView fx:id="speedIcon" fitHeight="48" fitWidth="48" preserveRatio="true" />
+            <Label fx:id="speedUpgradeText" styleClass="upgrade-label" text="Speed"/>
+            <HBox alignment="CENTER" spacing="8">
+                <Circle fx:id="speedCircle1" radius="8"/>
+                <Circle fx:id="speedCircle2" radius="8"/>
+                <Circle fx:id="speedCircle3" radius="8"/>
+                <Circle fx:id="speedCircle4" radius="8"/>
+                <Circle fx:id="speedCircle5" radius="8"/>
+            </HBox>
+            <Button fx:id="speedPriceButton" text="2000$" onAction="#handleSpeedUpgrade" focusTraversable="false" styleClass="price-button"/>
+        </VBox>
+    </AnchorPane>
 
-    <!-- Load Save Button -->
-    <Button layoutX="240.0" layoutY="437.0" onAction="#handleLoadSave" prefHeight="65.0" prefWidth="320.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="Load Save" />
 
-    <!-- Save Button -->
-    <Button layoutX="240.0" layoutY="367.0" onAction="#handleSave" prefHeight="65.0" prefWidth="320.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="Save" />
+    <AnchorPane fx:id="shopPane" layoutX="50.0" layoutY="220.0" prefHeight="450.0" prefWidth="700.0" visible="false" />
+
+    <!-- Buttons -->
+    <Button layoutX="50.0" layoutY="690.0" onAction="#handleBack" prefHeight="60.0" prefWidth="120.0" styleClass="button-custom" text="Back" />
+    <Button layoutX="179.0" layoutY="690.0" onAction="#handleSettings" prefHeight="65.0" prefWidth="196.0" styleClass="button-custom" text="Settings" />
+    <Button layoutX="384.0" layoutY="690.0" onAction="#handleDifficulty" prefHeight="65.0" prefWidth="196.0" styleClass="button-custom" text="Difficulty" />
+    <Button layoutX="590.0" layoutY="690.0" onAction="#handleStartGame" prefHeight="60.0" prefWidth="160.0" styleClass="button-custom" text="Play" />
+
+
+    <!-- SETTINGS PANE -->
+    <AnchorPane fx:id="settingsPane"
+                prefWidth="350" prefHeight="500"
+                layoutX="225" layoutY="150"
+                style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #cccccc; -fx-border-width: 2;"
+                visible="false">
+
+        <Button text="X"
+                layoutX="315" layoutY="10"
+                prefWidth="25" prefHeight="25"
+                style="-fx-background-color: red; -fx-text-fill: white; -fx-background-radius: 100%; -fx-font-weight: bold; -fx-cursor: hand;"
+                onAction="#handleCloseSettings" />
+
+    </AnchorPane>
 
 </AnchorPane>

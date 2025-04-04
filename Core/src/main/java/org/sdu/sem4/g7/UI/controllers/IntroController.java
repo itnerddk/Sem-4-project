@@ -81,7 +81,6 @@ public class IntroController implements Initializable {
     }
 
     public void handleCredits(ActionEvent actionEvent) {
-
     }
 
     public void handleQuitGame(ActionEvent actionEvent) {
@@ -89,21 +88,6 @@ public class IntroController implements Initializable {
     }
 
 
-    //Settings Tab:
-    @FXML private AnchorPane settingsPane;
-
-    @FXML
-    public void handleSettings(ActionEvent event) {
-        settingsPane.setOpacity(0);
-        settingsPane.setVisible(true);
-        FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.3), settingsPane);
-        fadeIn.setToValue(1);
-        fadeIn.play();
+    public void loadSave(ActionEvent actionEvent) {
     }
-
-    @FXML
-    public void handleCloseSettings(ActionEvent event) {
-        settingsPane.setVisible(false);
-    }
-
 }
