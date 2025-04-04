@@ -1,5 +1,6 @@
 package org.sdu.sem4.g7.UI.controllers;
 
+import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,8 +16,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+
+import javafx.util.Duration;
+import org.sdu.sem4.g7.MissionLoader.services.MissionLoaderService;
+import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
 import javafx.scene.control.Label;
+
 
 import java.io.IOException;
 
@@ -54,6 +60,9 @@ public class MainMenuController implements Initializable {
     @FXML private Label speedUpgradeText;
     @FXML private Circle speedCircle1, speedCircle2, speedCircle3, speedCircle4, speedCircle5;
 
+    private GameData gameData;
+    private Stage stage;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -67,7 +76,6 @@ public class MainMenuController implements Initializable {
         setupArmorUpgrade();
         setupHealthUpgrade();
         setupSpeedUpgrade();
-
 
         ServiceLocator.getCurrencyService().ifPresentOrElse(
                 service -> coinDisplay.setText("Coins: " + service.getCurrency()),
@@ -90,14 +98,6 @@ public class MainMenuController implements Initializable {
         shopPane.setVisible(true);
     }
 
-    @FXML private void handleStartGame(ActionEvent event) {
-        loadScene(event, "/view/MissionSelector.fxml", "Tank Wars - Mission Selector");
-    }
-
-    @FXML private void handleBack(ActionEvent event) {
-        loadScene(event, "/view/Intro.fxml", "Main Menu");
-    }
-
     private void loadScene(ActionEvent event, String fxmlPath, String title) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -109,6 +109,48 @@ public class MainMenuController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void handleStartGame(ActionEvent event) {
+
+        try {
+            GameData gameData = new GameData();
+            // Set up the game data so it has a mission loader
+            MissionLoaderService missionLoader = new MissionLoaderService(gameData, null);
+            gameData.setMissionLoaderService(missionLoader);
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MissionSelector.fxml"));
+            Parent missionSelectorPane = loader.load();
+
+            MissionSelectorController controller = loader.getController();
+            controller.init(gameData);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            controller.setStage(stage);
+
+            Scene missionSelectorScene = new Scene(missionSelectorPane);
+            stage.setScene(missionSelectorScene);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
+    @FXML
+    private  void handleShop(ActionEvent event){
+
+    }
+
+    @FXML private void handleSave(ActionEvent event) {
+    }
+
+    @FXML private void handleLoadSave(ActionEvent event) {
+    }
+
+    @FXML private void handleBack(ActionEvent event) {
+        loadScene(event, "/view/Intro.fxml", "Main Menu");
     }
 
     @FXML private void handleSettings(ActionEvent event) {
