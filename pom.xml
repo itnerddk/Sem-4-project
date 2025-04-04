@@ -13,12 +13,12 @@
     <modules>
         <module>Core</module>
         <module>Common</module>
-        <module>Player</module> <!-- Cant be removed -->
-        <module>TankParts</module> <!-- Cant be removed -->
-        <module>CannonTurret</module> <!-- If removed GameInstance cannot run-->
+        <module>Player</module>
+        <module>TankParts</module>
+        <module>CannonTurret</module>
         <module>Enemy</module>
         <module>Collision</module>
-        <module>MissionLoader</module> <!-- Cant be removed -->
+        <module>MissionLoader</module>
         <module>Currency</module>
         <module>Level</module>
     </modules>
