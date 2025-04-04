@@ -80,7 +80,7 @@ public class MainMenuController implements Initializable {
             Scene missionSelectorScene = new Scene(missionSelectorPane);
             stage.setScene(missionSelectorScene);
         } catch (Exception e) {
-            System.out.println("Error loading MissionSelector.fxml: ");
+            e.printStackTrace();
         }
 
    
