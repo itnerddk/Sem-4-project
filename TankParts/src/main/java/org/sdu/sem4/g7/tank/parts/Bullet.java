@@ -1,8 +1,10 @@
 package org.sdu.sem4.g7.tank.parts;
 
 import org.sdu.sem4.g7.common.data.Entity;
+import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Hitbox;
 import org.sdu.sem4.g7.common.data.Vector2;
+import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.IRigidbodyService;
 import org.sdu.sem4.g7.common.enums.EntityType;
 
@@ -67,7 +69,7 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
     }
 
     @Override
-    public boolean onCollision(IRigidbodyService other) {
+    public boolean onCollision(IRigidbodyService other, GameData gameData) {
         // If the bullet hits another bullet
         if (other instanceof Bullet) {
             // Return true (This makes the current collision ignore it)
@@ -86,6 +88,7 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
                 otherEntity.setHealth(otherEntity.getHealth() - this.damage);
                 // Set the health of the bullet to 0 to make it disapear next tick
                 this.setHealth(0);
+                gameData.playAudio(SoundType.HIT);
                 // Return true signifying that the collision was handled
                 return true;
             }

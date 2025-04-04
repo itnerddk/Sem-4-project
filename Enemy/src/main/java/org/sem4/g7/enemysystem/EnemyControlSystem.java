@@ -3,6 +3,7 @@ package org.sem4.g7.enemysystem;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
+import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.playersystem.Player;
 
@@ -57,6 +58,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
 
             // Check if the enemy is dead
             if (enemy.isDead()) {
+                gameData.playAudio(SoundType.EXPLOSION);
                 System.out.println("Enemy died!");
                 world.removeEntity(enemy);
                 continue;
