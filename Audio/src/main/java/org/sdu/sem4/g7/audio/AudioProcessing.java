@@ -10,8 +10,7 @@ import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.IAudioProcessingService;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
 
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.AudioClip;
 
 public class AudioProcessing implements IAudioProcessingService, IGamePluginService {
 
@@ -25,50 +24,38 @@ public class AudioProcessing implements IAudioProcessingService, IGamePluginServ
         soundMap.put(SoundType.GAME_END, "End");
     }
 
-    private HashMap<SoundType, Media> soundPlayers = new HashMap<>();
-
-    private static int soundCount = 0;
-    private static int maxSounds = 5; // Even if spamming I can't play more than 5 sounds at once (atm)
+    private HashMap<SoundType, AudioClip> soundPlayers = new HashMap<>();
 
     @Override
     public void playSound(SoundType soundType, float volume) {
-        // Check if the sound count exceeds the maximum allowed sounds
-        if (soundCount >= maxSounds) {
-            System.out.println("Maximum number of sounds reached. Cannot play more sounds.");
-            return;
-        }
+        long startTime = System.nanoTime();
         if (volume < 0 || volume > 1) {
             throw new IllegalArgumentException("Volume must be between 0.0 and 1.0");
         }
-        if (soundType == null) {
+        else if (soundType == null) {
             throw new IllegalArgumentException("soundType cannot be null");
         }
-
-        String soundName = soundMap.get(soundType);
-
         // Play the sound
         if (!soundPlayers.containsKey(soundType)) {
             try {
+                String soundName = soundMap.get(soundType);
                 // Load the sound file
-                Media sound = new Media(getClass().getResource("/sounds/" + soundName + ".wav").toURI().toString());
-                MediaPlayer mediaPlayer = new MediaPlayer(sound);
-                mediaPlayer.setVolume(volume);
-                soundPlayers.put(soundType, sound);
+                String soundPath = getClass().getResource("/sounds/" + soundName + ".wav").toURI().toString();
+                AudioClip audioClip = new AudioClip(soundPath);
+                soundPlayers.put(soundType, audioClip);
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
         }
+
+        AudioClip audioClip = soundPlayers.get(soundType);
+        audioClip.setVolume(volume);
+        double pitch = 0.8f + Math.random() * 0.4f; // Random pitch between 0.8 and 1.2
+        audioClip.setRate(pitch);
+        audioClip.play();
         
-        MediaPlayer mediaPlayer = new MediaPlayer(soundPlayers.get(soundType));
-        mediaPlayer.setVolume(volume);
-        mediaPlayer.play();
-        soundCount++;
-        // Dispose of the media player when done
-        mediaPlayer.setOnEndOfMedia(() -> {
-            mediaPlayer.stop();
-            mediaPlayer.dispose();
-            soundCount--;
-        });
+        long endTime = System.nanoTime();
+        System.out.println("Sound played: " + soundType.toString() + " | Volume: " + volume + " | Pitch: " + pitch + " | Time taken: " + ((double)(endTime - startTime))/1000000 + "ms");
     }
 
     @Override
