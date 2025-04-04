@@ -1,6 +1,7 @@
 package org.sdu.sem4.g7.MissionLoader.objects;
 
 import org.sdu.sem4.g7.common.data.Entity;
+import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Hitbox;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.services.IRigidbodyService;
@@ -38,7 +39,11 @@ public class TileEntity extends Entity implements IRigidbodyService {
     }
 
     @Override
-    public boolean onCollision(IRigidbodyService other) {
+    public boolean onCollision(IRigidbodyService other, GameData gameData) {
+        return false;
+    }
+    @Override
+    public boolean isDead() {
         return false;
     }
 }

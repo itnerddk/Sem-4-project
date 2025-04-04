@@ -6,6 +6,7 @@ import org.sdu.sem4.g7.MissionLoader.internalServices.FileSystemService;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
+import org.sdu.sem4.g7.common.services.IPreGamePluginService;
 
 
 
@@ -13,7 +14,7 @@ import org.sdu.sem4.g7.common.services.IGamePluginService;
 /*
  * Game plugin
  */
-public class Loader implements IGamePluginService {
+public class Loader implements IPreGamePluginService {
 
 	@Override
 	public void start(GameData gameData, WorldData world) {
@@ -35,18 +36,6 @@ public class Loader implements IGamePluginService {
 			System.err.println("Could not write default file(s) to disk! Please see the MissionLoader...");
 			ex.printStackTrace();
 		}
-
-		// Create an instance of MissionLoaderService and set the reference in gameData
-		try {
-			gameData.setMissionLoaderService(new MissionLoaderService(gameData, world));
-		} catch (IOException e) {
-			System.err.println("Could not create a MissionLoaderService!");
-			e.printStackTrace();
-		}
-
-
-
-
 	}
 
 	@Override

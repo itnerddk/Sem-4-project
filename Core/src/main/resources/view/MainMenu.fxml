@@ -3,6 +3,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -72,7 +74,6 @@
             <Button fx:id="speedPriceButton" text="2000$" onAction="#handleSpeedUpgrade" focusTraversable="false" styleClass="price-button"/>
         </VBox>
     </AnchorPane>
-
 
     <AnchorPane fx:id="shopPane" layoutX="50.0" layoutY="220.0" prefHeight="450.0" prefWidth="700.0" visible="false" />
 

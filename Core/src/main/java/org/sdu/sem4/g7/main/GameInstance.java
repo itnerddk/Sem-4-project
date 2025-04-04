@@ -10,77 +10,176 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
+import javafx.scene.paint.Color;
 
-import org.sdu.sem4.g7.common.data.Entity;
-import org.sdu.sem4.g7.common.data.GameData;
+import org.sdu.sem4.g7.common.data.*;
 import org.sdu.sem4.g7.common.data.GameData.Keys;
-import org.sdu.sem4.g7.common.data.Vector2;
-import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.enums.EntityType;
-import org.sdu.sem4.g7.common.services.IEntityProcessingService;
-import org.sdu.sem4.g7.common.services.IGamePluginService;
-import org.sdu.sem4.g7.common.services.IPostEntityProcessingService;
-import org.sdu.sem4.g7.common.services.IPreGamePluginService;
-
-import java.util.Collection;
-import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.concurrent.ConcurrentHashMap;
+import org.sdu.sem4.g7.common.services.*;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
 public class GameInstance {
 
-    private final GameData gameData = new GameData();
-    private WorldData worldData;
-    private final Map<Entity, Node> sprites = new ConcurrentHashMap<>();
+    private final GameData gameData;
+    private final WorldData worldData;
+
     private final Pane gameWindow = new Pane();
-    private final Canvas gameCanvas = new Canvas(gameData.getDisplayWidth(), gameData.getDisplayHeight());
-    public static Text debugText = new Text(10, 20, "");
+    private final Canvas gameCanvas;
+    private final Map<Entity, Node> sprites = new ConcurrentHashMap<>();
     private final Group debugGroup = new Group();
+    private static final Text debugText = new Text(10, 20, "");
 
-    public GameInstance(Stage window) {
+    private final Collection<IGamePluginService> pluginServices;
+   
+
+    public GameInstance(GameData gameData, WorldData worldData) {
+        this.gameData = gameData;
+        this.worldData = worldData;
+
+        this.gameCanvas = new Canvas(gameData.getMissionLoaderService().getMapSizeX(), gameData.getMissionLoaderService().getMapSizeY());
+        this.pluginServices = loadServices(IGamePluginService.class);
+      
+        setupCanvas();
+        startPlugins();
+        loadEntities();
+        startRenderLoop();
+    }
+
+    private void setupCanvas() {
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
-        gameWindow.getChildren().add(debugText);
         gameCanvas.setViewOrder(-9999);
-        gameWindow.getChildren().add(gameCanvas);
+        gameWindow.getChildren().addAll(gameCanvas, debugText);
         gameWindow.setStyle("-fx-background-color: black;");
+    }
 
-
-        for (IPreGamePluginService plugin : getPrePluginServices()) {
+    private void startPlugins() {
+        for (IGamePluginService plugin : pluginServices) {
             plugin.start(gameData, worldData);
         }
-        for (IGamePluginService plugin : getPluginServices()) {
-            plugin.start(gameData, worldData);
-        }
+    }
 
-        this.worldData = gameData.getMissionLoaderService().loadMission(1);
-
-        gameCanvas.setWidth(gameData.getMissionLoaderService().getMapSizeX());
-        gameCanvas.setHeight(gameData.getMissionLoaderService().getMapSizeY());
-
-        window.widthProperty().addListener((obs, oldVal, newVal) -> {
-            gameData.setDisplayWidth(newVal.intValue());
-        });
-        window.heightProperty().addListener((obs, oldVal, newVal) -> {
-            gameData.setDisplayHeight(newVal.intValue());
-        });
-
+    private void loadEntities() {
         for (Entity entity : worldData.getEntities()) {
-            sprites.put(entity, entity.getSprite());
-            gameWindow.getChildren().add(entity.getSprite());
+            Node sprite = entity.getSprite();
+            if (sprite != null) {
+                sprites.put(entity, sprite);
+                gameWindow.getChildren().add(sprite);
+            }
+        }
+    }
+
+    private void startRenderLoop() {
+        new AnimationTimer() {
+            long lastTick = 0;
+
+            @Override
+            public void handle(long now) {
+                if (now - lastTick >= 28_000_000) {
+                    update();
+                    gameData.updateKeys();
+                    gameData.setDelta((now - lastTick) * 1.0e-9);
+                    gameData.addDebug("Entity Count", String.valueOf(worldData.getEntities().size()));
+                    gameData.addDebug("Delta", String.valueOf((Math.round(gameData.getDelta() * 10000) / 10.0)));
+                    lastTick = now;
+                    draw();
+                }
+            }
+        }.start();
+    }
+
+    private void update() {
+        for (IEntityProcessingService processor : getEntityProcessingServices()) {
+            processor.process(gameData, worldData);
+        }
+        for (IPostEntityProcessingService processor : getPostEntityProcessingServices()) {
+            processor.process(gameData, worldData);
+        }
+    }
+
+    private void draw() {
+        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
+
+        // Follow player
+        worldData.getEntities().stream()
+                .filter(e -> e.getEntityType() == EntityType.PLAYER)
+                .findFirst()
+                .ifPresent(player -> {
+                    Vector2 pos = new Vector2(player.getPosition()).multiply(-1)
+                            .add(gameData.getDisplayWidth() / 2, gameData.getDisplayHeight() / 2);
+                    gameWindow.setTranslateX(pos.getX());
+                    gameWindow.setTranslateY(pos.getY());
+                });
+
+        // Sync entities and render
+        for (Entity entity : worldData.getEntities()) {
+            ImageView sprite = (ImageView) sprites.get(entity);
+            if (sprite == null) {
+                sprite = entity.getSprite();
+                if (sprite != null) {
+                    sprites.put(entity, sprite);
+                    if (!gameWindow.getChildren().contains(sprite)) {
+                        gameWindow.getChildren().add(sprite);
+                    }
+                }
+            }
+            entity.render(gc);
         }
 
-        render();
+        // Remove deleted entities
+        sprites.keySet().removeIf(entity -> {
+            if (!worldData.getEntities().contains(entity)) {
+                Node sprite = sprites.remove(entity);
+                if (sprite != null) {
+                    gameWindow.getChildren().remove(sprite);
+                }
+                return true;
+            }
+            return false;
+        });
+
+
+
+        // Games doesn't load properly if debug is removed.
+        // Debug overlay
+        if (gameData.isDebugMode()) {
+            debugGroup.getChildren().clear();
+            debugGroup.viewOrderProperty().set(1000);
+            gameWindow.getChildren().remove(debugGroup);
+            for (Node node : gameData.debugEntities.values()) {
+                debugGroup.getChildren().add(node);
+            }
+            gameWindow.getChildren().add(debugGroup);
+        }
+
+        // Debug text
+        debugText.setText("");
+        for (String key : gameData.debugMap.keySet()) {
+            debugText.setText(debugText.getText() + key + ": " + gameData.debugMap.get(key) + "\n");
+        }
+    }
+
+    private <T> Collection<T> loadServices(Class<T> type) {
+        return ServiceLoader.load(type).stream()
+                .map(ServiceLoader.Provider::get)
+                .collect(Collectors.toList());
+    }
+
+    public Pane getGameView() {
+        return gameWindow;
     }
 
     public Scene getScene() {
         Scene scene = new Scene(gameWindow);
-        scene.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
-        scene.setFill(javafx.scene.paint.Color.BLACK);
+        scene.setFill(Color.BLACK);
         scene.setOnKeyPressed(event -> setupKeys(event, true));
         scene.setOnKeyReleased(event -> setupKeys(event, false));
+        scene.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
         return scene;
     }
 
@@ -108,94 +207,6 @@ public class GameInstance {
             default:
                 break;
         }
-    }
-
-    private void render() {
-        new AnimationTimer() {
-            long lastTick;
-            @Override
-            public void handle(long now) {
-                if (now - lastTick >= 28_000_000) {
-                    update();
-                    gameData.updateKeys();
-                    gameData.setDelta((now - lastTick) * 1.0e-9);
-                    gameData.addDebug("Entity Count", String.valueOf(worldData.getEntities().size()));
-                    gameData.addDebug("Delta", String.valueOf((Math.round(gameData.getDelta() * 10000) / 10.0)));
-                    lastTick = now;
-                    draw();
-                }
-            }
-        }.start();
-    }
-
-    private void update() {
-        for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
-            entityProcessorService.process(gameData, worldData);
-        }
-        for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
-            postEntityProcessorService.process(gameData, worldData);
-        }
-    }
-
-    private void draw() {
-        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
-
-        // Center the camera on the player
-        for (Entity entity : worldData.getEntities()) {
-            if (entity.getEntityType() == EntityType.PLAYER) {
-                Vector2 playerPos = new Vector2(entity.getPosition()).multiply(-1);
-                playerPos.add(gameData.getDisplayWidth() / 2, gameData.getDisplayHeight() / 2);
-
-                Vector2 windowPos = new Vector2(gameWindow.getTranslateX(), gameWindow.getTranslateY());
-
-                windowPos.lerp(playerPos, Math.min(5 * gameData.getDelta(), 1));
-
-                gameWindow.setTranslateX(windowPos.getX());
-                gameWindow.setTranslateY(windowPos.getY());
-            }
-        }
-
-        if (worldData != null) {
-            for (Entity spriteEntity : sprites.keySet()) {
-                if(!worldData.getEntities().contains(spriteEntity)){
-                    ImageView removedSprite = (ImageView) sprites.get(spriteEntity);
-                    sprites.remove(spriteEntity);
-                    gameWindow.getChildren().remove(removedSprite);
-                }
-            }
-            if (gameData.isDebugMode()) {
-                debugGroup.getChildren().clear();
-                debugGroup.viewOrderProperty().set(1000);
-                gameWindow.getChildren().remove(debugGroup);
-                for (Node node : gameData.debugEntities.values()) {
-                    debugGroup.getChildren().add(node);
-                }
-                gameWindow.getChildren().add(debugGroup);
-            }
-
-            for (Entity entity : worldData.getEntities()) {
-                ImageView sprite = (ImageView) sprites.get(entity);
-                if (sprite == null) {
-                    sprite = entity.getSprite();
-                    sprites.put(entity, sprite);
-                    gameWindow.getChildren().add(sprite);
-                }
-                entity.render(gc);
-            }
-        }
-        debugText.setText("");
-        for (String key : gameData.debugMap.keySet()) {
-            debugText.setText(debugText.getText() + key + ": " + gameData.debugMap.get(key) + "\n");
-        }
-    }
-
-    private Collection<? extends IPreGamePluginService> getPrePluginServices() {
-        return ServiceLoader.load(IPreGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
-    }
-
-    private Collection<? extends IGamePluginService> getPluginServices() {
-        return ServiceLoader.load(IGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 
     private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {

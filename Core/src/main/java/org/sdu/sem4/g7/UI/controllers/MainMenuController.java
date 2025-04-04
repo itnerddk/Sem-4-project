@@ -1,6 +1,5 @@
 package org.sdu.sem4.g7.UI.controllers;
 
-import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,10 +15,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
+import javafx.scene.control.Label;
 
 import java.io.IOException;
+
+import org.sdu.sem4.g7.MissionLoader.services.MissionLoaderService;
+import org.sdu.sem4.g7.common.data.GameData;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -65,6 +67,7 @@ public class MainMenuController implements Initializable {
         setupArmorUpgrade();
         setupHealthUpgrade();
         setupSpeedUpgrade();
+
 
         ServiceLocator.getCurrencyService().ifPresentOrElse(
                 service -> coinDisplay.setText("Coins: " + service.getCurrency()),
@@ -279,4 +282,14 @@ public class MainMenuController implements Initializable {
             circles[i].getStyleClass().add(i < level ? "filled" : "empty");
         }
     }
+
+    public void setScene(Stage stage) {
+        this.stage = stage;
+    }
+
+
+    public void setGameData(GameData gameData) {
+        this.gameData = gameData;
+    }
+
 }

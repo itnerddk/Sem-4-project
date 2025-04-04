@@ -4,6 +4,8 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.sdu.sem4.g7.common.enums.SoundType;
+import org.sdu.sem4.g7.common.services.IAudioProcessingService;
 import org.sdu.sem4.g7.common.services.IMissionLoaderService;
 
 import javafx.scene.Node;
@@ -18,6 +20,8 @@ public class GameData {
 
     // TODO: This is maybe not the best way, but let's change it later
     private IMissionLoaderService missionLoaderService;
+    private IAudioProcessingService audioProcessingService;
+    EnumMap<SoundType, Float> soundVolume = new EnumMap<>(SoundType.class);
 
     public void setDisplayWidth(int width) {
         this.displayWidth = width;
@@ -53,6 +57,10 @@ public class GameData {
         for (Keys key : Keys.values()) {
             keys.put(key, false);
             keysLast.put(key, false);
+        }
+        // Initialize the sound volume
+        for (SoundType soundType : SoundType.values()) {
+            soundVolume.put(soundType, 1.0f); // Default volume is 1.0
         }
     }
 
@@ -150,5 +158,45 @@ public class GameData {
 
     public void setMissionLoaderService(IMissionLoaderService missionLoaderService) {
         this.missionLoaderService = missionLoaderService;
+    }
+
+    public IAudioProcessingService getAudioProcessingService() {
+        return audioProcessingService;
+    }
+    
+    public void setAudioProcessingService(IAudioProcessingService audioProcessingService) {
+        this.audioProcessingService = audioProcessingService;
+    }
+
+    public void setSoundVolume(SoundType soundType, float volume) {
+        if (volume < 0 || volume > 1) {
+            throw new IllegalArgumentException("Volume must be between 0.0 and 1.0");
+        }
+        soundVolume.put(soundType, volume);
+    }
+
+    public float getSoundVolume(SoundType soundType) {
+        return soundVolume.get(soundType);
+    }
+
+    /**
+     * Plays an audio file with the given name and volume.
+     * @param soundType the type of sound to play (shoot, click, explosion, etc.)
+     * @param volume the volume level (0.0 to 1.0)
+     */
+    public void playAudio(SoundType soundType, float volume) {
+        if (audioProcessingService != null) {
+            audioProcessingService.playSound(soundType, volume  * soundVolume.get(soundType));
+        } else {
+            System.err.println("Audio processing service is not set.");
+        }
+    }
+    
+    /**
+     * Plays an audio file with the given name at the default volume.
+     * @param soundType the type of sound to play (shoot, click, explosion, etc.)
+     */
+    public void playAudio(SoundType soundType) {
+        playAudio(soundType, 1.0f);
     }
 }
