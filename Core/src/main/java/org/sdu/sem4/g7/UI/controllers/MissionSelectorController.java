@@ -1,6 +1,7 @@
 package org.sdu.sem4.g7.UI.controllers;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.ServiceLoader;
@@ -11,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -31,6 +33,8 @@ import javafx.scene.layout.GridPane;
 public class MissionSelectorController {
 
     @FXML
+    private ScrollPane missionScroll;
+    @FXML
     private StackPane contentWrapper;
 
     @FXML
@@ -50,6 +54,7 @@ public class MissionSelectorController {
 
         this.gameData = gameData;
         List<Mission> missions = gameData.getMissionLoaderService().getMissions();
+        missions.sort(Comparator.comparingInt(Mission::getId));
 
         int cols = 3;
         int highestUnlockedId = 2;
@@ -61,7 +66,7 @@ public class MissionSelectorController {
             tile.setSpacing(5);
             tile.getStyleClass().add("mission-tile");
 
-            Label number = new Label(String.valueOf(i + 1)); // i er loop-indeks
+            Label number = new Label(String.valueOf(mission.getId()));
             number.getStyleClass().add("mission-number");
 
             boolean isLocked = i > highestUnlockedId;
