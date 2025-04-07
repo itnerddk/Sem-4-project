@@ -10,13 +10,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import org.sdu.sem4.g7.common.services.ISettingPluginService;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
 import javafx.scene.control.Label;
 
@@ -24,8 +29,14 @@ import java.io.IOException;
 
 import org.sdu.sem4.g7.MissionLoader.services.MissionLoaderService;
 import org.sdu.sem4.g7.common.data.GameData;
+import org.sdu.sem4.g7.common.data.Setting;
+
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.ServiceLoader;
+import java.util.stream.Collectors;
 
 public class MainMenuController implements Initializable {
 
@@ -69,10 +80,13 @@ public class MainMenuController implements Initializable {
         healthIcon.setImage(new Image(getClass().getResource("/images/heart.png").toExternalForm()));
         armorIcon.setImage(new Image(getClass().getResource("/images/armor.png").toExternalForm()));
         speedIcon.setImage(new Image(getClass().getResource("/images/speed.png").toExternalForm()));
+        gameData = new GameData();
 
         setupArmorUpgrade();
         setupHealthUpgrade();
         setupSpeedUpgrade();
+
+        setupSettingsPane();
 
         ServiceLocator.getCurrencyService().ifPresentOrElse(
                 service -> coinDisplay.setText("Coins: " + service.getCurrency()),
@@ -88,7 +102,6 @@ public class MainMenuController implements Initializable {
     @FXML
     private void handleStartGame(ActionEvent event) {
         try {
-            GameData gameData = new GameData();
             // Set up the game data so it has a mission loader
             MissionLoaderService missionLoader = new MissionLoaderService(gameData, null);
             gameData.setMissionLoaderService(missionLoader);
@@ -316,5 +329,67 @@ public class MainMenuController implements Initializable {
             circles[i].getStyleClass().removeAll("filled", "empty");
             circles[i].getStyleClass().add(i < level ? "filled" : "empty");
         }
+    }
+
+    private void setupSettingsPane() {
+        List<Setting> settings = new ArrayList<>();
+        for(ISettingPluginService settingPlugin: ServiceLoader.load(ISettingPluginService.class).stream().map(ServiceLoader.Provider::get).collect(Collectors.toList())) {
+            settingPlugin.addSettings(settings);
+        }
+        
+        for (Setting setting : settings) {
+            System.out.println("Setting: " + setting.getName() + " - " + setting.getDescription());
+            
+            // Load Setting.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Setting.fxml"));
+            Pane settingPane = null;
+            try {
+                settingPane = loader.load();
+                Label settingLabel = (Label) settingPane.lookup("#settingName");
+                settingLabel.setText(setting.getName());
+                Label settingDescription = (Label) settingPane.lookup("#settingDescription");
+                settingDescription.setText(setting.getDescription());
+
+                // Set the value of the setting
+                HBox settingValue = (HBox) settingPane.lookup("#settingValue");
+
+                if (setting.getValueTypeClass() == Boolean.class) {
+                    // Create a toggle button
+                    Button toggleButton = new Button();
+                    toggleButton.setText((Boolean) setting.getValue() ? "ON" : "OFF");
+                    toggleButton.setOnAction(e -> {
+                        boolean newValue = !((Boolean) setting.getValue());
+                        setting.setValue(newValue);
+                        toggleButton.setText(newValue ? "ON" : "OFF");
+                        setting.apply(gameData);
+                    });
+                    settingValue.getChildren().add(toggleButton);
+                } else if (setting.getValueTypeClass() == Integer.class) {
+                } else if (setting.getValueTypeClass() == Float.class) {
+                    // Create slider with 0.1 step
+                    Slider slider = new Slider(0, 1, (Float) setting.getValue());
+                    slider.setBlockIncrement(0.1);
+                    slider.setMajorTickUnit(1);
+                    slider.setMinorTickCount(9);
+                    slider.setSnapToTicks(true);
+                    Label sliderValueLabel = new Label(String.valueOf((Float) setting.getValue()));
+                    sliderValueLabel.setText(String.valueOf((Float) setting.getValue()));
+                    slider.valueProperty().addListener((obs, oldValue, newValue) -> {
+                        setting.setValue(newValue.floatValue());
+                        sliderValueLabel.setText(String.valueOf(Math.round(newValue.floatValue() * 10.0f) / 10.0f));
+                        setting.apply(gameData);
+                    });
+                    settingValue.getChildren().add(slider);
+                    settingValue.getChildren().add(sliderValueLabel);
+                }
+                // Get #settingsVbox
+                ((VBox) settingsPane.lookup("#settingsVbox")).getChildren().add(settingPane);
+                // Set vgrow
+                // VBox.setVgrow(settingPane, javafx.scene.layout.Priority.ALWAYS);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

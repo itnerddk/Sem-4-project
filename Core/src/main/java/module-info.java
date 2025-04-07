@@ -20,6 +20,7 @@ module Core {
     uses org.sdu.sem4.g7.tank.parts.Tank;
     uses org.sdu.sem4.g7.common.services.ICurrencyService;
     uses org.sdu.sem4.g7.common.services.IMissionLoaderService;
+    uses org.sdu.sem4.g7.common.services.ISettingPluginService;
 
     exports org.sdu.sem4.g7.main;
     exports org.sdu.sem4.g7.UI.controllers to javafx.fxml;
