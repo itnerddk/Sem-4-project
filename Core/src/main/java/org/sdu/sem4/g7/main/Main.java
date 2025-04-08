@@ -41,6 +41,9 @@ public class Main extends Application {
         MainMenuController controller = mainMenuLoader.getController();
         controller.setGameData(gameData);
 
+        // Insert reference to primaryStage in gamedata TODO: Find a better way, currently needed to change it from the game
+        gameData.setPrimaryStage(primaryStage);
+
         Scene IntroMediaScene = new Scene(root);
 
         primaryStage.setScene(IntroMediaScene);

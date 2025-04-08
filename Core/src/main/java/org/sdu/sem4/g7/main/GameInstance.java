@@ -1,8 +1,10 @@
 package org.sdu.sem4.g7.main;
 
 import javafx.animation.AnimationTimer;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -19,6 +21,7 @@ import org.sdu.sem4.g7.common.services.*;
 
 import static java.util.stream.Collectors.toList;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -99,6 +102,25 @@ public class GameInstance {
         for (IPostEntityProcessingService processor : getPostEntityProcessingServices()) {
             processor.process(gameData, worldData);
         }
+
+        // check if player died or won TODO: Maybe we can figure out a better way?
+        Parent root;
+        FXMLLoader loader;
+        try {
+            if (worldData.isGameWon()) {
+                loader = new FXMLLoader(getClass().getResource("/view/Victory.fxml"));
+                root = loader.load();
+                gameData.getPrimaryStage().setScene(new Scene(root));
+            } else if (worldData.isGameLost()) {
+                loader = new FXMLLoader(getClass().getResource("/view/GameOver.fxml"));
+                root = loader.load();
+                gameData.getPrimaryStage().setScene(new Scene(root));
+            }
+        } catch (IOException ex) {
+            System.err.println("Kunne ikke loade FXML for victory eller gameover!");
+            ex.printStackTrace();
+        }
+        
     }
 
     private void draw() {
