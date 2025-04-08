@@ -372,6 +372,8 @@ public class MainMenuController implements Initializable {
                     slider.setMajorTickUnit(1);
                     slider.setMinorTickCount(9);
                     slider.setSnapToTicks(true);
+                    slider.setShowTickMarks(true);
+                    // Create a label to show the value of the slider
                     Label sliderValueLabel = new Label(String.valueOf((Float) setting.getValue()));
                     sliderValueLabel.setText(String.valueOf((Float) setting.getValue()));
                     slider.valueProperty().addListener((obs, oldValue, newValue) -> {
@@ -379,13 +381,14 @@ public class MainMenuController implements Initializable {
                         sliderValueLabel.setText(String.valueOf(Math.round(newValue.floatValue() * 10.0f) / 10.0f));
                         setting.apply(gameData);
                     });
+                    HBox.setHgrow(slider, javafx.scene.layout.Priority.ALWAYS);
                     settingValue.getChildren().add(slider);
                     settingValue.getChildren().add(sliderValueLabel);
                 }
                 // Get #settingsVbox
                 ((VBox) settingsPane.lookup("#settingsVbox")).getChildren().add(settingPane);
-                // Set vgrow
-                // VBox.setVgrow(settingPane, javafx.scene.layout.Priority.ALWAYS);
+                // Set 5 margin
+                VBox.setMargin(settingPane, new javafx.geometry.Insets(0, 5, 0, 5));
             } catch (IOException e) {
                 e.printStackTrace();
             }
