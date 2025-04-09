@@ -66,3 +66,19 @@
     -fx-background-radius: 5 5 0 0;
     -fx-border-radius: 5 5 0 0;
 }
+
+.generic-head1-label {
+    -fx-text-fill: -style-text-color;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+.generic-head2-label {
+    -fx-text-fill: -style-text-color;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+.generic-head3-label {
+    -fx-text-fill: -style-text-color;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}

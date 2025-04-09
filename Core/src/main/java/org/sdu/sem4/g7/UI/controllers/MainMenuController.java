@@ -344,6 +344,7 @@ public class MainMenuController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Setting.fxml"));
             Pane settingPane = null;
             try {
+                // Load the setting FXML file
                 settingPane = loader.load();
                 Label settingLabel = (Label) settingPane.lookup("#settingName");
                 settingLabel.setText(setting.getName());
@@ -353,6 +354,7 @@ public class MainMenuController implements Initializable {
                 // Set the value of the setting
                 HBox settingValue = (HBox) settingPane.lookup("#settingValue");
 
+                // Set up the input based on the type of setting
                 if (setting.getValueTypeClass() == Boolean.class) {
                     // Create a toggle button
                     Button toggleButton = new Button();
@@ -376,11 +378,13 @@ public class MainMenuController implements Initializable {
                     // Create a label to show the value of the slider
                     Label sliderValueLabel = new Label(String.valueOf((Float) setting.getValue()));
                     sliderValueLabel.setText(String.valueOf((Float) setting.getValue()));
+                    // Add a listener to the slider to update the setting value
                     slider.valueProperty().addListener((obs, oldValue, newValue) -> {
                         setting.setValue(newValue.floatValue());
                         sliderValueLabel.setText(String.valueOf(Math.round(newValue.floatValue() * 10.0f) / 10.0f));
                         setting.apply(gameData);
                     });
+                    // Add the slider and label to the setting value HBox
                     HBox.setHgrow(slider, javafx.scene.layout.Priority.ALWAYS);
                     settingValue.getChildren().add(slider);
                     settingValue.getChildren().add(sliderValueLabel);
