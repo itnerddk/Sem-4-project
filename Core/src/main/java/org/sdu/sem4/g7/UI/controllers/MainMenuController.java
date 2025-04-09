@@ -108,6 +108,7 @@ public class MainMenuController implements Initializable {
             controller.init(gameData);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             controller.setStage(stage);
+            gameData.setPrimaryStage(stage);
 
             Scene missionSelectorScene = new Scene(missionSelectorPane);
             stage.setScene(missionSelectorScene);
