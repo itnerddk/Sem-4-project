@@ -11,6 +11,7 @@ import org.sdu.sem4.g7.common.services.IMissionLoaderService;
 import javafx.scene.Node;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.stage.Stage;
 
 public class GameData {
 
@@ -20,6 +21,12 @@ public class GameData {
 
     // TODO: This is maybe not the best way, but let's change it later
     private IMissionLoaderService missionLoaderService;
+
+    /*
+     * The primary stage of the game, TODO: Find a better way
+     */
+    private Stage primaryStage;
+
     private IAudioProcessingService audioProcessingService;
     EnumMap<SoundType, Float> soundVolume = new EnumMap<>(SoundType.class);
 
@@ -198,5 +205,13 @@ public class GameData {
      */
     public void playAudio(SoundType soundType) {
         playAudio(soundType, 1.0f);
+    }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
     }
 }
