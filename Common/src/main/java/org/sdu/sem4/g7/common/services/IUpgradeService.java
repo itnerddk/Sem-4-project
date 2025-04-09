@@ -8,8 +8,6 @@ public interface IUpgradeService {
     int getHealthLevel();
     void setHealthLevel(int level);
 
-
-
     int getArmorUpgradePrice();
     boolean upgradeArmor();
     boolean isArmorMaxed();
@@ -21,4 +19,10 @@ public interface IUpgradeService {
     boolean isSpeedMaxed();
     int getSpeedLevel();
     void setSpeedLevel(int level);
+
+    int getDamageUpgradePrice();
+    boolean upgradeDamage();
+    boolean isDamageMaxed();
+    int getDamageLevel();
+    void setDamageLevel(int level);
 }
