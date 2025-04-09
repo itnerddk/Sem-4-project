@@ -27,7 +27,7 @@ public class GameResultController implements Initializable {
 
     public void init(boolean isWin, int score, int target, int coins) {
         resultText.setText(isWin ? "YOU WIN!" : "YOU LOSE!");
-        scoreText.setText("Your Score: " + score + " / " + target);
+        scoreText.setText("Your Score: " + score);
         coinsText.setText("+" + coins + " Coins");
     }
 

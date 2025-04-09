@@ -2,32 +2,31 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.Pane?>
 
 <AnchorPane fx:id="root" prefHeight="800.0" prefWidth="800.0"
             style="-fx-background-color: rgba(0,0,0,0.75);"
+            stylesheets="@GameResult.css"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.sdu.sem4.g7.UI.controllers.GameResultController">
 
-    <Text fx:id="resultText" layoutX="200" layoutY="220" strokeType="OUTSIDE" strokeWidth="0.0" text="YOU WIN!" textAlignment="CENTER" wrappingWidth="400">
-        <font>
-            <Font name="Comic Sans MS" size="60.0"/>
-        </font>
-    </Text>
+    <Pane prefWidth="400" prefHeight="400" layoutX="200" layoutY="200"
+          styleClass="result-window">
 
-    <Text fx:id="scoreText" layoutX="200" layoutY="300" text="Your Score: 0 / 10000" wrappingWidth="400">
-        <font>
-            <Font name="Arial" size="24.0"/>
-        </font>
-    </Text>
+        <Text fx:id="resultText" layoutX="30" layoutY="120" text="YOU WIN!" wrappingWidth="340"
+              styleClass="result-title" textAlignment="CENTER"/>
 
-    <Text fx:id="coinsText" layoutX="200" layoutY="340" text="+0 Coins" wrappingWidth="400">
-        <font>
-            <Font name="Arial" size="24.0"/>
-        </font>
-    </Text>
+        <Text fx:id="scoreText" layoutX="30" layoutY="180" text="Your Score: 0 / 10000"
+              wrappingWidth="340" styleClass="result-score" textAlignment="CENTER"/>
 
-    <Button layoutX="250" layoutY="440" prefWidth="300" prefHeight="60" text="Main Menu" onAction="#handleMainMenu" styleClass="button-custom" focusTraversable="false"/>
+        <Text fx:id="coinsText" layoutX="30" layoutY="230" text="+0 Coins"
+              wrappingWidth="340" styleClass="result-coins" textAlignment="CENTER"/>
+
+        <Button layoutX="100" layoutY="300" prefWidth="200" prefHeight="60"
+                text="Main Menu" onAction="#handleMainMenu"
+                styleClass="button-ok" focusTraversable="false"/>
+    </Pane>
+
 </AnchorPane>

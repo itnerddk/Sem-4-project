@@ -31,7 +31,7 @@ public class Main extends Application {
                 .map(ServiceLoader.Provider::get)
                 .forEach(plugin -> plugin.start(gameData, null));
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Intro.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/IntroMedia.fxml"));
         Parent root = loader.load();
 
 
