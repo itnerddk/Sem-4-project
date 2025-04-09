@@ -334,11 +334,13 @@ public class MainMenuController implements Initializable {
     }
 
     private void setupSettingsPane() {
+        // Create an empty list to store the to be loaded groups
         List<SettingGroup> settingGroups = new ArrayList<>();
+        // Load them through the service loader
         for(ISettingPluginService settingPlugin: ServiceLoader.load(ISettingPluginService.class).stream().map(ServiceLoader.Provider::get).collect(Collectors.toList())) {
             settingPlugin.addSettings(settingGroups);
         }
-        
+        // Iterate through the loaded groups and add them to the settings pane
         for (SettingGroup settingGroup : settingGroups) {
             // Load SettingGroup.fxml file
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SettingGroup.fxml"));
@@ -348,16 +350,20 @@ public class MainMenuController implements Initializable {
                 settingGroupPane = loader.load();
                 settingGroupPane.setText(settingGroup.getName());
                 settingGroupPane.setExpanded(true); // Might as well keep it expanded for now as there are not enough settings
+
+                // TODO: Description label
                 // Label groupDescriptionLabel = (Label) settingGroupPane.lookup("#groupDescription");
                 // groupDescriptionLabel.setText(settingGroup.getDescription());
 
-                System.out.println("Setting group: " + settingGroup.getName() + " - " + settingGroup.getDescription());
+                // Find the container for the groups
                 VBox settingsVbox = (VBox) settingGroupPane.getContent().lookup("#settingsVbox");
-                System.out.println("Settings VBox: " + settingsVbox);
+
+                // Iterate through the settings and add them to the group
                 for (Setting setting : settingGroup.getSettings()) {
                     spawnSetting(setting, settingsVbox);
                 }
-                System.out.println("Adding to pane");
+
+                // Add the setting group to the settings pane
                 ((VBox)settingsPane.lookup("#settingsVbox")).getChildren().add(settingGroupPane);
             } catch (IOException e) {
                 e.printStackTrace();
