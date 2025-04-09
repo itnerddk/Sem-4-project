@@ -31,7 +31,7 @@ public class Main extends Application {
                 .map(ServiceLoader.Provider::get)
                 .forEach(plugin -> plugin.start(gameData, null));
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Intro.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/IntroMedia.fxml"));
         Parent root = loader.load();
 
 
@@ -40,6 +40,9 @@ public class Main extends Application {
         mainMenuLoader.load();
         MainMenuController controller = mainMenuLoader.getController();
         controller.setGameData(gameData);
+
+        // Insert reference to primaryStage in gamedata TODO: Find a better way, currently needed to change it from the game
+        gameData.setPrimaryStage(primaryStage);
 
         Scene IntroMediaScene = new Scene(root);
 

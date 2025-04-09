@@ -21,9 +21,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
-import org.sdu.sem4.g7.common.services.ISettingPluginService;
+import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
+import org.sdu.sem4.g7.common.services.ISettingPluginService;
 import javafx.scene.control.Label;
 
 import java.io.IOException;
@@ -49,8 +49,7 @@ public class MainMenuController implements Initializable {
     @FXML private ImageView backgroundImage;
     @FXML private Parent mainMenuPane;
     private Stage stage;
-    private GameData gameData;
-
+    private GameData gameData = new GameData();
 
     // Health upgrade UI
     @FXML private ImageView healthIcon;
@@ -73,6 +72,13 @@ public class MainMenuController implements Initializable {
     @FXML private Label speedUpgradeText;
     @FXML private Circle speedCircle1, speedCircle2, speedCircle3, speedCircle4, speedCircle5;
 
+    // Damage UI
+    @FXML private ImageView damageIcon;
+    @FXML private VBox damageUpgradeBox;
+    @FXML private Button damagePriceButton;
+    @FXML private Label damageUpgradeText;
+    @FXML private Circle damageCircle1, damageCircle2, damageCircle3, damageCircle4, damageCircle5;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -82,11 +88,15 @@ public class MainMenuController implements Initializable {
         healthIcon.setImage(new Image(getClass().getResource("/images/heart.png").toExternalForm()));
         armorIcon.setImage(new Image(getClass().getResource("/images/armor.png").toExternalForm()));
         speedIcon.setImage(new Image(getClass().getResource("/images/speed.png").toExternalForm()));
+        damageIcon.setImage(new Image(getClass().getResource("/images/damage.png").toExternalForm()));
+      
         gameData = new GameData();
+
 
         setupArmorUpgrade();
         setupHealthUpgrade();
         setupSpeedUpgrade();
+        setupDamageUpgrade();
 
         setupSettingsPane();
 
@@ -115,6 +125,7 @@ public class MainMenuController implements Initializable {
             controller.init(gameData);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             controller.setStage(stage);
+            gameData.setPrimaryStage(stage);
 
             Scene missionSelectorScene = new Scene(missionSelectorPane);
             stage.setScene(missionSelectorScene);
@@ -333,6 +344,7 @@ public class MainMenuController implements Initializable {
         }
     }
 
+
     private void setupSettingsPane() {
         // Create an empty list to store the to be loaded groups
         List<SettingGroup> settingGroups = new ArrayList<>();
@@ -429,6 +441,57 @@ public class MainMenuController implements Initializable {
             parent.getChildren().add(settingPane);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    // Damage
+    public void handleDamageUpgrade(ActionEvent actionEvent) {
+        ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
+            if (upgradeService.isDamageMaxed()) {
+                damagePriceButton.setText("MAX");
+                damageCircle1.setDisable(true);
+                return;
+            }
+
+            if (upgradeService.upgradeDamage()) {
+                int newLevel = upgradeService.getDamageLevel();
+                updateDamageCircles(newLevel);
+
+                if (upgradeService.isDamageMaxed()) {
+                    damagePriceButton.setText("MAX");
+                    damagePriceButton.setDisable(true);
+                } else {
+                    damagePriceButton.setText(upgradeService.getDamageUpgradePrice() + "$");
+                }
+
+                ServiceLocator.getCurrencyService().ifPresent(service ->
+                        coinDisplay.setText("Coins: " + service.getCurrency())
+                );
+            } else {
+                System.out.println("Not enough coins!");
+            }
+        });
+    }
+
+    private void setupDamageUpgrade() {
+        ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
+            int level = upgradeService.getDamageLevel();
+            updateDamageCircles(level);
+
+            if (upgradeService.isDamageMaxed()) {
+                damagePriceButton.setText("MAX");
+                damagePriceButton.setDisable(true);
+            } else {
+                damagePriceButton.setText(upgradeService.getDamageUpgradePrice() + "$");
+            }
+        });
+    }
+
+    private void updateDamageCircles(int level) {
+        Circle[] circles = {damageCircle1, damageCircle2, damageCircle3, damageCircle4, damageCircle5};
+        for (int i = 0; i < circles.length; i++) {
+            circles[i].getStyleClass().removeAll("filled", "empty");
+            circles[i].getStyleClass().add(i < level ? "filled" : "empty");
         }
     }
 }
