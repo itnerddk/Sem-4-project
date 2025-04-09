@@ -1,6 +1,7 @@
 package org.sdu.sem4.g7.main;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -11,20 +12,22 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-
+import javafx.scene.text.Text;
+import javafx.util.Duration;
+import org.sdu.sem4.g7.UI.controllers.GameResultController;
 import org.sdu.sem4.g7.common.data.*;
 import org.sdu.sem4.g7.common.data.GameData.Keys;
 import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.common.services.*;
 
-import static java.util.stream.Collectors.toList;
-
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class GameInstance {
 
@@ -33,6 +36,7 @@ public class GameInstance {
 
     private AnimationTimer animationTimer;
 
+    private final StackPane rootPane = new StackPane();
     private final Pane gameWindow = new Pane();
     private final Canvas gameCanvas;
     private final Map<Entity, Node> sprites = new ConcurrentHashMap<>();
@@ -40,15 +44,13 @@ public class GameInstance {
     private static final Text debugText = new Text(10, 20, "");
 
     private final Collection<IGamePluginService> pluginServices;
-   
 
     public GameInstance(GameData gameData, WorldData worldData) {
         this.gameData = gameData;
         this.worldData = worldData;
-
         this.gameCanvas = new Canvas(gameData.getMissionLoaderService().getMapSizeX(), gameData.getMissionLoaderService().getMapSizeY());
         this.pluginServices = loadServices(IGamePluginService.class);
-      
+
         setupCanvas();
         startPlugins();
         loadEntities();
@@ -59,7 +61,8 @@ public class GameInstance {
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         gameCanvas.setViewOrder(-9999);
         gameWindow.getChildren().addAll(gameCanvas, debugText);
-        gameWindow.setStyle("-fx-background-color: black;");
+        rootPane.getChildren().add(gameWindow);
+        rootPane.setStyle("-fx-background-color: black;");
     }
 
     private void startPlugins() {
@@ -92,26 +95,32 @@ public class GameInstance {
                     gameData.addDebug("Delta", String.valueOf((Math.round(gameData.getDelta() * 10000) / 10.0)));
                     lastTick = now;
                     draw();
-                    
-                    // check if player died or won TODO: Maybe we can figure out a better way?
-                    Parent root;
-                    FXMLLoader loader;
+
                     try {
                         if (worldData.isGameWon()) {
-                            loader = new FXMLLoader(getClass().getResource("/view/Victory.fxml"));
-                            root = loader.load();
-                            gameData.getPrimaryStage().setScene(new Scene(root));
+                            gameData.setScoreTarget(10000);
+                            int timePenalty = (int)(gameData.getTime() * 100); // 100 point per sekund
+                            int finalScore = Math.max(0, 10000 - timePenalty);
+                            gameData.setScore(finalScore);
+                            gameData.setCoinsEarned(1000); // midlertidigt hardcoded
+
+                            ServiceLocator.getCurrencyService().ifPresent(service -> {
+                                service.addCurrency(gameData.getCoinsEarned());
+                            });
+                            showResultOverlay(true, finalScore, 10000, 1000);
                             animationTimer.stop();
                             return;
                         } else if (worldData.isGameLost()) {
-                            loader = new FXMLLoader(getClass().getResource("/view/GameOver.fxml"));
-                            root = loader.load();
-                            gameData.getPrimaryStage().setScene(new Scene(root));
+                            gameData.setScoreTarget(10000);
+                            gameData.setScore(0);
+                            gameData.setCoinsEarned(0);
+                            showResultOverlay(false, 0, 10000, 0);
                             animationTimer.stop();
                             return;
                         }
+
                     } catch (IOException ex) {
-                        System.err.println("Kunne ikke loade FXML for victory eller gameover!");
+                        System.err.println("Could not load GameResult.fxml");
                         ex.printStackTrace();
                     }
                 }
@@ -120,13 +129,30 @@ public class GameInstance {
         animationTimer.start();
     }
 
+    private void showResultOverlay(boolean isWin, int score, int target, int coins) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/GameResult.fxml"));
+        Parent overlay = loader.load();
+
+        GameResultController controller = loader.getController();
+        controller.init(isWin, score, target, coins);
+
+        overlay.setStyle("-fx-background-color: rgba(0,0,0,0.75);");
+
+        FadeTransition ft = new FadeTransition(Duration.seconds(0.5), overlay);
+        ft.setFromValue(0);
+        ft.setToValue(1);
+        ft.play();
+
+        rootPane.getChildren().add(overlay);
+    }
+
     private void update() {
         for (IEntityProcessingService processor : getEntityProcessingServices()) {
             processor.process(gameData, worldData);
         }
         for (IPostEntityProcessingService processor : getPostEntityProcessingServices()) {
             processor.process(gameData, worldData);
-        }        
+        }
     }
 
     private void draw() {
@@ -172,8 +198,6 @@ public class GameInstance {
         });
 
 
-
-        // Games doesn't load properly if debug is removed.
         // Debug overlay
         if (gameData.isDebugMode()) {
             debugGroup.getChildren().clear();
@@ -203,7 +227,7 @@ public class GameInstance {
     }
 
     public Scene getScene() {
-        Scene scene = new Scene(gameWindow);
+        Scene scene = new Scene(rootPane);
         scene.setFill(Color.BLACK);
         scene.setOnKeyPressed(event -> setupKeys(event, true));
         scene.setOnKeyReleased(event -> setupKeys(event, false));

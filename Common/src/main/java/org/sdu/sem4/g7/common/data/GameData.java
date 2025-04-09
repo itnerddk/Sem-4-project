@@ -214,4 +214,39 @@ public class GameData {
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
+
+
+    // #region Score & Reward Tracking
+    private int score;
+    private int scoreTarget;
+    private int coinsEarned;
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getScoreTarget() {
+        return scoreTarget;
+    }
+
+    public void setScoreTarget(int scoreTarget) {
+        this.scoreTarget = scoreTarget;
+    }
+
+    public int getCoinsEarned() {
+        return coinsEarned;
+    }
+
+    public void setCoinsEarned(int coinsEarned) {
+        this.coinsEarned = coinsEarned;
+    }
+
+// #endregion
+
+
+
 }

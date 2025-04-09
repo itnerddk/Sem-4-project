@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
 import javafx.scene.control.Label;
 
@@ -36,7 +37,7 @@ public class MainMenuController implements Initializable {
     @FXML private ImageView backgroundImage;
     @FXML private Parent mainMenuPane;
     private Stage stage;
-    private GameData gameData;
+    private GameData gameData = new GameData();
 
     // Health upgrade UI
     @FXML private ImageView healthIcon;
@@ -96,7 +97,6 @@ public class MainMenuController implements Initializable {
     @FXML
     private void handleStartGame(ActionEvent event) {
         try {
-            GameData gameData = new GameData();
             // Set up the game data so it has a mission loader
             MissionLoaderService missionLoader = new MissionLoaderService(gameData, null);
             gameData.setMissionLoaderService(missionLoader);

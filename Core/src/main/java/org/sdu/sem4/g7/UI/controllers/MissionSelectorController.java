@@ -81,7 +81,7 @@ public class MissionSelectorController {
                 lockIcon.setFitWidth(30);
                 lockIcon.setFitHeight(30);
 
-                tile.getChildren().add(lockIcon); // 👈 Kun lås, intet tal
+                tile.getChildren().add(lockIcon); // Kun lås, intet tal
                 tile.setDisable(true);
             } else {
                 tile.getChildren().add(number);
