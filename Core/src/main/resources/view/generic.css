@@ -6,6 +6,7 @@
 }
 
 /* Generic type styles */
+/* Slider */
 .slider .track {
     -fx-background-color: -style-color1;
     -fx-background-radius: 5;
@@ -37,13 +38,50 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 2, 4);
 }
 
+/* Titled pane */
+.titled-pane {
+    -fx-background-color: -style-color2;
+    -fx-background-radius: 3;
+    -fx-text-fill: -style-text-color;
+    -fx-border-color: -style-border-color;
+    -fx-border-width: 3;
+    -fx-border-radius: 3;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 2, 4);
+}
+.titled-pane * {
+    -fx-text-fill: -style-text-color;
+}
+
+.titled-pane .title {
+    -fx-background-color: -style-color2;
+}
+.titled-pane .title:hover {
+    -fx-background-color: -style-color1;
+}
+
+.titled-pane .title .arrow-button .arrow {
+    -fx-background-color: -style-color1;
+    -fx-background-radius: 5;
+    -fx-padding: 5;
+    -fx-border-color: -style-border-color;
+    -fx-border-width: 2;
+    -fx-border-radius: 5;
+}
+
+.titled-pane .content {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-radius: 5;
+}
+
+
 
 .generic-pane {
     -fx-background-color: -style-color1;
     -fx-text-fill: -style-text-color;
     -fx-border-color: -style-border-color;
     -fx-border-width: 3;
-    -fx-background-radius: 5;
+    -fx-background-radius: 9;
     -fx-border-radius: 5;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 2, 4);
 }
@@ -81,4 +119,12 @@
     -fx-text-fill: -style-text-color;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
+}
+
+.invisible {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0;
 }

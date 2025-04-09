@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 
-<AnchorPane prefHeight="800" prefWidth="800" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.sdu.sem4.g7.UI.controllers.MainMenuController">
+<AnchorPane prefHeight="800" prefWidth="800" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.sdu.sem4.g7.UI.controllers.MainMenuController">
 
     <!-- Background Image -->
     <ImageView fx:id="backgroundImage" fitHeight="800" fitWidth="800" layoutY="1.0" />
@@ -86,7 +86,7 @@
 
     <!-- SETTINGS PANE -->
     <AnchorPane fx:id="settingsPane" layoutX="225" layoutY="150" prefHeight="500" prefWidth="350" styleClass="generic-pane" visible="false">
-        <VBox fx:id="settingsVbox" layoutX="20" layoutY="20" spacing="10" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox fx:id="settingsVbox" layoutX="20" layoutY="20" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label styleClass="generic-header" text="Settings" />
          </children></VBox>
