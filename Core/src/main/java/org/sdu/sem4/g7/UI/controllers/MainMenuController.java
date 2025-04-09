@@ -38,7 +38,6 @@ public class MainMenuController implements Initializable {
     private Stage stage;
     private GameData gameData;
 
-
     // Health upgrade UI
     @FXML private ImageView healthIcon;
     @FXML private VBox healthUpgradeBox;
@@ -60,6 +59,13 @@ public class MainMenuController implements Initializable {
     @FXML private Label speedUpgradeText;
     @FXML private Circle speedCircle1, speedCircle2, speedCircle3, speedCircle4, speedCircle5;
 
+    // Damage UI
+    @FXML private ImageView damageIcon;
+    @FXML private VBox damageUpgradeBox;
+    @FXML private Button damagePriceButton;
+    @FXML private Label damageUpgradeText;
+    @FXML private Circle damageCircle1, damageCircle2, damageCircle3, damageCircle4, damageCircle5;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -69,10 +75,12 @@ public class MainMenuController implements Initializable {
         healthIcon.setImage(new Image(getClass().getResource("/images/heart.png").toExternalForm()));
         armorIcon.setImage(new Image(getClass().getResource("/images/armor.png").toExternalForm()));
         speedIcon.setImage(new Image(getClass().getResource("/images/speed.png").toExternalForm()));
+        damageIcon.setImage(new Image(getClass().getResource("/images/damage.png").toExternalForm()));
 
         setupArmorUpgrade();
         setupHealthUpgrade();
         setupSpeedUpgrade();
+        setupDamageUpgrade();
 
         ServiceLocator.getCurrencyService().ifPresentOrElse(
                 service -> coinDisplay.setText("Coins: " + service.getCurrency()),
@@ -317,4 +325,56 @@ public class MainMenuController implements Initializable {
             circles[i].getStyleClass().add(i < level ? "filled" : "empty");
         }
     }
+
+    // Damage
+    public void handleDamageUpgrade(ActionEvent actionEvent) {
+        ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
+            if (upgradeService.isDamageMaxed()) {
+                damagePriceButton.setText("MAX");
+                damageCircle1.setDisable(true);
+                return;
+            }
+
+            if (upgradeService.upgradeDamage()) {
+                int newLevel = upgradeService.getDamageLevel();
+                updateDamageCircles(newLevel);
+
+                if (upgradeService.isDamageMaxed()) {
+                    damagePriceButton.setText("MAX");
+                    damagePriceButton.setDisable(true);
+                } else {
+                    damagePriceButton.setText(upgradeService.getDamageUpgradePrice() + "$");
+                }
+
+                ServiceLocator.getCurrencyService().ifPresent(service ->
+                        coinDisplay.setText("Coins: " + service.getCurrency())
+                );
+            } else {
+                System.out.println("Not enough coins!");
+            }
+        });
+    }
+
+    private void setupDamageUpgrade() {
+        ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
+            int level = upgradeService.getDamageLevel();
+            updateDamageCircles(level);
+
+            if (upgradeService.isDamageMaxed()) {
+                damagePriceButton.setText("MAX");
+                damagePriceButton.setDisable(true);
+            } else {
+                damagePriceButton.setText(upgradeService.getDamageUpgradePrice() + "$");
+            }
+        });
+    }
+
+    private void updateDamageCircles(int level) {
+        Circle[] circles = {damageCircle1, damageCircle2, damageCircle3, damageCircle4, damageCircle5};
+        for (int i = 0; i < circles.length; i++) {
+            circles[i].getStyleClass().removeAll("filled", "empty");
+            circles[i].getStyleClass().add(i < level ? "filled" : "empty");
+        }
+    }
+
 }

@@ -35,7 +35,8 @@
 
     <!-- Content panes -->
     <AnchorPane fx:id="upgradePane" layoutX="50.0" layoutY="220.0" prefHeight="450.0" prefWidth="700.0">
-        <VBox fx:id="healthUpgradeBox" prefWidth="150" prefHeight="200" layoutX="75" layoutY="100" alignment="CENTER" spacing="10" styleClass="upgrade-box">
+
+        <VBox fx:id="healthUpgradeBox" prefWidth="150" prefHeight="200" layoutX="20" layoutY="100" alignment="CENTER" spacing="10" styleClass="upgrade-box">
             <ImageView fx:id="healthIcon" fitHeight="48" fitWidth="48" preserveRatio="true" />
             <Label fx:id="healthUpgradeText" styleClass="upgrade-label" text="Health"/>
             <HBox alignment="CENTER" spacing="8">
@@ -48,7 +49,7 @@
             <Button fx:id="healthPriceButton" text="2000$" onAction="#handleHealthUpgrade" focusTraversable="false" styleClass="price-button"/>
         </VBox>
 
-        <VBox fx:id="armorUpgradeBox" prefWidth="150" prefHeight="200" layoutX="275" layoutY="100" alignment="CENTER" spacing="10" styleClass="upgrade-box">
+        <VBox fx:id="armorUpgradeBox" prefWidth="150" prefHeight="200" layoutX="190" layoutY="100" alignment="CENTER" spacing="10" styleClass="upgrade-box">
             <ImageView fx:id="armorIcon" fitHeight="48" fitWidth="48" preserveRatio="true" />
             <Label fx:id="armorUpgradeText" styleClass="upgrade-label" text="Armor"/>
             <HBox alignment="CENTER" spacing="8">
@@ -61,7 +62,7 @@
             <Button fx:id="armorPriceButton" text="2000$" onAction="#handleArmorUpgrade" focusTraversable="false" styleClass="price-button"/>
         </VBox>
 
-        <VBox fx:id="speedUpgradeBox" prefWidth="150" prefHeight="200" layoutX="475" layoutY="100" alignment="CENTER" spacing="10" styleClass="upgrade-box">
+        <VBox fx:id="speedUpgradeBox" prefWidth="150" prefHeight="200" layoutX="360" layoutY="100" alignment="CENTER" spacing="10" styleClass="upgrade-box">
             <ImageView fx:id="speedIcon" fitHeight="48" fitWidth="48" preserveRatio="true" />
             <Label fx:id="speedUpgradeText" styleClass="upgrade-label" text="Speed"/>
             <HBox alignment="CENTER" spacing="8">
@@ -73,6 +74,20 @@
             </HBox>
             <Button fx:id="speedPriceButton" text="2000$" onAction="#handleSpeedUpgrade" focusTraversable="false" styleClass="price-button"/>
         </VBox>
+
+        <VBox fx:id="damageUpgradeBox" prefWidth="150" prefHeight="200" layoutX="530" layoutY="100" alignment="CENTER" spacing="10" styleClass="upgrade-box">
+            <ImageView fx:id="damageIcon" fitHeight="48" fitWidth="48" preserveRatio="true" />
+            <Label fx:id="damageUpgradeText" styleClass="upgrade-label" text="Damage"/>
+            <HBox alignment="CENTER" spacing="8">
+                <Circle fx:id="damageCircle1" radius="8"/>
+                <Circle fx:id="damageCircle2" radius="8"/>
+                <Circle fx:id="damageCircle3" radius="8"/>
+                <Circle fx:id="damageCircle4" radius="8"/>
+                <Circle fx:id="damageCircle5" radius="8"/>
+            </HBox>
+            <Button fx:id="damagePriceButton" text="2000$" onAction="#handleDamageUpgrade" focusTraversable="false" styleClass="price-button"/>
+        </VBox>
+
     </AnchorPane>
 
 
