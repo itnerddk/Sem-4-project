@@ -31,6 +31,8 @@ public class GameInstance {
     private final GameData gameData;
     private final WorldData worldData;
 
+    private AnimationTimer animationTimer;
+
     private final Pane gameWindow = new Pane();
     private final Canvas gameCanvas;
     private final Map<Entity, Node> sprites = new ConcurrentHashMap<>();
@@ -77,7 +79,7 @@ public class GameInstance {
     }
 
     private void startRenderLoop() {
-        new AnimationTimer() {
+        this.animationTimer = new AnimationTimer() {
             long lastTick = 0;
 
             @Override
@@ -90,9 +92,32 @@ public class GameInstance {
                     gameData.addDebug("Delta", String.valueOf((Math.round(gameData.getDelta() * 10000) / 10.0)));
                     lastTick = now;
                     draw();
+                    
+                    // check if player died or won TODO: Maybe we can figure out a better way?
+                    Parent root;
+                    FXMLLoader loader;
+                    try {
+                        if (worldData.isGameWon()) {
+                            loader = new FXMLLoader(getClass().getResource("/view/Victory.fxml"));
+                            root = loader.load();
+                            gameData.getPrimaryStage().setScene(new Scene(root));
+                            animationTimer.stop();
+                            return;
+                        } else if (worldData.isGameLost()) {
+                            loader = new FXMLLoader(getClass().getResource("/view/GameOver.fxml"));
+                            root = loader.load();
+                            gameData.getPrimaryStage().setScene(new Scene(root));
+                            animationTimer.stop();
+                            return;
+                        }
+                    } catch (IOException ex) {
+                        System.err.println("Kunne ikke loade FXML for victory eller gameover!");
+                        ex.printStackTrace();
+                    }
                 }
             }
-        }.start();
+        };
+        animationTimer.start();
     }
 
     private void update() {
@@ -101,26 +126,7 @@ public class GameInstance {
         }
         for (IPostEntityProcessingService processor : getPostEntityProcessingServices()) {
             processor.process(gameData, worldData);
-        }
-
-        // check if player died or won TODO: Maybe we can figure out a better way?
-        Parent root;
-        FXMLLoader loader;
-        try {
-            if (worldData.isGameWon()) {
-                loader = new FXMLLoader(getClass().getResource("/view/Victory.fxml"));
-                root = loader.load();
-                gameData.getPrimaryStage().setScene(new Scene(root));
-            } else if (worldData.isGameLost()) {
-                loader = new FXMLLoader(getClass().getResource("/view/GameOver.fxml"));
-                root = loader.load();
-                gameData.getPrimaryStage().setScene(new Scene(root));
-            }
-        } catch (IOException ex) {
-            System.err.println("Kunne ikke loade FXML for victory eller gameover!");
-            ex.printStackTrace();
-        }
-        
+        }        
     }
 
     private void draw() {
