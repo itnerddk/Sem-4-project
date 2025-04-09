@@ -347,7 +347,7 @@ public class MainMenuController implements Initializable {
                 // Load the setting group FXML file
                 settingGroupPane = loader.load();
                 settingGroupPane.setText(settingGroup.getName());
-                settingGroupPane.setExpanded(false);
+                settingGroupPane.setExpanded(true); // Might as well keep it expanded for now as there are not enough settings
                 // Label groupDescriptionLabel = (Label) settingGroupPane.lookup("#groupDescription");
                 // groupDescriptionLabel.setText(settingGroup.getDescription());
 
