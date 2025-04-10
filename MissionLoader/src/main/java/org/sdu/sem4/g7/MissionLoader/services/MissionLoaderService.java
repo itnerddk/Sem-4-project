@@ -20,7 +20,6 @@ import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.common.data.WorldData;
-import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.common.services.IEntityPluginService;
 import org.sdu.sem4.g7.common.services.IMissionLoaderService;
 

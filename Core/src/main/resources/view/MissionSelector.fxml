@@ -9,7 +9,7 @@
 <?import javafx.scene.control.ScrollPane?>
 
 <?import javafx.scene.layout.HBox?>
-<StackPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/22" fx:controller="org.sdu.sem4.g7.UI.controllers.MissionSelectorController"
+<StackPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="org.sdu.sem4.g7.UI.controllers.MissionSelectorController"
            prefWidth="800" prefHeight="800" stylesheets="@missionSelector.css">
 
     <!-- Background Image -->

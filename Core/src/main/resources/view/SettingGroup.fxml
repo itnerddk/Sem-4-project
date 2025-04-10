@@ -4,7 +4,7 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.VBox?>
 
-<TitledPane expanded="false" stylesheets="@generic.css" text="Name" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<TitledPane expanded="false" stylesheets="@generic.css" text="Name" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       <VBox fx:id="settingsVbox" spacing="5.0" styleClass="invisible">
          <padding>

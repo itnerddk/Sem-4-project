@@ -21,10 +21,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
 import org.sdu.sem4.g7.common.services.ISettingPluginService;
-import javafx.scene.control.Label;
 
 import java.io.IOException;
 
