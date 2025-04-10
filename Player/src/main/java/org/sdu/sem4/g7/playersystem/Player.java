@@ -20,7 +20,11 @@ public class Player extends Tank {
         this.setMaxHealth(100);
 
         // Test code to load turret
-        this.setTurret(TurretLoader.getTurrets().get(0).get());
+        try {
+            this.setTurret(TurretLoader.getTurrets().get(0).get());
+        } catch (Exception e) {
+            System.out.println("Error loading turret: " + e.getMessage());
+        }
     }
 
     @Override
