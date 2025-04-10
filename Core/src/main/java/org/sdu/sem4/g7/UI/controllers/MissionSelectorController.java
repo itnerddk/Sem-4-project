@@ -57,7 +57,7 @@ public class MissionSelectorController {
         missions.sort(Comparator.comparingInt(Mission::getId));
 
         int cols = 3;
-        int highestUnlockedId = 2;
+        int highestUnlockedId = 1;
 
         for (int i = 0; i < missions.size(); i++) {
             Mission mission = missions.get(i);

@@ -12,13 +12,13 @@
             "entityType": "Enemies",
             "x": 128,
             "y": 128,
-            "health": 50
+            "health": 100
         },
         {
             "entityType": "Enemies",
             "x": 512,
             "y": 128,
-            "health": 75
+            "health": 100
         },
         {
             "entityType": "Enemies",
@@ -30,6 +30,18 @@
             "entityType": "Enemies",
             "x": 512,
             "y": 512,
+            "health": 100
+        },
+        {
+            "entityType": "Enemies",
+            "x": 615,
+            "y": 615,
+            "health": 100
+        },
+        {
+            "entityType": "Enemies",
+            "x": 700,
+            "y": 1000,
             "health": 100
         }
     ],

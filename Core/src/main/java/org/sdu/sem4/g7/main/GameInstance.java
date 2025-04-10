@@ -91,8 +91,8 @@ public class GameInstance {
                     update();
                     gameData.updateKeys();
                     gameData.setDelta((now - lastTick) * 1.0e-9);
-                    gameData.addDebug("Entity Count", String.valueOf(worldData.getEntities().size()));
-                    gameData.addDebug("Delta", String.valueOf((Math.round(gameData.getDelta() * 10000) / 10.0)));
+                    // gameData.addDebug("Entity Count", String.valueOf(worldData.getEntities().size()));
+                    // gameData.addDebug("Delta", String.valueOf((Math.round(gameData.getDelta() * 10000) / 10.0)));
                     lastTick = now;
                     draw();
 
