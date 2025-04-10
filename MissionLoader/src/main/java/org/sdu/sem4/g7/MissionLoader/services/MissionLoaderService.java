@@ -58,8 +58,18 @@ public class MissionLoaderService implements IMissionLoaderService {
 	private int mapSizeX;
 	private int mapSizeY;
 
+	public MissionLoaderService() {
+		this.missions = new ArrayList<>();
+		this.tiles = new HashMap<>();
+	}
 
-	public MissionLoaderService(GameData gameData, WorldData worldData) throws IOException {
+	/**
+	 * Insert the gameData and worldData into the service
+	 * @param gameData
+	 * @param worldData
+	 * @throws IOException
+	 */
+	public void insert(GameData gameData, WorldData worldData) throws IOException {
 		this.gameData = gameData;
 		this.worldData = worldData;
 		this.missions = new ArrayList<>();

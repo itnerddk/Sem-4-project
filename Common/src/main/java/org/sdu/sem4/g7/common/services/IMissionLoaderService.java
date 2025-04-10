@@ -1,12 +1,23 @@
 package org.sdu.sem4.g7.common.services;
 
+import java.io.IOException;
 import java.util.List;
 
+import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.common.data.WorldData;
 
 public interface IMissionLoaderService {
     
+    
+    /**
+	 * Insert the gameData and worldData into the service
+	 * @param gameData
+	 * @param worldData
+	 * @throws IOException
+	 */
+    public void insert(GameData gameData, WorldData worldData) throws IOException;
+
     /**
      * Returns a list of all missions available
      * 

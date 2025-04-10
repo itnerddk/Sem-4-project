@@ -26,7 +26,6 @@ import org.sdu.sem4.g7.common.services.ISettingPluginService;
 
 import java.io.IOException;
 
-import org.sdu.sem4.g7.MissionLoader.services.MissionLoaderService;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Setting;
 import org.sdu.sem4.g7.common.data.SettingGroup;
@@ -111,25 +110,32 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private void handleStartGame(ActionEvent event) {
-        try {
-            // Set up the game data so it has a mission loader
-            MissionLoaderService missionLoader = new MissionLoaderService(gameData, null);
-            gameData.setMissionLoaderService(missionLoader);
-            
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MissionSelector.fxml"));
-            Parent missionSelectorPane = loader.load();
-            
-            MissionSelectorController controller = loader.getController();
-            controller.init(gameData);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            controller.setStage(stage);
-            gameData.setPrimaryStage(stage);
+        System.out.println("Start Game button clicked");
+        ServiceLocator.getMissionLoaderService().ifPresentOrElse(
+                service -> {
+                    try {
+                        // Set up the game data so it has a mission loader
+                        gameData.setMissionLoaderService(service.getClass().getConstructor().newInstance());
+                        System.out.println(gameData.getMissionLoaderService());
+                        gameData.getMissionLoaderService().insert(gameData, null);
 
-            Scene missionSelectorScene = new Scene(missionSelectorPane);
-            stage.setScene(missionSelectorScene);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MissionSelector.fxml"));
+                        Parent missionSelectorPane = loader.load();
+                        
+                        MissionSelectorController controller = loader.getController();
+                        controller.init(gameData);
+                        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                        controller.setStage(stage);
+                        gameData.setPrimaryStage(stage);
+            
+                        Scene missionSelectorScene = new Scene(missionSelectorPane);
+                        stage.setScene(missionSelectorScene);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                },
+                () -> System.out.println("MissionLoaderService not found")
+        );
     }
    
 

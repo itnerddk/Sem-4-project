@@ -8,6 +8,7 @@ public class ServiceLocator {
     private static ICurrencyService currencyService;
     private static ILevelService levelService;
     private static IUpgradeService upgradeService;
+    private static IMissionLoaderService missionLoaderService;
 
     public static void loadServices() {
         ServiceLoader<ICurrencyService> currencyLoader = ServiceLoader.load(ICurrencyService.class);
@@ -18,6 +19,9 @@ public class ServiceLocator {
 
         ServiceLoader<IUpgradeService> upgradeLoader = ServiceLoader.load(IUpgradeService.class);
         upgradeService = upgradeLoader.findFirst().orElse(null);
+
+        ServiceLoader<IMissionLoaderService> missionLoader = ServiceLoader.load(IMissionLoaderService.class);
+        missionLoaderService = missionLoader.findFirst().orElse(null);
     }
 
     public static Optional<ICurrencyService> getCurrencyService() {
@@ -30,5 +34,9 @@ public class ServiceLocator {
 
     public static Optional<IUpgradeService> getUpgradeService() {
         return Optional.ofNullable(upgradeService);
+    }
+
+    public static Optional<IMissionLoaderService> getMissionLoaderService() {
+        return Optional.ofNullable(missionLoaderService);
     }
 }
