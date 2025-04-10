@@ -10,23 +10,35 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
+import org.sdu.sem4.g7.common.services.ISettingPluginService;
 import javafx.scene.control.Label;
 
 import java.io.IOException;
 
 import org.sdu.sem4.g7.MissionLoader.services.MissionLoaderService;
 import org.sdu.sem4.g7.common.data.GameData;
+import org.sdu.sem4.g7.common.data.Setting;
+import org.sdu.sem4.g7.common.data.SettingGroup;
+
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.ServiceLoader;
+import java.util.stream.Collectors;
 
 public class MainMenuController implements Initializable {
 
@@ -77,11 +89,16 @@ public class MainMenuController implements Initializable {
         armorIcon.setImage(new Image(getClass().getResource("/images/armor.png").toExternalForm()));
         speedIcon.setImage(new Image(getClass().getResource("/images/speed.png").toExternalForm()));
         damageIcon.setImage(new Image(getClass().getResource("/images/damage.png").toExternalForm()));
+      
+        gameData = new GameData();
+
 
         setupArmorUpgrade();
         setupHealthUpgrade();
         setupSpeedUpgrade();
         setupDamageUpgrade();
+
+        setupSettingsPane();
 
         ServiceLocator.getCurrencyService().ifPresentOrElse(
                 service -> coinDisplay.setText("Coins: " + service.getCurrency()),
@@ -327,6 +344,106 @@ public class MainMenuController implements Initializable {
         }
     }
 
+
+    private void setupSettingsPane() {
+        // Create an empty list to store the to be loaded groups
+        List<SettingGroup> settingGroups = new ArrayList<>();
+        // Load them through the service loader
+        for(ISettingPluginService settingPlugin: ServiceLoader.load(ISettingPluginService.class).stream().map(ServiceLoader.Provider::get).collect(Collectors.toList())) {
+            settingPlugin.addSettings(settingGroups);
+        }
+        // Iterate through the loaded groups and add them to the settings pane
+        for (SettingGroup settingGroup : settingGroups) {
+            // Load SettingGroup.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SettingGroup.fxml"));
+            TitledPane settingGroupPane = null;
+            try {
+                // Load the setting group FXML file
+                settingGroupPane = loader.load();
+                settingGroupPane.setText(settingGroup.getName());
+                settingGroupPane.setExpanded(true); // Might as well keep it expanded for now as there are not enough settings
+
+                // TODO: Description label
+                // Label groupDescriptionLabel = (Label) settingGroupPane.lookup("#groupDescription");
+                // groupDescriptionLabel.setText(settingGroup.getDescription());
+
+                // Find the container for the groups
+                VBox settingsVbox = (VBox) settingGroupPane.getContent().lookup("#settingsVbox");
+
+                // Iterate through the settings and add them to the group
+                for (Setting setting : settingGroup.getSettings()) {
+                    spawnSetting(setting, settingsVbox);
+                }
+
+                // Add the setting group to the settings pane
+                ((VBox)settingsPane.lookup("#settingsVbox")).getChildren().add(settingGroupPane);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private void spawnSetting(Setting setting, VBox parent) {
+        System.out.println("Setting: " + setting.getName() + " - " + setting.getDescription());
+            
+        // Load Setting.fxml file
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Setting.fxml"));
+        Pane settingPane = null;
+        try {
+            // Load the setting FXML file
+            settingPane = loader.load();
+            Label settingLabel = (Label) settingPane.lookup("#settingName");
+            settingLabel.setText(setting.getName());
+            Label settingDescription = (Label) settingPane.lookup("#settingDescription");
+            settingDescription.setText(setting.getDescription());
+
+            // Set the value of the setting
+            HBox settingValue = (HBox) settingPane.lookup("#settingValue");
+
+            // Set up the input based on the type of setting
+            if (setting.getValueTypeClass() == Boolean.class) {
+                // Create a toggle button
+                Button toggleButton = new Button();
+                toggleButton.setText((Boolean) setting.getValue() ? "ON" : "OFF");
+                toggleButton.setOnAction(e -> {
+                    boolean newValue = !((Boolean) setting.getValue());
+                    setting.setValue(newValue);
+                    toggleButton.setText(newValue ? "ON" : "OFF");
+                    setting.apply(gameData);
+                });
+                settingValue.getChildren().add(toggleButton);
+            } else if (setting.getValueTypeClass() == Integer.class) {
+            } else if (setting.getValueTypeClass() == Float.class) {
+                // Create slider with 0.1 step
+                Slider slider = new Slider(0, 1, (Float) setting.getValue());
+                slider.setBlockIncrement(0.1);
+                slider.setMajorTickUnit(1);
+                slider.setMinorTickCount(9);
+                slider.setSnapToTicks(true);
+                slider.setShowTickMarks(true);
+                // Create a label to show the value of the slider
+                Label sliderValueLabel = new Label(String.valueOf((Float) setting.getValue()));
+                sliderValueLabel.setText(String.valueOf((Float) setting.getValue()));
+                // Add a listener to the slider to update the setting value
+                slider.valueProperty().addListener((obs, oldValue, newValue) -> {
+                    setting.setValue(newValue.floatValue());
+                    sliderValueLabel.setText(String.valueOf(Math.round(newValue.floatValue() * 10.0f) / 10.0f));
+                    setting.apply(gameData);
+                });
+                // Add the slider and label to the setting value HBox
+                HBox.setHgrow(slider, javafx.scene.layout.Priority.ALWAYS);
+                settingValue.getChildren().add(slider);
+                settingValue.getChildren().add(sliderValueLabel);
+            }
+            System.out.println("Adding to parent");
+            // Get #settingsVbox
+            parent.getChildren().add(settingPane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Damage
     public void handleDamageUpgrade(ActionEvent actionEvent) {
         ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
@@ -377,5 +494,4 @@ public class MainMenuController implements Initializable {
             circles[i].getStyleClass().add(i < level ? "filled" : "empty");
         }
     }
-
 }

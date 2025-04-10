@@ -193,7 +193,7 @@ public class GameData {
      */
     public void playAudio(SoundType soundType, float volume) {
         if (audioProcessingService != null) {
-            audioProcessingService.playSound(soundType, volume  * soundVolume.get(soundType));
+            audioProcessingService.playSound(soundType, volume  * soundVolume.get(soundType) * soundVolume.get(SoundType.MASTER));
         } else {
             System.err.println("Audio processing service is not set.");
         }
