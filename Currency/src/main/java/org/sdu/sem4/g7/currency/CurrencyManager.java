@@ -1,14 +1,12 @@
 package org.sdu.sem4.g7.currency;
 
-import java.util.Optional;
-
 import org.sdu.sem4.g7.common.services.ICurrencyService;
 import org.sdu.sem4.g7.common.services.IPersistenceService;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
 
 public class CurrencyManager implements ICurrencyService {
 
-    private static final Optional<IPersistenceService> persistenceService = ServiceLocator.getPersistenceService();
+    private IPersistenceService persistenceService;
 
     /**
      * Key used to save currency
@@ -20,11 +18,19 @@ public class CurrencyManager implements ICurrencyService {
      */
     private int localCurrency = 0;
 
+    public CurrencyManager() {
+        ServiceLocator.getPersistenceService().ifPresentOrElse(
+            service -> this.persistenceService = service,
+            () -> System.out.println("Currency manager does not have a persistenceService!")
+        );
+    }
+
     @Override
     public int getCurrency() {
-        if (persistenceService.isPresent()) {
+
+        if (persistenceService != null) {
             // get currency from persistent storage
-            return persistenceService.get().getInt(persistenceKey);
+            return persistenceService.getInt(persistenceKey);
         } else {
             // get currency in memory
             return localCurrency;
@@ -33,9 +39,9 @@ public class CurrencyManager implements ICurrencyService {
 
     @Override
     public void addCurrency(int amount) {
-        if (persistenceService.isPresent()) {
+        if (persistenceService != null) {
             // add currency to persistent storage
-            if (amount > 0) persistenceService.get().setInt(persistenceKey, getCurrency() + amount);
+            if (amount > 0) persistenceService.setInt(persistenceKey, getCurrency() + amount);
         } else {
             // save currency in memory
             if (amount > 0) localCurrency += amount;
@@ -44,9 +50,9 @@ public class CurrencyManager implements ICurrencyService {
 
     @Override
     public void subtractCurrency(int amount) {
-        if (persistenceService.isPresent()) {
+        if (persistenceService != null) {
             // subtract currency from persistent storage
-            if (amount > 0 && getCurrency() >= amount) persistenceService.get().setInt(persistenceKey, getCurrency() - amount);
+            if (amount > 0 && getCurrency() >= amount) persistenceService.setInt(persistenceKey, getCurrency() - amount);
         } else {
             // subtract currency from memory
             if (amount > 0 && localCurrency >= amount) localCurrency -= amount;
