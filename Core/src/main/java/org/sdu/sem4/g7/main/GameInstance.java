@@ -107,7 +107,7 @@ public class GameInstance {
                             gameData.setCoinsEarned(1000); // midlertidigt hardcoded
 
                             ServiceLocator.getCurrencyService().ifPresent(service -> {
-                                service.addCurrency(gameData.getCoinsEarned());
+                                service.addCurrency(gameData, gameData.getCoinsEarned());
                             });
                             showResultOverlay(true, finalScore, 10000, 1000);
                             animationTimer.stop();

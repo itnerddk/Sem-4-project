@@ -99,7 +99,7 @@ public class MainMenuController implements Initializable {
         setupSettingsPane();
 
         ServiceLocator.getCurrencyService().ifPresentOrElse(
-                service -> coinDisplay.setText("Coins: " + service.getCurrency()),
+                service -> coinDisplay.setText("Coins: " + service.getCurrency(gameData)),
                 () -> coinDisplay.setVisible(false)
         );
 
@@ -108,11 +108,17 @@ public class MainMenuController implements Initializable {
                 () -> levelDisplay.setVisible(false)
         );
 
+
+        ServiceLocator.getPersistenceService().ifPresentOrElse(
+            service -> gameData.setPersistenceService(service),
+            () -> System.out.println("No persistence service found!")
+
         ServiceLocator.getAudioProcessingService().ifPresentOrElse(
                 service -> {
                     gameData.setAudioProcessingService(service);
                 },
                 () -> System.out.println("AudioProcessingService not found")
+
         );
     }
 
@@ -243,7 +249,7 @@ public class MainMenuController implements Initializable {
                 }
 
                 ServiceLocator.getCurrencyService().ifPresent(service ->
-                        coinDisplay.setText("Coins: " + service.getCurrency())
+                        coinDisplay.setText("Coins: " + service.getCurrency(gameData))
                 );
             } else {
                 System.out.println("Not enough coins!");
@@ -296,7 +302,7 @@ public class MainMenuController implements Initializable {
                 }
 
                 ServiceLocator.getCurrencyService().ifPresent(service ->
-                        coinDisplay.setText("Coins: " + service.getCurrency())
+                        coinDisplay.setText("Coins: " + service.getCurrency(gameData))
                 );
             } else {
                 System.out.println("Not enough coins!");
@@ -334,7 +340,7 @@ public class MainMenuController implements Initializable {
                 }
 
                 ServiceLocator.getCurrencyService().ifPresent(service ->
-                        coinDisplay.setText("Coins: " + service.getCurrency())
+                        coinDisplay.setText("Coins: " + service.getCurrency(gameData))
                 );
             } else {
                 System.out.println("Not enough coins!");
@@ -500,7 +506,7 @@ public class MainMenuController implements Initializable {
                 }
 
                 ServiceLocator.getCurrencyService().ifPresent(service ->
-                        coinDisplay.setText("Coins: " + service.getCurrency())
+                        coinDisplay.setText("Coins: " + service.getCurrency(gameData))
                 );
             } else {
                 System.out.println("Not enough coins!");
