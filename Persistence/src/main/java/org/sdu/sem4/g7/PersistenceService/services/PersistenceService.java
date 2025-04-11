@@ -59,6 +59,7 @@ public class PersistenceService implements IPersistenceService {
         writer.close();
     }
 
+
     public PersistenceService() {
 
         // Create persistence datadir if not exists
@@ -88,6 +89,7 @@ public class PersistenceService implements IPersistenceService {
         }
 
     }
+
 
     @Override
     public String getString(String key) {

@@ -1,5 +1,3 @@
-import org.sdu.sem4.g7.currency.CurrencyManager;
-
 module Currency {
     requires Common;
 
