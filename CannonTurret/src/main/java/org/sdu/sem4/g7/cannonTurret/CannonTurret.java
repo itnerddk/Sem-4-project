@@ -52,6 +52,11 @@ public class CannonTurret extends Turret {
         }
 
         CannonBullet bullet = new CannonBullet();
+
+        // Set WeaponDamage for the specific weapon
+        bullet.setWeaponBonus(10);
+        bullet.finalizeDamage();
+
         bullet.setPosition(this.getPosition());
         // bullet.getPosition().add(this.getOffset());
         Vector2 rotatedMuzzle = new Vector2(this.getMuzzle().getX(), this.getMuzzle().getY());
@@ -66,16 +71,6 @@ public class CannonTurret extends Turret {
         float rotationInRadians = bullet.getRotation() - 90;
         rotationInRadians = (float) Math.toRadians(rotationInRadians);
 
-        // bullet.setPosition(bullet.getPosition().getX() + (float) Math.cos(rotationInRadians) * 40,
-        //         bullet.getPosition().getY() + (float) Math.sin(rotationInRadians) * 40);
-
-        // bullet.getPosition().add(new Vector2(-4, -4));
-
-        // Vector2 size = new Vector2(getTank().getSprite().getImage().getWidth(), getTank().getSprite().getImage().getHeight());
-        // bullet.getPosition().add(new Vector2(size.getX() / 2, size.getY() / 2));
-
-        // Vector2 bulletSize = new Vector2(bullet.getSprite().getImage().getWidth(), bullet.getSprite().getImage().getHeight());
-        // bullet.getPosition().subtract(new Vector2(bulletSize.getX() / 2, bulletSize.getY() / 2));
 
         bullet.setVelocity(Math.cos(rotationInRadians) * 8, Math.sin(rotationInRadians) * 8);
 
