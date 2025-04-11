@@ -112,6 +112,7 @@ public class MainMenuController implements Initializable {
         ServiceLocator.getPersistenceService().ifPresentOrElse(
             service -> gameData.setPersistenceService(service),
             () -> System.out.println("No persistence service found!")
+        );
 
         ServiceLocator.getAudioProcessingService().ifPresentOrElse(
                 service -> {

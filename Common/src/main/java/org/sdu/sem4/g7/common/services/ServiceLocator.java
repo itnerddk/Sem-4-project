@@ -54,6 +54,7 @@ public class ServiceLocator {
 
     public static Optional<IPersistenceService> getPersistenceService() {
         return Optional.ofNullable(persistenceLoaderService);
+    }
 
     public static Optional<IUpgradeStatsService> getUpgradeStatsService() {
         return Optional.ofNullable(upgradeStatsService);
