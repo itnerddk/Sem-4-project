@@ -1,4 +1,6 @@
 package org.sdu.sem4.g7.common.services;
+import java.net.URI;
+
 import org.sdu.sem4.g7.common.enums.SoundType;
 
 public interface IAudioProcessingService {
@@ -9,6 +11,11 @@ public interface IAudioProcessingService {
      * @param volume the volume of the sound (0.0 - 1.0)
      */
     void playSound(SoundType soundType, float volume);
+
+    boolean playSound(SoundType soundType, String soundName, float volume);
+
+    void addSound(SoundType soundType, URI soundFile);
+
     /**
      * Stop a sound
      * @param soundType the name of the sound to stop (shoot, click, explosion, etc.)

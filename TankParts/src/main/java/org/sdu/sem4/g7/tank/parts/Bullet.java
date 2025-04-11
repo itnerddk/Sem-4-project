@@ -7,45 +7,44 @@ import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.IRigidbodyService;
 import org.sdu.sem4.g7.common.enums.EntityType;
+import org.sdu.sem4.g7.common.services.IUpgradeStatsService;
+import org.sdu.sem4.g7.common.services.ServiceLocator;
 
-/*
- * Shootable and renderable bullet
- */
 public abstract class Bullet extends Entity implements IRigidbodyService {
-    
-    /*
-     * Defines how many health an entity loses upon collision
-     */
+
+    private int baseDamage = 0;
+    private int weaponBonus = 0;
+    private int upgradeBonus = 0;
     private int damage;
 
-    /*
-     * Defines the entity that have created the entity
-     * 
-     * Usefull, to ensure the bullet does not collide with the entity that have "created" it
-     */
     private Entity createdBy;
 
     public Bullet() {
         super();
-
-        // Set entity type
         setEntityType(EntityType.BULLET);
     }
 
-    public Bullet(int damage) {
-        super();
-        this.damage = damage;
+    public void finalizeDamage() {
+        int upgradeBonus = ServiceLocator.getUpgradeStatsService()
+                .map(IUpgradeStatsService::getDamageBonus)
+                .orElse(0);
+        this.damage = baseDamage + upgradeBonus + weaponBonus;
+    }
 
-        // Set entity type
-        setEntityType(EntityType.BULLET);
+    public void setWeaponBonus(int weaponBonus) {
+        this.weaponBonus = weaponBonus;
+    }
+
+    public void setUpgradeBonus(int upgradeBonus) {
+        this.upgradeBonus = upgradeBonus;
     }
 
     public int getDamage() {
         return damage;
     }
 
-    public void setDamage(int damage) {
-        this.damage = damage;
+    public void setBaseDamage(int baseDamage) {
+        this.baseDamage = baseDamage;
     }
 
     public Entity getCreatedBy() {
@@ -55,7 +54,6 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
     public void setCreatedBy(Entity createdBy) {
         this.createdBy = createdBy;
     }
-
 
     private Hitbox hitbox;
 
@@ -70,31 +68,18 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
 
     @Override
     public boolean onCollision(IRigidbodyService other, GameData gameData) {
-        // If the bullet hits another bullet
-        if (other instanceof Bullet) {
-            // Return true (This makes the current collision ignore it)
+        if (other instanceof Bullet) return true;
+
+        if (other instanceof Entity) {
+            if (this.createdBy != null && this.createdBy.equals(other)) return true;
+
+            Entity otherEntity = (Entity) other;
+            otherEntity.setHealth(otherEntity.getHealth() - this.damage);
+            this.setHealth(0);
+            gameData.playAudio(SoundType.HIT);
             return true;
-        } else {
-            // If the bullet hits an entity it means we know the behavior and can cast it
-            if (other instanceof Entity) {
-                // If the entity that created the bullet is the same as the entity that the bullet hit
-                if (this.createdBy != null && this.createdBy.equals(other)) {
-                    // Return true (This makes the current collision ignore it)
-                    return true;
-                }
-                // Cast the other entity to an entity
-                Entity otherEntity = (Entity) other;
-                // Reduce the health of the entity by the damage of the bullet
-                otherEntity.setHealth(otherEntity.getHealth() - this.damage);
-                // Set the health of the bullet to 0 to make it disapear next tick
-                this.setHealth(0);
-                gameData.playAudio(SoundType.HIT);
-                // Return true signifying that the collision was handled
-                return true;
-            }
         }
-        // Return false if the collision was not handled meaning it runs default collision handling
+
         return false;
     }
-
 }

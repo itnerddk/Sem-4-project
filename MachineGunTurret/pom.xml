@@ -9,13 +9,19 @@
           <version>1.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>TankParts</artifactId>
+    <artifactId>MachineGunTurret</artifactId>
     <packaging>jar</packaging>
-    <name>TankParts</name>
+    <name>MachineGunTurret</name>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>Common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>TankParts</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

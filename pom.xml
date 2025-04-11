@@ -24,6 +24,7 @@
         <module>Level</module>
         <module>Upgrades</module>
         <module>Persistence</module>
+        <module>MachineGunTurret</module>
     </modules>
 
     <properties>

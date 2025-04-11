@@ -231,7 +231,6 @@ public class MissionLoaderService implements IMissionLoaderService {
 		try {
 			Entity player = world.getEntityTypes().get("Players").get(0).getDeclaredConstructor().newInstance();
 			player.setPosition(mission.getPlayer().getX(), mission.getPlayer().getY());
-			player.setHealth(100);
 			world.addEntity(player);
 			world.addEntity(player.getChildren());
 		} catch (Exception ex) {

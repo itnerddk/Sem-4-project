@@ -15,6 +15,7 @@ public class CurrencyManager implements ICurrencyService {
      */
     private int localCurrency = 0;
 
+
     @Override
     public int getCurrency(GameData gameData) {
 
