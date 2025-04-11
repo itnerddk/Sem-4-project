@@ -51,9 +51,9 @@ public class ServiceLocator {
 
     public static Optional<IUpgradeStatsService> getUpgradeStatsService() {
         return Optional.ofNullable(upgradeStatsService);
+    }
 
-    public static Optional<IAudioProcessingService> getAudioProcessingService() {
+    public static Optional<IAudioProcessingService> getAudioProcessingService () {
         return Optional.ofNullable(audioProcessingService);
-
     }
 }

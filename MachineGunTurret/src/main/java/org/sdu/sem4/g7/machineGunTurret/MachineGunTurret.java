@@ -28,6 +28,11 @@ public class MachineGunTurret extends Turret {
             return false;
         }
         MachineGunBullet bullet = new MachineGunBullet();
+
+        // Set WeaponDamage for the specific weapon
+        bullet.setWeaponBonus(2);
+        bullet.finalizeDamage();
+
         bullet.setPosition(this.getPosition());
         Vector2 rotatedMuzzle = new Vector2(this.getMuzzle().getX(), this.getMuzzle().getY());
         rotatedMuzzle.rotate(this.getRotation());

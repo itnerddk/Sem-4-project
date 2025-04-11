@@ -1,12 +1,11 @@
 package org.sdu.sem4.g7.machineGunTurret;
 
 import java.net.URISyntaxException;
-
 import org.sdu.sem4.g7.tank.parts.Bullet;
 
 public class MachineGunBullet extends Bullet {
     public MachineGunBullet() {
-        super(2);
+        super();
         setCollision(true);
         setHealth(1);
         try {
