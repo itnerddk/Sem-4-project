@@ -9,7 +9,8 @@ module Common {
     uses org.sdu.sem4.g7.common.services.ICurrencyService;
     uses org.sdu.sem4.g7.common.services.ILevelService;
     uses org.sdu.sem4.g7.common.services.IUpgradeService;
-    uses org.sdu.sem4.g7.common.services.IMissionLoaderService;
+    uses org.sdu.sem4.g7.common.services.IMissionLoaderService
+    uses org.sdu.sem4.g7.common.services.IPersistenceService;
     uses org.sdu.sem4.g7.common.services.IUpgradeStatsService;
     uses org.sdu.sem4.g7.common.services.IAudioProcessingService;
 }

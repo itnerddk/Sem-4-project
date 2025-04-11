@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.IAudioProcessingService;
 import org.sdu.sem4.g7.common.services.IMissionLoaderService;
+import org.sdu.sem4.g7.common.services.IPersistenceService;
 
 import javafx.scene.Node;
 import javafx.scene.shape.Circle;
@@ -30,6 +31,8 @@ public class GameData {
     private Stage primaryStage;
 
     private IAudioProcessingService audioProcessingService;
+    private IPersistenceService persistenceService;
+
     EnumMap<SoundType, Float> soundVolume = new EnumMap<>(SoundType.class);
 
     public void setDisplayWidth(int width) {
@@ -175,6 +178,14 @@ public class GameData {
     
     public void setAudioProcessingService(IAudioProcessingService audioProcessingService) {
         this.audioProcessingService = audioProcessingService;
+    }
+
+    public IPersistenceService getPersistenceService() {
+        return persistenceService;
+    }
+
+    public void setPersistenceService(IPersistenceService persistenceService) {
+        this.persistenceService = persistenceService;
     }
 
     public void setSoundVolume(SoundType soundType, float volume) {
