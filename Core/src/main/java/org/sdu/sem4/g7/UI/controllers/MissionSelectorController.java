@@ -62,8 +62,8 @@ public class MissionSelectorController {
 
         ServiceLocator.getPersistenceService().ifPresent(service -> {
             if (service.intListExists("completedMissions")) {
-                List<Integer> compltedMission = service.getIntList("completedMssions");
-                tempHighestUnlockedId.set(compltedMission.size() -1);
+                List<Integer> compltedMission = service.getIntList("completedMissions");
+                tempHighestUnlockedId.set(compltedMission.size());
             }
         });
 
