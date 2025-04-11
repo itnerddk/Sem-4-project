@@ -1,12 +1,9 @@
 package org.sdu.sem4.g7.currency;
 
+import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.services.ICurrencyService;
-import org.sdu.sem4.g7.common.services.IPersistenceService;
-import org.sdu.sem4.g7.common.services.ServiceLocator;
 
 public class CurrencyManager implements ICurrencyService {
-
-    private IPersistenceService persistenceService;
 
     /**
      * Key used to save currency
@@ -18,19 +15,12 @@ public class CurrencyManager implements ICurrencyService {
      */
     private int localCurrency = 0;
 
-    public CurrencyManager() {
-        ServiceLocator.getPersistenceService().ifPresentOrElse(
-            service -> this.persistenceService = service,
-            () -> System.out.println("Currency manager does not have a persistenceService!")
-        );
-    }
-
     @Override
-    public int getCurrency() {
+    public int getCurrency(GameData gameData) {
 
-        if (persistenceService != null) {
+        if (gameData.getPersistenceService() != null) {
             // get currency from persistent storage
-            return persistenceService.getInt(persistenceKey);
+            return gameData.getPersistenceService().getInt(persistenceKey);
         } else {
             // get currency in memory
             return localCurrency;
@@ -38,10 +28,10 @@ public class CurrencyManager implements ICurrencyService {
     }
 
     @Override
-    public void addCurrency(int amount) {
-        if (persistenceService != null) {
+    public void addCurrency(GameData gameData, int amount) {
+        if (gameData.getPersistenceService() != null) {
             // add currency to persistent storage
-            if (amount > 0) persistenceService.setInt(persistenceKey, getCurrency() + amount);
+            if (amount > 0) gameData.getPersistenceService().setInt(persistenceKey, getCurrency(gameData) + amount);
         } else {
             // save currency in memory
             if (amount > 0) localCurrency += amount;
@@ -49,10 +39,10 @@ public class CurrencyManager implements ICurrencyService {
     }
 
     @Override
-    public void subtractCurrency(int amount) {
-        if (persistenceService != null) {
+    public void subtractCurrency(GameData gameData, int amount) {
+        if (gameData.getPersistenceService() != null) {
             // subtract currency from persistent storage
-            if (amount > 0 && getCurrency() >= amount) persistenceService.setInt(persistenceKey, getCurrency() - amount);
+            if (amount > 0 && getCurrency(gameData) >= amount) gameData.getPersistenceService().setInt(persistenceKey, getCurrency(gameData) - amount);
         } else {
             // subtract currency from memory
             if (amount > 0 && localCurrency >= amount) localCurrency -= amount;

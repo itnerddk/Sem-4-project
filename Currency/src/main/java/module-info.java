@@ -1,5 +1,5 @@
 module Currency {
-    requires Common;
+    requires transitive Common;
 
     uses org.sdu.sem4.g7.common.services.IPersistenceService;
 
