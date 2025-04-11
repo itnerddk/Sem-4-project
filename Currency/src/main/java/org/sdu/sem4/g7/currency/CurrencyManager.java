@@ -1,7 +1,9 @@
 package org.sdu.sem4.g7.currency;
 
-import org.sdu.sem4.g7.common.data.GameData;
+import java.util.ServiceLoader;
+
 import org.sdu.sem4.g7.common.services.ICurrencyService;
+import org.sdu.sem4.g7.common.services.IPersistenceService;
 
 public class CurrencyManager implements ICurrencyService {
 
@@ -15,38 +17,30 @@ public class CurrencyManager implements ICurrencyService {
      */
     private int localCurrency = 0;
 
-
-    @Override
-    public int getCurrency(GameData gameData) {
-
-        if (gameData.getPersistenceService() != null) {
-            // get currency from persistent storage
-            return gameData.getPersistenceService().getInt(persistenceKey);
-        } else {
-            // get currency in memory
-            return localCurrency;
-        }
+    private IPersistenceService getPersistenceService() {
+        return ServiceLoader.load(IPersistenceService.class).findFirst().orElse(null);
     }
 
     @Override
-    public void addCurrency(GameData gameData, int amount) {
-        if (gameData.getPersistenceService() != null) {
-            // add currency to persistent storage
-            if (amount > 0) gameData.getPersistenceService().setInt(persistenceKey, getCurrency(gameData) + amount);
-        } else {
-            // save currency in memory
-            if (amount > 0) localCurrency += amount;
-        }
+    public int getCurrency() {
+        localCurrency = getPersistenceService().getInt(persistenceKey);
+        // return currency from memory
+        return localCurrency;
     }
 
     @Override
-    public void subtractCurrency(GameData gameData, int amount) {
-        if (gameData.getPersistenceService() != null) {
-            // subtract currency from persistent storage
-            if (amount > 0 && getCurrency(gameData) >= amount) gameData.getPersistenceService().setInt(persistenceKey, getCurrency(gameData) - amount);
-        } else {
-            // subtract currency from memory
-            if (amount > 0 && localCurrency >= amount) localCurrency -= amount;
-        }
+    public void addCurrency(int amount) {
+        // add currency to memory
+        localCurrency += amount;
+        // save currency to persistence
+        getPersistenceService().setInt(persistenceKey, localCurrency);
+    }
+
+    @Override
+    public void subtractCurrency(int amount) {
+        // subtract currency from memory
+        localCurrency -= amount;
+        // save currency to persistence
+        getPersistenceService().setInt(persistenceKey, localCurrency);
     }
 }

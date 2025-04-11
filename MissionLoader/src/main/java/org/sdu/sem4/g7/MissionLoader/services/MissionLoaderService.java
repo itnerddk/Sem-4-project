@@ -104,6 +104,19 @@ public class MissionLoaderService implements IMissionLoaderService {
 	private void loadMissionsMetadata() throws IOException {
 		for (File missionFile : Config.missionsDir.listFiles()) {
 			Mission mission = objectMapper.readValue(missionFile, Mission.class); // NOTE: This does not load the entire mission object, just the metadata!
+			// Iterate all enemies and based on max health multiple difficulty
+			try {
+				List<EnemyStartPositionObject> enemies = getMissionObject(mission.getId()).getEnemies();
+				System.out.println(mission.getName() + "(" + mission.getId() + ") has " + enemies.size() + " enemies" + " with a difficulty of " + mission.getDifficulty());
+				for (EnemyStartPositionObject enemy : enemies) {
+					// Enemies with a max health of 100 should contribute with something around 1.05x
+					// f(x)=0.7+1.5 (1-ℯ^(-((x)/(400))))
+					mission.setDifficulty((float)(mission.getDifficulty() * Math.max(1.0, (0.7 + 1.5 * (1 - Math.exp(-(((float)enemy.getHealth()) / (400))))))));
+				}
+				System.out.println(mission.getName() + " has a difficulty of " + mission.getDifficulty());
+			} catch (Exception e) {
+				System.out.println("No level file, not calculating difficulty");
+			}
 			missions.add(mission);
 		}
 	}
@@ -210,7 +223,7 @@ public class MissionLoaderService implements IMissionLoaderService {
 				enemy = world.getEntityTypes().get(espo.getEntityType()).get(0).getDeclaredConstructor().newInstance();
 				enemy.setPosition(espo.getX(), espo.getY());
 				enemy.setHealth(espo.getHealth());
-				enemy.setMaxHealth(100);
+				enemy.setMaxHealth(espo.getHealth());
 				System.out.println("set enemy health from mission: " + espo.getHealth());
 				
 				// Set maxHealth to the same value as health if not explicitly defined

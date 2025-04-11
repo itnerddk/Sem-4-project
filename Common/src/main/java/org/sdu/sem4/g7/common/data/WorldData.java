@@ -61,6 +61,17 @@ public class WorldData {
         return r;
     }
 
+    @SuppressWarnings("unchecked")
+    public <E extends Entity> List<E> getEntities(EntityType entityType) {
+        List<E> r = new ArrayList<>();
+        for (Entity e : getEntities()) {
+            if (entityType.equals(e.getEntityType())) {
+                r.add((E) e);
+            }
+        }
+        return r;
+    }
+
     public Entity getEntity(String ID) {
         return entityMap.get(ID);
     }

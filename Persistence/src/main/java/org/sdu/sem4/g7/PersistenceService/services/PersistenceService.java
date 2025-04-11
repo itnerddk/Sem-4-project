@@ -144,7 +144,7 @@ public class PersistenceService implements IPersistenceService {
     public int getInt(String key) {
         try {
             return readFileObject().getIntMap().get(key);
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println("Could not read playerdata file! key given: " + key);
             e.printStackTrace();
         }

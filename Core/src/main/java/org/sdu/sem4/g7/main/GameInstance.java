@@ -100,16 +100,28 @@ public class GameInstance {
 
                     try {
                         if (worldData.isGameWon()) {
-                            gameData.setScoreTarget(10000);
-                            int timePenalty = (int)(gameData.getTime() * 100); // 100 point per sekund
-                            int finalScore = Math.max(0, 10000 - timePenalty);
+                            float difficulty = gameData.getMissionLoaderService().getMission(missionId - 1).getDifficulty();
+                            System.out.println("Difficulty: " + difficulty);
+                            gameData.setScoreTarget((int)(1000 * difficulty));
+                            int timePenalty = (int)(gameData.getTime() * gameData.getScoreTarget() / 120); // 120 seconds
+                            int finalScore = Math.max(0, gameData.getScoreTarget() - timePenalty);
+                            
+                            // Get the mission difficulty and multiply it on
+                            finalScore *= difficulty;
+
+                            Entity player = worldData.getEntities(EntityType.PLAYER).getFirst();
+
+                            int healthBonus = (int) (100.0f * (((float) player.getHealth() / (float) player.getMaxHealth()) * difficulty));
+                            finalScore += healthBonus;
+
+
                             gameData.setScore(finalScore);
-                            gameData.setCoinsEarned(1000); // midlertidigt hardcoded
+                            gameData.setCoinsEarned((int)(finalScore * 0.25)); // midlertidigt hardcoded
 
                             ServiceLocator.getCurrencyService().ifPresent(service -> {
-                                service.addCurrency(gameData, gameData.getCoinsEarned());
+                                service.addCurrency(gameData.getCoinsEarned());
                             });
-                            showResultOverlay(true, finalScore, 10000, 1000);
+                            showResultOverlay(true, finalScore, gameData.getScoreTarget(), gameData.getCoinsEarned());
                             animationTimer.stop();
                             return;
                         } else if (worldData.isGameLost()) {

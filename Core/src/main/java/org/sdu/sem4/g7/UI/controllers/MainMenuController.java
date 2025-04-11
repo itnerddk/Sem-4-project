@@ -101,7 +101,7 @@ public class MainMenuController implements Initializable {
         setupSettingsPane();
 
         ServiceLocator.getCurrencyService().ifPresentOrElse(
-                service -> coinDisplay.setText("Coins: " + service.getCurrency(gameData)),
+                service -> coinDisplay.setText("Coins: " + service.getCurrency()),
                 () -> coinDisplay.setVisible(false)
         );
 
@@ -261,7 +261,7 @@ public class MainMenuController implements Initializable {
                 }
 
                 ServiceLocator.getCurrencyService().ifPresent(service ->
-                        coinDisplay.setText("Coins: " + service.getCurrency(gameData))
+                        coinDisplay.setText("Coins: " + service.getCurrency())
                 );
             } else {
                 System.out.println("Not enough coins!");
@@ -314,7 +314,7 @@ public class MainMenuController implements Initializable {
                 }
 
                 ServiceLocator.getCurrencyService().ifPresent(service ->
-                        coinDisplay.setText("Coins: " + service.getCurrency(gameData))
+                        coinDisplay.setText("Coins: " + service.getCurrency())
                 );
             } else {
                 System.out.println("Not enough coins!");
@@ -352,7 +352,7 @@ public class MainMenuController implements Initializable {
                 }
 
                 ServiceLocator.getCurrencyService().ifPresent(service ->
-                        coinDisplay.setText("Coins: " + service.getCurrency(gameData))
+                        coinDisplay.setText("Coins: " + service.getCurrency())
                 );
             } else {
                 System.out.println("Not enough coins!");
@@ -518,7 +518,7 @@ public class MainMenuController implements Initializable {
                 }
 
                 ServiceLocator.getCurrencyService().ifPresent(service ->
-                        coinDisplay.setText("Coins: " + service.getCurrency(gameData))
+                        coinDisplay.setText("Coins: " + service.getCurrency())
                 );
             } else {
                 System.out.println("Not enough coins!");

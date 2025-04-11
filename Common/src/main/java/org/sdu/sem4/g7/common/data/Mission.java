@@ -26,10 +26,10 @@ public class Mission {
     /*
      * Scale of difficulty of the mission
      */
-    private int difficulty;
+    private float difficulty;
 
 
-	public Mission(int id, String name, String description, int difficulty) {
+	public Mission(int id, String name, String description, float difficulty) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -62,11 +62,11 @@ public class Mission {
 		this.description = description;
 	}
 
-	public int getDifficulty() {
+	public float getDifficulty() {
 		return difficulty;
 	}
 
-	public void setDifficulty(int difficulty) {
+	public void setDifficulty(float difficulty) {
 		this.difficulty = difficulty;
 	}
 

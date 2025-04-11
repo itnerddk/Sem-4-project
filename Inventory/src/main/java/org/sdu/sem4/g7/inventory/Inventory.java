@@ -53,6 +53,7 @@ public class Inventory implements IInventoryService, IGamePluginService, IEntity
             }
             player.setTurret(turret);
             world.addEntity(turret);
+            player.subProcess();
         }
     }
 
