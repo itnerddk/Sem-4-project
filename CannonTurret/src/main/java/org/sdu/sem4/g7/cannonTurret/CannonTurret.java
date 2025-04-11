@@ -78,17 +78,6 @@ public class CannonTurret extends Turret {
         return true;
     }
 
-    @Override
-    public void render(GraphicsContext gc) {
-        super.render(gc);
-        gc.save();
-        gc.translate(this.getPosition().getX(), this.getPosition().getY());
-        gc.rotate(this.getRotation());
-        gc.strokeOval(this.getMuzzle().getX(), this.getMuzzle().getY(), 5, 5);
-        gc.restore();
-    }
-
-
     // Self functions
     public static URI getShootSoundFile() {
         return shootSoundFile;
