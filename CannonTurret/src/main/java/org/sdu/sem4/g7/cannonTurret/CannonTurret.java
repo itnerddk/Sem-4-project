@@ -21,6 +21,7 @@ public class CannonTurret extends Turret {
         super();
         setOffset(new Vector2(0, 0));
         setMuzzle(new Vector2(0, -25));
+        setAttackSpeed(400);
         try {
             System.out.println(this.getClass().getClassLoader().getResource("CannonTurret.png"));
             this.setSprite(this.getClass().getClassLoader().getResource("CannonTurret.png").toURI(), 5);
@@ -38,7 +39,11 @@ public class CannonTurret extends Turret {
     }
 
     @Override
-    public void shoot(GameData gameData, WorldData mission) {
+    public boolean shoot(GameData gameData, WorldData mission) {
+        // Check if the turret is ready to shoot
+        if (tryShoot() == false) {
+            return false;
+        }
         // Play the shoot sound
         if (gameData.playAudio(SoundType.SHOOT, getShootSoundFile().toString(), 1.0f)) {
             System.out.println("Playing shoot sound");
@@ -75,6 +80,7 @@ public class CannonTurret extends Turret {
         bullet.setVelocity(Math.cos(rotationInRadians) * 8, Math.sin(rotationInRadians) * 8);
 
         mission.addEntity(bullet);
+        return true;
     }
 
     @Override

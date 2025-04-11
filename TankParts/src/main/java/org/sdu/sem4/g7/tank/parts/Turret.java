@@ -11,6 +11,7 @@ public abstract class Turret extends Entity {
     private Vector2 offset;
     private Vector2 muzzle;
     private int attackSpeed;
+    private long lastShotTime;
 
     public Turret() {
     }
@@ -55,5 +56,14 @@ public abstract class Turret extends Entity {
         this.attackSpeed = attackSpeed;
     }
 
-    abstract public void shoot(GameData gameData, WorldData world);
+    public boolean tryShoot() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastShotTime >= attackSpeed) {
+            lastShotTime = currentTime;
+            return true;
+        }
+        return false;
+    }
+
+    abstract public boolean shoot(GameData gameData, WorldData world);
 }
