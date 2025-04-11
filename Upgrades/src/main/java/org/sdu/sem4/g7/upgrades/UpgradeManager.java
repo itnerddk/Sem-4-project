@@ -68,7 +68,7 @@ public class UpgradeManager implements IUpgradeService, IUpgradeStatsService {
 
     @Override
     public int getDamageBonus() {
-        return damage.getLevel() * 5;
+        return damage.getLevel();
     }
 }
 

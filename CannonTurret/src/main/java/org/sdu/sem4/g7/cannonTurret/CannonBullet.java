@@ -7,7 +7,7 @@ import org.sdu.sem4.g7.tank.parts.Bullet;
 public class CannonBullet extends Bullet {
 
     public CannonBullet() {
-        super(10); // TODO: Find a better way to set bullet damage #HACKFIX
+        super(); // TODO: Find a better way to set bullet damage #HACKFIX
         setCollision(true);
         setHealth(1);
         try {
