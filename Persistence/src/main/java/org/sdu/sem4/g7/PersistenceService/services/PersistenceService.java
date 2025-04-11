@@ -69,10 +69,16 @@ public class PersistenceService implements IPersistenceService {
         // Create a barebone persistence file, if it does not exists
         if (!persistenceFile.isFile()) {
             DataFileObject dfo = new DataFileObject();
+
+            // Create the empty object
             dfo.setCreated(new Date());
             dfo.setRevision(0);
             dfo.setStringMap(new HashMap<>());
             dfo.setIntMap(new HashMap<>());
+            dfo.setStringListMap(new HashMap<>());
+            dfo.setIntListMap(new HashMap<>());
+
+            // save the object
             try {
                 writeFileObject(dfo);
             } catch (IOException e) {
@@ -84,9 +90,106 @@ public class PersistenceService implements IPersistenceService {
     }
 
     @Override
-    public List<String> getStringList(String key) {
+    public String getString(String key) {
         try {
             return readFileObject().getStringMap().get(key);
+        } catch (IOException e) {
+            System.err.println("Could not read playerdata file! key given: " + key);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    @Override
+    public void setString(String key, String value) {
+        try {
+            // Load playerdata
+            DataFileObject dfo = readFileObject();
+            Map<String, String> data = dfo.getStringMap();
+
+            // update data
+            data.put(key, value);
+
+            // Save file
+            writeFileObject(dfo);
+
+        } catch (IOException e) {
+            System.err.println("Could not save string to playerdata with key: " + key);
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public boolean stringExists(String key) {
+        try {
+            // Load playerdata
+            DataFileObject dfo = readFileObject();
+            Map<String, String> data = dfo.getStringMap();
+
+            // update data
+            return data.containsKey(key);
+        } catch (IOException e) {
+            System.err.println("Could not load playerdata");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    @Override
+    public int getInt(String key) {
+        try {
+            return readFileObject().getIntMap().get(key);
+        } catch (IOException e) {
+            System.err.println("Could not read playerdata file! key given: " + key);
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
+    @Override
+    public void setInt(String key, int value) {
+        try {
+            // Load playerdata
+            DataFileObject dfo = readFileObject();
+            Map<String, Integer> data = dfo.getIntMap();
+
+            // update data
+            data.put(key, value);
+
+            // Save file
+            writeFileObject(dfo);
+
+        } catch (IOException e) {
+            System.err.println("Could not save integer to playerdata with key: " + key);
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public boolean intExists(String key) {
+        try {
+            // Load playerdata
+            DataFileObject dfo = readFileObject();
+            Map<String, Integer> data = dfo.getIntMap();
+
+            // update data
+            return data.containsKey(key);
+        } catch (IOException e) {
+            System.err.println("Could not load playerdata");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public List<String> getStringList(String key) {
+        try {
+            return readFileObject().getStringListMap().get(key);
         } catch (IOException e) {
             System.err.println("Could not read playerdata file! key given: " + key);
             e.printStackTrace();
@@ -99,7 +202,7 @@ public class PersistenceService implements IPersistenceService {
         try {
             // Load playerdata
             DataFileObject dfo = readFileObject();
-            Map<String, List<String>> data = dfo.getStringMap();
+            Map<String, List<String>> data = dfo.getStringListMap();
 
             // update data
             data.put(key, value);
@@ -118,7 +221,7 @@ public class PersistenceService implements IPersistenceService {
         try {
             // Load playerdata
             DataFileObject dfo = readFileObject();
-            Map<String, List<String>> data = dfo.getStringMap();
+            Map<String, List<String>> data = dfo.getStringListMap();
 
             // update data
             return data.containsKey(key);
@@ -132,7 +235,7 @@ public class PersistenceService implements IPersistenceService {
     @Override
     public List<Integer> getIntList(String key) {
         try {
-            return readFileObject().getIntMap().get(key);
+            return readFileObject().getIntListMap().get(key);
         } catch (IOException e) {
             System.err.println("Could not read playerdata file! key given: " + key);
             e.printStackTrace();
@@ -145,7 +248,7 @@ public class PersistenceService implements IPersistenceService {
         try {
             // Load playerdata
             DataFileObject dfo = readFileObject();
-            Map<String, List<Integer>> data = dfo.getIntMap();
+            Map<String, List<Integer>> data = dfo.getIntListMap();
 
             // update data
             data.put(key, value);
@@ -164,7 +267,7 @@ public class PersistenceService implements IPersistenceService {
         try {
             // Load playerdata
             DataFileObject dfo = readFileObject();
-            Map<String, List<Integer>> data = dfo.getIntMap();
+            Map<String, List<Integer>> data = dfo.getIntListMap();
 
             // update data
             return data.containsKey(key);

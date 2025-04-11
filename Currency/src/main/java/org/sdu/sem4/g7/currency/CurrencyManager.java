@@ -3,6 +3,7 @@ package org.sdu.sem4.g7.currency;
 import org.sdu.sem4.g7.common.services.ICurrencyService;
 
 public class CurrencyManager implements ICurrencyService {
+
     private int currency = 0;
 
     @Override
