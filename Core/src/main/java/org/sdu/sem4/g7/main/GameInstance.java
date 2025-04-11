@@ -23,6 +23,7 @@ import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.common.services.*;
 
 import java.io.IOException;
+import java.security.Provider.Service;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -36,6 +37,7 @@ public class GameInstance {
 
     private AnimationTimer animationTimer;
 
+    private final int missionId;
     private final StackPane rootPane = new StackPane();
     private final Pane gameWindow = new Pane();
     private final Canvas gameCanvas;
@@ -43,9 +45,11 @@ public class GameInstance {
     private final Group debugGroup = new Group();
     private static final Text debugText = new Text(10, 20, "");
 
+
     private final Collection<IGamePluginService> pluginServices;
 
-    public GameInstance(GameData gameData, WorldData worldData) {
+    public GameInstance(GameData gameData, WorldData worldData, int missionId) {
+        this.missionId = missionId;
         this.gameData = gameData;
         this.worldData = worldData;
         this.gameCanvas = new Canvas(gameData.getMissionLoaderService().getMapSizeX(), gameData.getMissionLoaderService().getMapSizeY());
@@ -107,6 +111,20 @@ public class GameInstance {
                             ServiceLocator.getCurrencyService().ifPresent(service -> {
                                 service.addCurrency(gameData.getCoinsEarned());
                             });
+                            ServiceLocator.getPersistenceService().ifPresent(service -> {
+                                List<Integer> compltedMission;
+                                if (service.intListExists("completedMissions")) {
+                                    compltedMission = service.getIntList("completedMissions");
+                                } else {
+                                    compltedMission = new ArrayList<>();
+                                }
+                                if(!compltedMission.contains(missionId)) {
+                                    compltedMission.add(missionId);
+                                    service.saveIntList("completedMissions", compltedMission);
+                                }
+                                
+                            });
+
                             showResultOverlay(true, finalScore, 10000, 1000);
                             animationTimer.stop();
                             return;
