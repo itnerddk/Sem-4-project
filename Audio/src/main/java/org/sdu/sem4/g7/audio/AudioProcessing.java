@@ -1,7 +1,7 @@
 package org.sdu.sem4.g7.audio;
 
-import java.net.URISyntaxException;
-import java.util.HashMap;
+import java.io.File;
+import java.net.URI;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.sdu.sem4.g7.common.data.GameData;
@@ -12,61 +12,79 @@ import org.sdu.sem4.g7.common.services.IGamePluginService;
 
 import javafx.scene.media.AudioClip;
 
-public class AudioProcessing implements IAudioProcessingService, IGamePluginService {
+class CompositeKey {
+    private SoundType soundType;
+    private String soundName;
 
-    public static ConcurrentHashMap<SoundType, String> soundMap = new ConcurrentHashMap<>();
-    static {
-        soundMap.put(SoundType.SHOOT, "Shoot");
-        soundMap.put(SoundType.EXPLOSION, "Explosion");
-        soundMap.put(SoundType.HIT, "Hit");
-        soundMap.put(SoundType.BUTTON_CLICK, "Click");
-        soundMap.put(SoundType.GAME_START, "Start");
-        soundMap.put(SoundType.GAME_END, "End");
+    public CompositeKey(SoundType soundType, String soundName) {
+        this.soundType = soundType;
+        this.soundName = soundName;
     }
 
-    private HashMap<SoundType, AudioClip> soundPlayers = new HashMap<>();
+    @Override
+    public int hashCode() {
+        if (soundName == null) {
+            return soundType.hashCode();
+        }
+        return soundType.hashCode() + soundName.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof CompositeKey) {
+            CompositeKey other = (CompositeKey) obj;
+            return this.soundType == other.soundType && this.soundName.equals(other.soundName);
+        }
+        return false;
+    }
+    
+}
+
+public class AudioProcessing implements IAudioProcessingService, IGamePluginService {
+
+    private static ConcurrentHashMap<CompositeKey, AudioClip> soundMap = new ConcurrentHashMap<>();
+    static {
+        try {
+            soundMap.put(new CompositeKey(SoundType.SHOOT, ""), new AudioClip(AudioProcessing.class.getResource("/sounds/Shoot.wav").toString()));
+            soundMap.put(new CompositeKey(SoundType.HIT, ""), new AudioClip(AudioProcessing.class.getResource("/sounds/Hit.wav").toString()));
+            soundMap.put(new CompositeKey(SoundType.EXPLOSION, ""), new AudioClip(AudioProcessing.class.getResource("/sounds/Explosion.wav").toString()));
+            soundMap.put(new CompositeKey(SoundType.BUTTON_CLICK, ""), new AudioClip(AudioProcessing.class.getResource("/sounds/Button_Click.wav").toString()));
+            soundMap.put(new CompositeKey(SoundType.GAME_START, ""), new AudioClip(AudioProcessing.class.getResource("/sounds/Game_Start.wav").toString()));
+            soundMap.put(new CompositeKey(SoundType.GAME_END, ""), new AudioClip(AudioProcessing.class.getResource("/sounds/Game_End.wav").toString()));
+        } catch (Exception e) {
+            System.out.println("Error loading sound files: " + e.getMessage());
+        }
+    }
 
     @Override
     public void playSound(SoundType soundType, float volume) {
-        long startTime = System.nanoTime();
-        if (volume < 0 || volume > 1) {
-            throw new IllegalArgumentException("Volume must be between 0.0 and 1.0");
-        }
-        else if (soundType == null) {
-            throw new IllegalArgumentException("soundType cannot be null");
-        }
-        // Play the sound
-        if (!soundPlayers.containsKey(soundType)) {
-            try {
-                String soundName = soundMap.get(soundType);
-                // Load the sound file
-                String soundPath = getClass().getResource("/sounds/" + soundName + ".wav").toURI().toString();
-                AudioClip audioClip = new AudioClip(soundPath);
-                soundPlayers.put(soundType, audioClip);
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-        }
-
-        AudioClip audioClip = soundPlayers.get(soundType);
-        audioClip.setVolume(volume);
-        double pitch = 0.8f + Math.random() * 0.4f; // Random pitch between 0.8 and 1.2
-        audioClip.setRate(pitch);
-        audioClip.play();
-        
-        long endTime = System.nanoTime();
-        System.out.println("Sound played: " + soundType.toString() + " | Volume: " + volume + " | Pitch: " + pitch + " | Time taken: " + ((double)(endTime - startTime))/1000000 + "ms");
+        playSound(soundType, "", volume);
     }
 
     @Override
-    public void stopSound(SoundType soundType) { // TODO not possible at the moment
-        if (soundType == null) {
-            throw new IllegalArgumentException("soundType cannot be null");
+    public boolean playSound(SoundType soundType, String soundName, float volume) {
+        AudioClip sound = soundMap.get(new CompositeKey(soundType, soundName));
+        double pitch = 0.8 + Math.random() * 0.4; // Random pitch between 0.8 and 1.2
+        if (sound != null) {
+            sound.setVolume(volume);
+            sound.setRate(pitch);
+            sound.play();
+            return true;
         }
+        System.out.println("Sound not found: " + soundType + " " + soundName);
+        return false;
+    }
 
-        System.out.println("Stopping all " + soundType.toString() + " sounds");
+    @Override
+    public void addSound(SoundType soundType, URI filePath) {
+        AudioClip sound = new AudioClip(filePath.toString());
+        soundMap.put(new CompositeKey(soundType, filePath.toString()), sound);
+    }
 
-        
+    @Override
+    public void stopSound(SoundType soundType) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'stopSound'");
     }
 
     @Override

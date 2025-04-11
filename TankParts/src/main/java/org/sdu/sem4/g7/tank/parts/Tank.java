@@ -98,7 +98,6 @@ public abstract class Tank extends Entity implements IRigidbodyService {
     public void shoot(GameData gameData, WorldData mission) {
         if (turret != null) {
             turret.shoot(gameData, mission);
-            gameData.playAudio(SoundType.SHOOT, 1.0f);
         }
     }
 

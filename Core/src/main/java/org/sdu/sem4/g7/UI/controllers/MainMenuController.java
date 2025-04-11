@@ -29,6 +29,7 @@ import java.io.IOException;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Setting;
 import org.sdu.sem4.g7.common.data.SettingGroup;
+import org.sdu.sem4.g7.common.enums.SoundType;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -106,11 +107,18 @@ public class MainMenuController implements Initializable {
                 service -> levelDisplay.setText("Level: " + service.getLevel()),
                 () -> levelDisplay.setVisible(false)
         );
+
+        ServiceLocator.getAudioProcessingService().ifPresentOrElse(
+                service -> {
+                    gameData.setAudioProcessingService(service);
+                },
+                () -> System.out.println("AudioProcessingService not found")
+        );
     }
 
     @FXML
     private void handleStartGame(ActionEvent event) {
-        System.out.println("Start Game button clicked");
+        gameData.playAudio(SoundType.BUTTON_CLICK);
         ServiceLocator.getMissionLoaderService().ifPresentOrElse(
                 service -> {
                     try {
@@ -140,16 +148,19 @@ public class MainMenuController implements Initializable {
    
 
     @FXML private void showUpgrades() {
+        gameData.playAudio(SoundType.BUTTON_CLICK);
         upgradePane.setVisible(true);
         shopPane.setVisible(false);
     }
 
     @FXML private void showShop() {
+        gameData.playAudio(SoundType.BUTTON_CLICK);
         upgradePane.setVisible(false);
         shopPane.setVisible(true);
     }
 
     @FXML private void handleBack(ActionEvent event) {
+        gameData.playAudio(SoundType.BUTTON_CLICK);
         loadScene(event, "/view/Intro.fxml", "Main Menu");
     }
 
@@ -177,6 +188,7 @@ public class MainMenuController implements Initializable {
 
 
     @FXML private void handleSettings(ActionEvent event) {
+        gameData.playAudio(SoundType.BUTTON_CLICK);
         settingsPane.setOpacity(0);
         settingsPane.setVisible(true);
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.3), settingsPane);
@@ -185,11 +197,13 @@ public class MainMenuController implements Initializable {
     }
 
     @FXML private void handleCloseSettings(ActionEvent event) {
+        gameData.playAudio(SoundType.BUTTON_CLICK);
         settingsPane.setVisible(false);
     }
 
     @FXML
     private void handleDifficulty(ActionEvent event) {
+        gameData.playAudio(SoundType.BUTTON_CLICK);
     }
 
     // Health
@@ -209,6 +223,7 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private void handleHealthUpgrade() {
+        gameData.playAudio(SoundType.BUTTON_CLICK);
         ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
             if (upgradeService.isHealthMaxed()) {
                 healthPriceButton.setText("MAX");
@@ -261,6 +276,7 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private void handleArmorUpgrade() {
+        gameData.playAudio(SoundType.BUTTON_CLICK);
         ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
             if (upgradeService.isArmorMaxed()) {
                 armorPriceButton.setText("MAX");
@@ -367,6 +383,11 @@ public class MainMenuController implements Initializable {
                 settingGroupPane.setText(settingGroup.getName());
                 settingGroupPane.setExpanded(true); // Might as well keep it expanded for now as there are not enough settings
 
+                // Set the on click to play a sound
+                settingGroupPane.setOnMouseClicked(e -> {
+                    gameData.playAudio(SoundType.BUTTON_CLICK);
+                });
+
                 // TODO: Description label
                 // Label groupDescriptionLabel = (Label) settingGroupPane.lookup("#groupDescription");
                 // groupDescriptionLabel.setText(settingGroup.getDescription());
@@ -414,6 +435,7 @@ public class MainMenuController implements Initializable {
                     boolean newValue = !((Boolean) setting.getValue());
                     setting.setValue(newValue);
                     toggleButton.setText(newValue ? "ON" : "OFF");
+                    gameData.playAudio(SoundType.BUTTON_CLICK);
                     setting.apply(gameData);
                 });
                 settingValue.getChildren().add(toggleButton);
@@ -421,7 +443,7 @@ public class MainMenuController implements Initializable {
             } else if (setting.getValueTypeClass() == Float.class) {
                 // Create slider with 0.1 step
                 Slider slider = new Slider(0, 1, (Float) setting.getValue());
-                slider.setBlockIncrement(0.1);
+                slider.setBlockIncrement(0.1f);
                 slider.setMajorTickUnit(1);
                 slider.setMinorTickCount(9);
                 slider.setSnapToTicks(true);
@@ -431,10 +453,18 @@ public class MainMenuController implements Initializable {
                 sliderValueLabel.setText(String.valueOf((Float) setting.getValue()));
                 // Add a listener to the slider to update the setting value
                 slider.valueProperty().addListener((obs, oldValue, newValue) -> {
-                    setting.setValue(newValue.floatValue());
-                    sliderValueLabel.setText(String.valueOf(Math.round(newValue.floatValue() * 10.0f) / 10.0f));
-                    setting.apply(gameData);
+                    // Snap to 0.1
+                    float snappedValue = Math.round(newValue.floatValue() * 10) / 10f;
+                    slider.setValue(snappedValue);
+                    // If change is above 0.1
+                    if (Math.abs(snappedValue - (Float) setting.getValue()) >= 0.05f) {
+                        sliderValueLabel.setText(String.valueOf(snappedValue));
+                        setting.setValue(snappedValue);
+                        setting.apply(gameData);
+                        gameData.playAudio(SoundType.BUTTON_CLICK);
+                    }
                 });
+
                 // Add the slider and label to the setting value HBox
                 HBox.setHgrow(slider, javafx.scene.layout.Priority.ALWAYS);
                 settingValue.getChildren().add(slider);
@@ -451,6 +481,7 @@ public class MainMenuController implements Initializable {
     // Damage
     public void handleDamageUpgrade(ActionEvent actionEvent) {
         ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
+            gameData.playAudio(SoundType.BUTTON_CLICK);
             if (upgradeService.isDamageMaxed()) {
                 damagePriceButton.setText("MAX");
                 damageCircle1.setDisable(true);

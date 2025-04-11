@@ -38,6 +38,7 @@ public class GameInstance {
 
     private final StackPane rootPane = new StackPane();
     private final Pane gameWindow = new Pane();
+    private final int missionId;
     private final Canvas gameCanvas;
     private final Map<Entity, Node> sprites = new ConcurrentHashMap<>();
     private final Group debugGroup = new Group();
@@ -45,7 +46,8 @@ public class GameInstance {
 
     private final Collection<IGamePluginService> pluginServices;
 
-    public GameInstance(GameData gameData, WorldData worldData) {
+    public GameInstance(GameData gameData, WorldData worldData, int missionId) {
+        this.missionId = missionId;
         this.gameData = gameData;
         this.worldData = worldData;
         this.gameCanvas = new Canvas(gameData.getMissionLoaderService().getMapSizeX(), gameData.getMissionLoaderService().getMapSizeY());

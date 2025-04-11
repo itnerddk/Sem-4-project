@@ -23,6 +23,7 @@
         <module>Audio</module>
         <module>Level</module>
         <module>Upgrades</module>
+        <module>MachineGunTurret</module>
     </modules>
 
     <properties>

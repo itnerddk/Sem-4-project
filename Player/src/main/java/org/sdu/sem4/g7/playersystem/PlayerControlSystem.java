@@ -36,7 +36,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
             }
 
             // Shoot
-            if (gameData.isPressed(GameData.Keys.SPACE)) {
+            if (gameData.isDown(GameData.Keys.SPACE)) {
                 player.shoot(gameData, world);
             }
 
