@@ -106,6 +106,11 @@ public class MainMenuController implements Initializable {
                 service -> levelDisplay.setText("Level: " + service.getLevel()),
                 () -> levelDisplay.setVisible(false)
         );
+
+        ServiceLocator.getPersistenceService().ifPresentOrElse(
+            service -> gameData.setPersistenceService(service),
+            () -> System.out.println("No persistence service found!")
+        );
     }
 
     @FXML
