@@ -11,6 +11,15 @@ public class HealthUpgrade {
     public boolean isMaxed() { return level >= prices.length; }
     public int getNextPrice() { return isMaxed() ? -1 : prices[level]; }
 
+    public HealthUpgrade() {
+        // get level from storage
+        ServiceLocator.getPersistenceService().ifPresent(
+            persistenceService -> {
+                level = persistenceService.getInt(this.getClass().getName());
+            }
+        );
+    }
+
     public boolean upgrade() {
         if (isMaxed()) return false;
 
@@ -19,6 +28,14 @@ public class HealthUpgrade {
             if (cs.getCurrency() >= price) {
                 cs.subtractCurrency(price);
                 level++;
+
+                // update persistence
+                ServiceLocator.getPersistenceService().ifPresent(
+                    persistenceService -> {
+                        persistenceService.setInt(this.getClass().getName(), level);
+                    }
+                );
+                
                 return true;
             }
             return false;
