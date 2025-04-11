@@ -18,6 +18,7 @@ import javafx.scene.layout.VBox;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.common.data.WorldData;
+import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
 import org.sdu.sem4.g7.main.GameInstance;
 
@@ -84,6 +85,7 @@ public class MissionSelectorController {
             } else {
                 tile.getChildren().add(number);
                 tile.setOnMouseClicked(e -> {
+                    gameData.playAudio(SoundType.BUTTON_CLICK);
                     selectedMission = mission;
                     System.out.println("Selected: " + mission.getName());
 
@@ -114,6 +116,7 @@ public class MissionSelectorController {
     }
 
     @FXML private void handleBack(ActionEvent event) {
+        gameData.playAudio(SoundType.BUTTON_CLICK);
         loadScene(event, "/view/MainMenu.fxml", "Main Menu");
     }
 

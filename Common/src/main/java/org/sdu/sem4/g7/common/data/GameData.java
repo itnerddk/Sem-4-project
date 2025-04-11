@@ -1,5 +1,7 @@
 package org.sdu.sem4.g7.common.data;
 
+import java.io.File;
+import java.net.URI;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -194,6 +196,23 @@ public class GameData {
     public void playAudio(SoundType soundType, float volume) {
         if (audioProcessingService != null) {
             audioProcessingService.playSound(soundType, volume  * soundVolume.get(soundType) * soundVolume.get(SoundType.MASTER));
+        } else {
+            System.err.println("Audio processing service is not set.");
+        }
+    }
+
+    public boolean playAudio(SoundType soundType, String soundName, float volume) {
+        if (audioProcessingService != null) {
+            return audioProcessingService.playSound(soundType, soundName, volume * soundVolume.get(soundType) * soundVolume.get(SoundType.MASTER));
+        } else {
+            System.err.println("Audio processing service is not set.");
+            return true;
+        }
+    }
+
+    public void addAudio(SoundType soundType, URI filePath) {
+        if (audioProcessingService != null) {
+            audioProcessingService.addSound(soundType, filePath);
         } else {
             System.err.println("Audio processing service is not set.");
         }

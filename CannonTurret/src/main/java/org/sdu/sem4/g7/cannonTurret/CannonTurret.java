@@ -1,15 +1,22 @@
 package org.sdu.sem4.g7.cannonTurret;
 
+import java.io.File;
+import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
+import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.tank.parts.Turret;
 
 import javafx.scene.canvas.GraphicsContext;
 
 public class CannonTurret extends Turret {
+
+    private static URI shootSoundFile;
+    private static URI explosionSoundFile;
+
     public CannonTurret() {
         super();
         setOffset(new Vector2(0, 0));
@@ -18,6 +25,12 @@ public class CannonTurret extends Turret {
             System.out.println(this.getClass().getClassLoader().getResource("CannonTurret.png"));
             this.setSprite(this.getClass().getClassLoader().getResource("CannonTurret.png").toURI(), 5);
             this.setzIndex(-10);
+
+            // Load the sound files
+            if (CannonTurret.getShootSoundFile() == null) {
+                System.out.println(this.getClass().getResource("/Shoot.wav"));
+                CannonTurret.setShootSoundFile(this.getClass().getResource("/Shoot.wav").toURI());
+            }
         } catch (URISyntaxException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -26,6 +39,13 @@ public class CannonTurret extends Turret {
 
     @Override
     public void shoot(GameData gameData, WorldData mission) {
+        // Play the shoot sound
+        if (gameData.playAudio(SoundType.SHOOT, getShootSoundFile().toString(), 1.0f)) {
+            System.out.println("Playing shoot sound");
+        } else {
+            gameData.addAudio(SoundType.SHOOT, getShootSoundFile());
+        }
+
         CannonBullet bullet = new CannonBullet();
         bullet.setPosition(this.getPosition());
         // bullet.getPosition().add(this.getOffset());
@@ -65,5 +85,20 @@ public class CannonTurret extends Turret {
         gc.rotate(this.getRotation());
         gc.strokeOval(this.getMuzzle().getX(), this.getMuzzle().getY(), 5, 5);
         gc.restore();
+    }
+
+
+    // Self functions
+    public static URI getShootSoundFile() {
+        return shootSoundFile;
+    }
+    public static URI getExplosionSoundFile() {
+        return explosionSoundFile;
+    }
+    public static void setShootSoundFile(URI shootSoundFile) {
+        CannonTurret.shootSoundFile = shootSoundFile;
+    }
+    public static void setExplosionSoundFile(URI explosionSoundFile) {
+        CannonTurret.explosionSoundFile = explosionSoundFile;
     }
 }
