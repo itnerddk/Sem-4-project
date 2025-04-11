@@ -14,26 +14,37 @@ public class Player extends Tank {
         this.getSprite().setEffect(new javafx.scene.effect.ColorAdjust(0.45, 0, 0, 0));
         this.getSprite().setCacheHint(javafx.scene.CacheHint.SPEED);
         this.setzIndex(-5);
-
-        // Set entity type
         setEntityType(EntityType.PLAYER);
 
-        // Base health
+        // Health
         int baseHealth = 100;
-
-        // Get health bonus from UpgradeService
         int bonusHealth = ServiceLocator.getUpgradeStatsService()
                 .map(IUpgradeStatsService::getHealthBonus)
                 .orElse(0);
-
-        System.out.println("HEALTH BONUS FROM SERVICE: " + bonusHealth);  //TEST
-
         int totalHealth = baseHealth + bonusHealth;
         this.setMaxHealth(totalHealth);
         this.setHealth(totalHealth);
-        System.out.println("HEALTH after setHealth: " + this.getHealth()); // TEST
 
+        // Speed
+        float speedMultiplier = ServiceLocator.getUpgradeStatsService()
+                .map(IUpgradeStatsService::getSpeedMultiplier)
+                .orElse(0f);
+
+        // Base values
+        double baseMaxSpeed = 0.5;
+        double baseAcceleration = 1.2;
+        double baseDeceleration = 0.8;
+
+        // Apply speed multiplier based on upgrades
+        this.setMaxSpeed(Math.min(baseMaxSpeed + speedMultiplier, 0.75));
+        this.setAcceleration(baseAcceleration + speedMultiplier * (baseAcceleration / baseMaxSpeed));
+        this.setDeceleration(baseDeceleration + speedMultiplier * (baseDeceleration / baseMaxSpeed));
+
+        // Debug text
         System.out.println("Player spawned with max health: " + totalHealth);
+        System.out.println("Player spawned with max speed: " + getMaxSpeed());
+        System.out.println("Player spawned with acceleration: " + getAcceleration());
+        System.out.println("Player spawned with deceleration: " + getDeceleration());
 
         // Load default turret
         try {

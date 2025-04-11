@@ -58,7 +58,7 @@ public class UpgradeManager implements IUpgradeService, IUpgradeStatsService {
 
     @Override
     public float getSpeedMultiplier() {
-        return 1.0f + (speed.getLevel() * 0.05f);
+        return speed.getLevel() * 0.05f;
     }
 
     @Override
