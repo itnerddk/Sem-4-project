@@ -19,7 +19,7 @@ public class Mission {
     private String name;
 
     /*
-     * Description descriping the mission
+     * Description describing the mission
      */
     private String description;
 
