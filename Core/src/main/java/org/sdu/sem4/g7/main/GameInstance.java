@@ -108,8 +108,19 @@ public class GameInstance {
                             gameData.setScore(finalScore);
                             gameData.setCoinsEarned(1000); // midlertidigt hardcoded
 
+
+
                             ServiceLocator.getCurrencyService().ifPresent(service -> {
-                                service.addCurrency(gameData.getCoinsEarned());
+                                ServiceLocator.getPersistenceService().ifPresent(persistenceService -> {
+                                    // Check if mission has been completed, so the player earn less money
+                                    if(persistenceService.intListExists("completedMissions")){
+                                        if(persistenceService.getIntList("completedMissions").contains(missionId)){
+                                            System.out.println("Mission already completed");
+                                            gameData.setCoinsEarned(500); //TODO: temp amount, need to figure out how much money should be earned per mission
+                                        }
+                                    }
+                                    service.addCurrency(gameData.getCoinsEarned());
+                                });
                             });
                             ServiceLocator.getPersistenceService().ifPresent(service -> {
                                 List<Integer> compltedMission;
@@ -125,7 +136,7 @@ public class GameInstance {
                                 
                             });
 
-                            showResultOverlay(true, finalScore, 10000, 1000);
+                            showResultOverlay(true, finalScore, 10000, gameData.getCoinsEarned());
                             animationTimer.stop();
                             return;
                         } else if (worldData.isGameLost()) {
