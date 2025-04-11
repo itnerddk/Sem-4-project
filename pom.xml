@@ -25,6 +25,7 @@
         <module>Upgrades</module>
         <module>Persistence</module>
         <module>MachineGunTurret</module>
+        <module>Inventory</module>
     </modules>
 
     <properties>

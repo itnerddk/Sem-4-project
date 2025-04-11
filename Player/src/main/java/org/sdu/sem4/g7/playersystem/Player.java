@@ -3,7 +3,6 @@ package org.sdu.sem4.g7.playersystem;
 import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.common.services.IUpgradeStatsService;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
-import org.sdu.sem4.g7.tank.TurretLoader;
 import org.sdu.sem4.g7.tank.parts.Tank;
 import org.sdu.sem4.g7.tank.parts.Turret;
 
@@ -45,13 +44,6 @@ public class Player extends Tank {
         System.out.println("Player spawned with max speed: " + getMaxSpeed());
         System.out.println("Player spawned with acceleration: " + getAcceleration());
         System.out.println("Player spawned with deceleration: " + getDeceleration());
-
-        // Load default turret
-        try {
-            this.setTurret(TurretLoader.getTurrets().get(0).get());
-        } catch (Exception e) {
-            System.out.println("Error loading turret: " + e.getMessage());
-        }
     }
 
     @Override

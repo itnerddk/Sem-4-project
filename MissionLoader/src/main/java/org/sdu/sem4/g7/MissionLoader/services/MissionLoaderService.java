@@ -15,7 +15,6 @@ import org.sdu.sem4.g7.MissionLoader.objects.EnemyStartPositionObject;
 import org.sdu.sem4.g7.MissionLoader.objects.MissionObject;
 import org.sdu.sem4.g7.MissionLoader.objects.TileEntity;
 import org.sdu.sem4.g7.MissionLoader.objects.TileObject;
-import org.sdu.sem4.g7.MissionLoader.objects.WorldDataObject;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Mission;
@@ -194,7 +193,7 @@ public class MissionLoaderService implements IMissionLoaderService {
 		}
 
 		// Create a new world
-		WorldData world = new WorldDataObject();
+		WorldData world = new WorldData();
 
 		// Load plugins
 		for (IEntityPluginService plugin : getPluginServices()) {
@@ -232,7 +231,6 @@ public class MissionLoaderService implements IMissionLoaderService {
 			Entity player = world.getEntityTypes().get("Players").get(0).getDeclaredConstructor().newInstance();
 			player.setPosition(mission.getPlayer().getX(), mission.getPlayer().getY());
 			world.addEntity(player);
-			world.addEntity(player.getChildren());
 		} catch (Exception ex) {
 			System.err.println("Could not create a player!");
 			ex.printStackTrace();

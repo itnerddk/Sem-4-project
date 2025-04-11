@@ -22,7 +22,9 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
+import org.sdu.sem4.g7.common.services.IInventoryService;
 import org.sdu.sem4.g7.common.services.ISettingPluginService;
+import org.sdu.sem4.g7.common.services.ITurretProviderService;
 
 import java.io.IOException;
 
@@ -121,6 +123,15 @@ public class MainMenuController implements Initializable {
                 () -> System.out.println("AudioProcessingService not found")
 
         );
+
+        ServiceLoader.load(ITurretProviderService.class).forEach(service -> {
+            ServiceLoader.load(IInventoryService.class).forEach(inventory -> {
+                service.getTurrets().forEach(turret -> {
+                    inventory.add(turret.get());
+                    System.out.println("Loaded turret: " + turret.get().getClass().getName());
+                });
+            });
+        });
     }
 
     @FXML

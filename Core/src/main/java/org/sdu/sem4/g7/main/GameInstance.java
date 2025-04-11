@@ -258,6 +258,9 @@ public class GameInstance {
             case SPACE:
                 this.gameData.setPressed(Keys.SPACE, pressed);
                 break;
+            case TAB:
+                this.gameData.setPressed(Keys.TAB, pressed);
+                break;
             default:
                 break;
         }

@@ -90,11 +90,6 @@ public class MissionSelectorController {
                     System.out.println("Selected: " + mission.getName());
 
                     if (selectedMission != null) {
-                        ServiceLoader.load(IGamePluginService.class)
-                                .stream()
-                                .map(ServiceLoader.Provider::get)
-                                .forEach(plugin -> plugin.start(gameData, worldData));
-
                         worldData = gameData.getMissionLoaderService().loadMission(selectedMission.getId());
                         GameInstance game = new GameInstance(gameData, worldData, selectedMission.getId());
                         Stage gameStage = (Stage) missionGrid.getScene().getWindow();

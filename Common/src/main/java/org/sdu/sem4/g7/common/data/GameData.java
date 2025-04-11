@@ -91,7 +91,8 @@ public class GameData {
         RIGHT,
         UP,
         DOWN,
-        SPACE
+        SPACE,
+        TAB
     }
     
     EnumMap<Keys, Boolean> keys = new EnumMap<>(Keys.class);

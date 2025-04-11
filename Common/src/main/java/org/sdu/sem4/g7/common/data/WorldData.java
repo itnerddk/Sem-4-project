@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.sdu.sem4.g7.common.enums.EntityType;
 
-public abstract class WorldData {
+public class WorldData {
 
     private final Map<String, Entity> entityMap;
     private Map<String, List<Class<? extends Entity>>> entityTypes;

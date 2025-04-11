@@ -1,7 +1,11 @@
 package org.sem4.g7.enemysystem;
 
+import java.util.ServiceLoader;
+import java.util.ServiceLoader.Provider;
+
+import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.enums.EntityType;
-import org.sdu.sem4.g7.tank.TurretLoader;
+import org.sdu.sem4.g7.common.services.ITurretProviderService;
 import org.sdu.sem4.g7.tank.parts.Tank;
 import org.sdu.sem4.g7.tank.parts.Turret;
 
@@ -19,10 +23,12 @@ public class Enemy extends Tank {
         setEntityType(EntityType.ENEMY);
 
         // Test code to load turret
-        try {
-            this.setTurret(TurretLoader.getTurrets().get(0).get());
-        } catch (Exception e) {
-            System.out.println("Error loading turret: " + e.getMessage());
+        ServiceLoader<ITurretProviderService> turretLoader = ServiceLoader.load(ITurretProviderService.class);
+        for (ITurretProviderService turretProvider : turretLoader) {
+            for (Provider<? extends Entity> turret : turretProvider.getTurrets()) {
+                this.setTurret((Turret)turret.get());
+                break; // Only set the first turret found
+            }
         }
     }
 

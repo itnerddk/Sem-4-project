@@ -21,6 +21,8 @@ module Core {
     uses org.sdu.sem4.g7.common.services.ICurrencyService;
     uses org.sdu.sem4.g7.common.services.IMissionLoaderService;
     uses org.sdu.sem4.g7.common.services.ISettingPluginService;
+    uses org.sdu.sem4.g7.common.services.IInventoryService;
+    uses org.sdu.sem4.g7.common.services.ITurretProviderService;
 
     // Exports
     exports org.sdu.sem4.g7.main;

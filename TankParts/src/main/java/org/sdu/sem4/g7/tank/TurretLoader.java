@@ -8,15 +8,17 @@ import java.util.ServiceLoader.Provider;
 
 import static java.util.stream.Collectors.toList;
 
+import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
-import org.sdu.sem4.g7.common.services.IGamePluginService;
+import org.sdu.sem4.g7.common.services.IPreGamePluginService;
+import org.sdu.sem4.g7.common.services.ITurretProviderService;
 import org.sdu.sem4.g7.tank.parts.Turret;
 
-public class TurretLoader implements IGamePluginService {
-    private static final ArrayList<Provider<? extends Turret>> turrets = new ArrayList<>();
+public class TurretLoader implements IPreGamePluginService, ITurretProviderService {
+    private static final ArrayList<Provider<? extends Entity>> turrets = new ArrayList<>();
 
-    public static List<Provider<? extends Turret>> getTurrets() {
+    public List<Provider<? extends Entity>> getTurrets() {
         return turrets;
     }
 
