@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.ServiceLoader;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -20,6 +21,7 @@ import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.IGamePluginService;
+import org.sdu.sem4.g7.common.services.ServiceLocator;
 import org.sdu.sem4.g7.main.GameInstance;
 
 import javafx.event.ActionEvent;
@@ -56,8 +58,17 @@ public class MissionSelectorController {
         missions.sort(Comparator.comparingInt(Mission::getId));
 
         int cols = 3;
-        int highestUnlockedId = 1;
+        int highestUnlockedId;
+        AtomicInteger tempHighestUnlockedId = new AtomicInteger(0);
 
+        ServiceLocator.getPersistenceService().ifPresent(service -> {
+            if (service.intListExists("completedMissions")) {
+                List<Integer> compltedMission = service.getIntList("completedMissions");
+                tempHighestUnlockedId.set(compltedMission.size());
+            }
+        });
+
+        highestUnlockedId = tempHighestUnlockedId.get();
         for (int i = 0; i < missions.size(); i++) {
             Mission mission = missions.get(i);
             VBox tile = new VBox();

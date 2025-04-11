@@ -23,6 +23,7 @@ import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.common.services.*;
 
 import java.io.IOException;
+import java.security.Provider.Service;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -43,6 +44,7 @@ public class GameInstance {
     private final Map<Entity, Node> sprites = new ConcurrentHashMap<>();
     private final Group debugGroup = new Group();
     private static final Text debugText = new Text(10, 20, "");
+
 
     private final Collection<IGamePluginService> pluginServices;
 
@@ -119,9 +121,32 @@ public class GameInstance {
                             gameData.setCoinsEarned((int)(finalScore * 0.25)); // midlertidigt hardcoded
 
                             ServiceLocator.getCurrencyService().ifPresent(service -> {
-                                service.addCurrency(gameData.getCoinsEarned());
+                                ServiceLocator.getPersistenceService().ifPresent(persistenceService -> {
+                                    // Check if mission has been completed, so the player earn less money
+                                    if(persistenceService.intListExists("completedMissions")){
+                                        if(persistenceService.getIntList("completedMissions").contains(missionId)){
+                                            System.out.println("Mission already completed");
+                                            gameData.setCoinsEarned((int) (gameData.getCoinsEarned() * 0.25)); //TODO: temp amount, need to figure out how much money should be earned per mission
+                                        }
+                                    }
+                                    service.addCurrency(gameData.getCoinsEarned());
+                                });
                             });
-                            showResultOverlay(true, finalScore, gameData.getScoreTarget(), gameData.getCoinsEarned());
+                            ServiceLocator.getPersistenceService().ifPresent(service -> {
+                                List<Integer> compltedMission;
+                                if (service.intListExists("completedMissions")) {
+                                    compltedMission = service.getIntList("completedMissions");
+                                } else {
+                                    compltedMission = new ArrayList<>();
+                                }
+                                if(!compltedMission.contains(missionId)) {
+                                    compltedMission.add(missionId);
+                                    service.saveIntList("completedMissions", compltedMission);
+                                }
+                                
+                            });
+
+                            showResultOverlay(true, finalScore, 10000, gameData.getCoinsEarned());
                             animationTimer.stop();
                             return;
                         } else if (worldData.isGameLost()) {
