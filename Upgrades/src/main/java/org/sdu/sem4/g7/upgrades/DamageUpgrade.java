@@ -3,7 +3,7 @@ import org.sdu.sem4.g7.common.services.ServiceLocator;
 
 public class DamageUpgrade {
     private int level = 0;
-    private final int[] prices = {2000, 3500, 6000, 85000, 12000};
+    private final int[] prices = {2000, 3500, 6000, 8500, 12000};
 
     public int getLevel() { return level; }
     public void setLevel(int level) { this.level = level; }
