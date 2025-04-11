@@ -1,8 +1,9 @@
 package org.sdu.sem4.g7.upgrades;
 
 import org.sdu.sem4.g7.common.services.IUpgradeService;
+import org.sdu.sem4.g7.common.services.IUpgradeStatsService;
 
-public class UpgradeManager implements IUpgradeService {
+public class UpgradeManager implements IUpgradeService, IUpgradeStatsService {
 
     public UpgradeManager() {
         if (instance == null) instance = this;
@@ -48,4 +49,26 @@ public class UpgradeManager implements IUpgradeService {
     @Override public boolean isDamageMaxed() { return damage.isMaxed(); }
     @Override public int getDamageLevel() { return damage.getLevel();}
     @Override public void setDamageLevel(int level) { damage.setLevel(level); }
+
+
+    @Override
+    public int getHealthBonus() {
+        return health.getLevel() * 10;
     }
+
+    @Override
+    public float getSpeedMultiplier() {
+        return 1.0f + (speed.getLevel() * 0.05f);
+    }
+
+    @Override
+    public int getArmorBonus() {
+        return armor.getLevel() * 5;
+    }
+
+    @Override
+    public int getDamageBonus() {
+        return damage.getLevel() * 5;
+    }
+}
+
