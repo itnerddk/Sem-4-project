@@ -96,7 +96,7 @@ public class MissionSelectorController {
                                 .forEach(plugin -> plugin.start(gameData, worldData));
 
                         worldData = gameData.getMissionLoaderService().loadMission(selectedMission.getId());
-                        GameInstance game = new GameInstance(gameData, worldData);
+                        GameInstance game = new GameInstance(gameData, worldData, selectedMission.getId());
                         Stage gameStage = (Stage) missionGrid.getScene().getWindow();
                         gameStage.setScene(game.getScene());
                     }
