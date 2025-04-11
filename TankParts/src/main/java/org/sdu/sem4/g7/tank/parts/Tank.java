@@ -208,8 +208,6 @@ public abstract class Tank extends Entity implements IRigidbodyService {
         // Draw the border
         gc.setStroke(Color.BLACK);
         gc.strokeRect(x, y, barWidth, barHeight);
-
-        // System.out.println("Health: " + getHealth() + ", MaxHealth: " + getMaxHealth());
     }
     
     @Override

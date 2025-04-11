@@ -7,7 +7,6 @@ import org.sdu.sem4.g7.common.services.IPersistenceService;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
 
 public class CurrencyManager implements ICurrencyService {
-
     /**
      * Key used to save currency
      */

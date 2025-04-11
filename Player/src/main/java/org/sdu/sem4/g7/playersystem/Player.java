@@ -1,5 +1,7 @@
 package org.sdu.sem4.g7.playersystem;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.common.services.IUpgradeStatsService;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
@@ -14,6 +16,14 @@ public class Player extends Tank {
         this.getSprite().setCacheHint(javafx.scene.CacheHint.SPEED);
         this.setzIndex(-5);
         setEntityType(EntityType.PLAYER);
+
+        // Shield
+        int baseShield = 0;
+        int bonusShield = ServiceLocator.getUpgradeStatsService()
+                .map(IUpgradeStatsService::getShieldBonus)
+                .orElse(0);
+        int totalShield = baseShield + bonusShield;
+        this.setShield(totalShield);
 
         // Health
         int baseHealth = 100;
@@ -39,11 +49,12 @@ public class Player extends Tank {
         this.setAcceleration(baseAcceleration + speedMultiplier * (baseAcceleration / baseMaxSpeed));
         this.setDeceleration(baseDeceleration + speedMultiplier * (baseDeceleration / baseMaxSpeed));
 
-        // Debug text
+        // Debug text for upgrades
         System.out.println("Player spawned with max health: " + totalHealth);
         System.out.println("Player spawned with max speed: " + getMaxSpeed());
         System.out.println("Player spawned with acceleration: " + getAcceleration());
         System.out.println("Player spawned with deceleration: " + getDeceleration());
+        System.out.println("Player spawned with shield: " + totalShield);
     }
 
     @Override
@@ -58,4 +69,44 @@ public class Player extends Tank {
         this.setHealth(newHealth);
         System.err.println("Player took " + damage + " damage. Remaining HP: " + this.getHealth());
     }
+
+    // Override Draw Health for Player to draw shield
+    @Override
+    public void drawHealthBar(GraphicsContext gc) {
+        double barWidth = 50;
+        double barHeight = 5;
+
+        int hp = this.getHealth();
+        int shield = this.getShield();
+        int total = hp + shield;
+
+        // Fill ratio
+        double fillRatio = (double) total / getMaxHealth();
+        double filledWidth = Math.min(fillRatio, 1.0) * barWidth;
+
+        double hpRatio = total > 0 ? (double) hp / total : 0;
+        double shieldRatio = total > 0 ? (double) shield / total : 0;
+
+        // Placement
+        double x = getPosition().getX() - barWidth / 2;
+        double y = getPosition().getY() - getSprite().getImage().getHeight() / 2 - 15;
+
+        // Background
+        gc.setFill(Color.GRAY);
+        gc.fillRect(x, y, barWidth, barHeight);
+
+        // Health (red)
+        gc.setFill(Color.RED);
+        gc.fillRect(x, y, filledWidth * hpRatio, barHeight);
+
+        // Shield (blue)
+        gc.setFill(Color.YELLOW);
+        gc.fillRect(x + filledWidth * hpRatio, y, filledWidth * shieldRatio, barHeight);
+
+        // Edge
+        gc.setStroke(Color.BLACK);
+        gc.strokeRect(x, y, barWidth, barHeight);
+    }
+
+
 }

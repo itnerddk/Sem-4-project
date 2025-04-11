@@ -12,11 +12,11 @@ public class UpgradeProvider implements IUpgradeService, IUpgradeStatsService {
     @Override public int getHealthLevel() { return instance.getHealthLevel(); }
     @Override public void setHealthLevel(int level) { instance.setHealthLevel(level); }
 
-    @Override public int getArmorUpgradePrice() { return instance.getArmorUpgradePrice(); }
-    @Override public boolean upgradeArmor() { return instance.upgradeArmor(); }
-    @Override public boolean isArmorMaxed() { return instance.isArmorMaxed(); }
-    @Override public int getArmorLevel() { return instance.getArmorLevel(); }
-    @Override public void setArmorLevel(int level) { instance.setArmorLevel(level); }
+    @Override public int getShieldUpgradePrice() { return instance.getShieldUpgradePrice(); }
+    @Override public boolean upgradeShield() { return instance.upgradeShield(); }
+    @Override public boolean isShieldMaxed() { return instance.isShieldMaxed(); }
+    @Override public int getShieldLevel() { return instance.getShieldLevel(); }
+    @Override public void setShieldLevel(int level) { instance.setShieldLevel(level); }
 
     @Override public int getSpeedUpgradePrice() { return instance.getSpeedUpgradePrice(); }
     @Override public boolean upgradeSpeed() { return instance.upgradeSpeed(); }
@@ -33,7 +33,7 @@ public class UpgradeProvider implements IUpgradeService, IUpgradeStatsService {
 
     @Override public int getHealthBonus() { return instance.getHealthBonus(); }
     @Override public float getSpeedMultiplier() { return instance.getSpeedMultiplier(); }
-    @Override public int getArmorBonus() { return instance.getArmorBonus(); }
+    @Override public int getShieldBonus() { return instance.getShieldBonus(); }
     @Override public int getDamageBonus() { return instance.getDamageBonus(); }
 
 }

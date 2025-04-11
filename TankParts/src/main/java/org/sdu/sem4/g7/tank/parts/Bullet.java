@@ -9,6 +9,7 @@ import org.sdu.sem4.g7.common.services.IRigidbodyService;
 import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.common.services.IUpgradeStatsService;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
+import java.lang.reflect.Method;
 
 public abstract class Bullet extends Entity implements IRigidbodyService {
 
@@ -74,11 +75,32 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
             if (this.createdBy != null && this.createdBy.equals(other)) return true;
 
             Entity otherEntity = (Entity) other;
-            otherEntity.setHealth(otherEntity.getHealth() - this.damage);
+
+            try {
+                Method methodGetShield = otherEntity.getClass().getMethod("getShield");
+                Method methodSetShield = otherEntity.getClass().getMethod("setShield", int.class);
+
+                int shield = (int) methodGetShield.invoke(otherEntity);
+
+                if (shield > 0) {
+                    int damageToShield = Math.min(damage, shield);
+                    int remainingDamage = damage - damageToShield;
+
+                    methodSetShield.invoke(otherEntity, shield - damageToShield);
+                    otherEntity.setHealth(otherEntity.getHealth() - remainingDamage);
+                } else {
+                    otherEntity.setHealth(otherEntity.getHealth() - this.damage);
+                }
+            } catch (Exception e) {
+                otherEntity.setHealth(otherEntity.getHealth() - this.damage);
+            }
+
+
             this.setHealth(0);
             gameData.playAudio(SoundType.HIT);
             return true;
         }
+
 
         return false;
     }

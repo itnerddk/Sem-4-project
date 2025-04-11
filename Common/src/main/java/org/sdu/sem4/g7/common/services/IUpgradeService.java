@@ -8,11 +8,11 @@ public interface IUpgradeService {
     int getHealthLevel();
     void setHealthLevel(int level);
 
-    int getArmorUpgradePrice();
-    boolean upgradeArmor();
-    boolean isArmorMaxed();
-    int getArmorLevel();
-    void setArmorLevel(int level);
+    int getShieldUpgradePrice();
+    boolean upgradeShield();
+    boolean isShieldMaxed();
+    int getShieldLevel();
+    void setShieldLevel(int level);
 
     int getSpeedUpgradePrice();
     boolean upgradeSpeed();

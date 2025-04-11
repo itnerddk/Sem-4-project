@@ -58,12 +58,12 @@ public class MainMenuController implements Initializable {
     @FXML private Label healthUpgradeText;
     @FXML private Circle healthCircle1, healthCircle2, healthCircle3, healthCircle4, healthCircle5;
 
-    // Armor UI
-    @FXML private ImageView armorIcon;
-    @FXML private VBox armorUpgradeBox;
-    @FXML private Button armorPriceButton;
-    @FXML private Label armorUpgradeText;
-    @FXML private Circle armorCircle1, armorCircle2, armorCircle3, armorCircle4, armorCircle5;
+    // Shield UI
+    @FXML private ImageView shieldIcon;
+    @FXML private VBox shieldUpgradeBox;
+    @FXML private Button shieldPriceButton;
+    @FXML private Label shieldUpgradeText;
+    @FXML private Circle shieldCircle1, shieldCircle2, shieldCircle3, shieldCircle4, shieldCircle5;
 
     // Speed UI
     @FXML private ImageView speedIcon;
@@ -86,14 +86,14 @@ public class MainMenuController implements Initializable {
         coinIcon.setImage(new Image(getClass().getResource("/images/dollar.png").toExternalForm()));
         levelIcon.setImage(new Image(getClass().getResource("/images/star.png").toExternalForm()));
         healthIcon.setImage(new Image(getClass().getResource("/images/heart.png").toExternalForm()));
-        armorIcon.setImage(new Image(getClass().getResource("/images/armor.png").toExternalForm()));
+        shieldIcon.setImage(new Image(getClass().getResource("/images/shield.png").toExternalForm()));
         speedIcon.setImage(new Image(getClass().getResource("/images/speed.png").toExternalForm()));
         damageIcon.setImage(new Image(getClass().getResource("/images/damage.png").toExternalForm()));
       
         gameData = new GameData();
 
 
-        setupArmorUpgrade();
+        setupShieldUpgrade();
         setupHealthUpgrade();
         setupSpeedUpgrade();
         setupDamageUpgrade();
@@ -277,40 +277,40 @@ public class MainMenuController implements Initializable {
         }
     }
 
-    //Armor
-    private void setupArmorUpgrade() {
+    // Shield
+    private void setupShieldUpgrade() {
         ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
-            int level = upgradeService.getArmorLevel();
-            updateArmorCircles(level);
+            int level = upgradeService.getShieldLevel();
+            updateShieldCircles(level);
 
-            if (upgradeService.isArmorMaxed()) {
-                armorPriceButton.setText("MAX");
-                armorPriceButton.setDisable(true);
+            if (upgradeService.isShieldMaxed()) {
+                shieldPriceButton.setText("MAX");
+                shieldPriceButton.setDisable(true);
             } else {
-                armorPriceButton.setText(upgradeService.getArmorUpgradePrice() + "$");
+                shieldPriceButton.setText(upgradeService.getShieldUpgradePrice() + "$");
             }
         });
     }
 
     @FXML
-    private void handleArmorUpgrade() {
+    private void handleShieldUpgrade() {
         gameData.playAudio(SoundType.BUTTON_CLICK);
         ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
-            if (upgradeService.isArmorMaxed()) {
-                armorPriceButton.setText("MAX");
-                armorCircle1.setDisable(true);
+            if (upgradeService.isShieldMaxed()) {
+                shieldPriceButton.setText("MAX");
+                shieldCircle1.setDisable(true);
                 return;
             }
 
-            if (upgradeService.upgradeArmor()) {
-                int newLevel = upgradeService.getArmorLevel();
-                updateArmorCircles(newLevel);
+            if (upgradeService.upgradeShield()) {
+                int newLevel = upgradeService.getShieldLevel();
+                updateShieldCircles(newLevel);
 
-                if (upgradeService.isArmorMaxed()) {
-                    armorPriceButton.setText("MAX");
-                    armorPriceButton.setDisable(true);
+                if (upgradeService.isShieldMaxed()) {
+                    shieldPriceButton.setText("MAX");
+                    shieldPriceButton.setDisable(true);
                 } else {
-                    armorPriceButton.setText(upgradeService.getArmorUpgradePrice() + "$");
+                    shieldPriceButton.setText(upgradeService.getShieldUpgradePrice() + "$");
                 }
 
                 ServiceLocator.getCurrencyService().ifPresent(service ->
@@ -322,8 +322,8 @@ public class MainMenuController implements Initializable {
         });
     }
 
-    private void updateArmorCircles(int level) {
-        Circle[] circles = {armorCircle1, armorCircle2, armorCircle3, armorCircle4, armorCircle5};
+    private void updateShieldCircles(int level) {
+        Circle[] circles = {shieldCircle1, shieldCircle2, shieldCircle3, shieldCircle4, shieldCircle5};
         for (int i = 0; i < circles.length; i++) {
             circles[i].getStyleClass().removeAll("filled", "empty");
             circles[i].getStyleClass().add(i < level ? "filled" : "empty");

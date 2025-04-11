@@ -62,6 +62,11 @@ public class Entity implements Serializable {
     private int health;
 
     /**
+     * Shield of the entity
+     */
+    private int shield;
+
+    /**
      * Limit for health, to ensure that the player cannot stack health
      */
     private int maxHealth;
@@ -80,7 +85,7 @@ public class Entity implements Serializable {
      * Weight of the entity, used when collision occurs
      */
     private int weight;
-            
+
 
     public String getID() {
         return ID.toString();
@@ -148,12 +153,20 @@ public class Entity implements Serializable {
         this.sprite = new ImageView(scaled);
     }
 
+    // Health
     public int getHealth() {
         return health;
     }
 
     public void setHealth(int health) {
         this.health = health;
+    }
+
+    // Shield
+    public int getShield() {return shield;}
+
+    public void setShield(int shield) {
+        this.shield = shield;
     }
 
     /*

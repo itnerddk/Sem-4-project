@@ -2,7 +2,7 @@ package org.sdu.sem4.g7.upgrades;
 
 import org.sdu.sem4.g7.common.services.ServiceLocator;
 
-public class ArmorUpgrade {
+public class ShieldUpgrade {
     private int level = 0;
     private final int[] prices = {1500, 3000, 4500, 6000, 8000};
 
@@ -11,7 +11,7 @@ public class ArmorUpgrade {
     public boolean isMaxed() { return level >= prices.length; }
     public int getNextPrice() { return isMaxed() ? -1 : prices[level]; }
 
-    public ArmorUpgrade() {
+    public ShieldUpgrade() {
         // get level from storage
         ServiceLocator.getPersistenceService().ifPresent(
             persistenceService -> {
