@@ -4,6 +4,7 @@ import java.util.ServiceLoader;
 
 import org.sdu.sem4.g7.common.services.ICurrencyService;
 import org.sdu.sem4.g7.common.services.IPersistenceService;
+import org.sdu.sem4.g7.common.services.ServiceLocator;
 
 public class CurrencyManager implements ICurrencyService {
 
@@ -17,14 +18,15 @@ public class CurrencyManager implements ICurrencyService {
      */
     private int localCurrency = 0;
 
-    private IPersistenceService getPersistenceService() {
-        return ServiceLoader.load(IPersistenceService.class).findFirst().orElse(null);
-    }
-
     @Override
     public int getCurrency() {
-        localCurrency = getPersistenceService().getInt(persistenceKey);
-        // return currency from memory
+        ServiceLocator.getPersistenceService().ifPresent(
+            persistenceService -> {
+                // load currency from persistence
+                int loadedCurrency = persistenceService.getInt(persistenceKey);
+                localCurrency = loadedCurrency;
+            }
+        );
         return localCurrency;
     }
 
@@ -33,7 +35,11 @@ public class CurrencyManager implements ICurrencyService {
         // add currency to memory
         localCurrency += amount;
         // save currency to persistence
-        getPersistenceService().setInt(persistenceKey, localCurrency);
+        ServiceLocator.getPersistenceService().ifPresent(
+            persistenceService -> {
+                persistenceService.setInt(persistenceKey, localCurrency);
+            }
+        );
     }
 
     @Override
@@ -41,6 +47,10 @@ public class CurrencyManager implements ICurrencyService {
         // subtract currency from memory
         localCurrency -= amount;
         // save currency to persistence
-        getPersistenceService().setInt(persistenceKey, localCurrency);
+        ServiceLocator.getPersistenceService().ifPresent(
+            persistenceService -> {
+                persistenceService.setInt(persistenceKey, localCurrency);
+            }
+        );
     }
 }
