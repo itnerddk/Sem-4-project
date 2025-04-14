@@ -491,6 +491,8 @@ public class MainMenuController implements Initializable {
             System.out.println("Adding to parent");
             // Get #settingsVbox
             parent.getChildren().add(settingPane);
+            // Apply the setting as it may have a saved value
+            setting.apply(gameData);
         } catch (IOException e) {
             e.printStackTrace();
         }

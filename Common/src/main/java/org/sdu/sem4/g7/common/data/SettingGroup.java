@@ -1,16 +1,27 @@
 package org.sdu.sem4.g7.common.data;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SettingGroup {
     private String name;
     private String description;
-    private List<Setting> settings;
+    private List<Setting> settings = new ArrayList<>();
 
     /**
      * Constructor for the SettingGroup class.
      * @param name The name of the setting group
      * @param description The description of the setting group
-     * @param settings The list of settings in the group
+     */
+    public SettingGroup(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    /**
+     * Constructor for the SettingGroup class.
+     * @param name The name of the setting group
+     * @param description The description of the setting group
+     * @param settings The initial list of settings in the group
      */
     public SettingGroup(String name, String description, List<Setting> settings) {
         this.name = name;
