@@ -1,9 +1,6 @@
 package org.sdu.sem4.g7.currency;
 
-import java.util.ServiceLoader;
-
 import org.sdu.sem4.g7.common.services.ICurrencyService;
-import org.sdu.sem4.g7.common.services.IPersistenceService;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
 
 public class CurrencyManager implements ICurrencyService {

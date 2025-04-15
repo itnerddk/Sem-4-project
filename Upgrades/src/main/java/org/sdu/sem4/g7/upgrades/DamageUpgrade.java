@@ -1,4 +1,7 @@
 package org.sdu.sem4.g7.upgrades;
+import java.util.ServiceLoader;
+
+import org.sdu.sem4.g7.common.services.IPersistenceService;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
 
 public class DamageUpgrade {
@@ -12,11 +15,10 @@ public class DamageUpgrade {
 
     public DamageUpgrade() {
         // get level from storage
-        ServiceLocator.getPersistenceService().ifPresent(
-            persistenceService -> {
-                level = persistenceService.getInt(this.getClass().getName());
-            }
-        );
+        ServiceLoader<IPersistenceService> persistenceServiceLoader = ServiceLoader.load(IPersistenceService.class);
+        if (persistenceServiceLoader.findFirst().isPresent()) {
+            level = persistenceServiceLoader.findFirst().get().getInt(this.getClass().getName());            
+        }
     }
 
     public boolean upgrade() {
