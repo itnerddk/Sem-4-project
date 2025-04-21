@@ -120,6 +120,7 @@ public class GameInstance {
                             gameData.setScore(finalScore);
                             gameData.setCoinsEarned((int)(finalScore * 0.25)); // midlertidigt hardcoded
 
+                            // Reward the player with coins
                             ServiceLocator.getCurrencyService().ifPresent(service -> {
                                 ServiceLocator.getPersistenceService().ifPresent(persistenceService -> {
                                     // Check if mission has been completed, so the player earn less money
@@ -132,6 +133,12 @@ public class GameInstance {
                                     service.addCurrency(gameData.getCoinsEarned());
                                 });
                             });
+
+                            // Reward the player with XP
+                            ServiceLocator.getLevelService().ifPresent(service -> {
+                                service.addXP((int) (gameData.getScore() * 0.25)); //TODO: temp amount
+                            });
+                            // Save the mission as completed
                             ServiceLocator.getPersistenceService().ifPresent(service -> {
                                 List<Integer> compltedMission;
                                 if (service.intListExists("completedMissions")) {
