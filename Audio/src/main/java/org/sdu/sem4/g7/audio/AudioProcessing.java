@@ -44,15 +44,17 @@ public class AudioProcessing implements IAudioProcessingService, IGamePluginServ
 
     private static ConcurrentHashMap<CompositeKey, AudioClip> soundMap = new ConcurrentHashMap<>();
     static {
-        try {
-            soundMap.put(new CompositeKey(SoundType.SHOOT, ""), new AudioClip(AudioProcessing.class.getResource("/sounds/Shoot.wav").toString()));
-            soundMap.put(new CompositeKey(SoundType.HIT, ""), new AudioClip(AudioProcessing.class.getResource("/sounds/Hit.wav").toString()));
-            soundMap.put(new CompositeKey(SoundType.EXPLOSION, ""), new AudioClip(AudioProcessing.class.getResource("/sounds/Explosion.wav").toString()));
-            soundMap.put(new CompositeKey(SoundType.BUTTON_CLICK, ""), new AudioClip(AudioProcessing.class.getResource("/sounds/Button_Click.wav").toString()));
-            soundMap.put(new CompositeKey(SoundType.GAME_START, ""), new AudioClip(AudioProcessing.class.getResource("/sounds/Game_Start.wav").toString()));
-            soundMap.put(new CompositeKey(SoundType.GAME_END, ""), new AudioClip(AudioProcessing.class.getResource("/sounds/Game_End.wav").toString()));
-        } catch (Exception e) {
-            System.out.println("Error loading sound files: " + e.getMessage());
+        String location = "/sounds/";
+        for (SoundType soundType : SoundType.values()) {
+            if (soundType == SoundType.MASTER) continue;
+            try {
+                CompositeKey key = new CompositeKey(soundType, "");
+                AudioClip clip = new AudioClip(AudioProcessing.class.getResource(location + soundType.name().toLowerCase() + ".wav").toString());
+                soundMap.put(key, clip);
+            } catch (Exception e) {
+                System.err.println("Sound " + soundType.name() + " could not load default .wav file.");
+                e.printStackTrace();
+            }
         }
     }
 

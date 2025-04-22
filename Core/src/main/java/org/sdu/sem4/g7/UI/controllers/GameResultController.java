@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.sdu.sem4.g7.common.enums.SoundType;
+import org.sdu.sem4.g7.common.services.ServiceLocator;
+
 public class GameResultController implements Initializable {
 
     @FXML private Text resultText;
@@ -29,6 +32,17 @@ public class GameResultController implements Initializable {
         resultText.setText(isWin ? "YOU WIN!" : "YOU LOSE!");
         scoreText.setText("Your Score: " + score);
         coinsText.setText("+" + coins + " Coins");
+
+        // Play sound
+        ServiceLocator.getAudioProcessingService().ifPresent(
+            service -> {
+                if (isWin) {
+                    service.playSound(SoundType.GAME_WON, 1);
+                } else {
+                    service.playSound(SoundType.GAME_LOST, 1);
+                }
+            }
+        );
     }
 
     @FXML

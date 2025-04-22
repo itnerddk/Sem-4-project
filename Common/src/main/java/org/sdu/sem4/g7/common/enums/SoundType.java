@@ -8,5 +8,6 @@ public enum SoundType {
     HIT,
     BUTTON_CLICK,
     GAME_START,
-    GAME_END,
+    GAME_WON,
+    GAME_LOST,
 }
