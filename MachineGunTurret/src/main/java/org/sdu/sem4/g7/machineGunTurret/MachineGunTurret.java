@@ -1,13 +1,18 @@
 package org.sdu.sem4.g7.machineGunTurret;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
+import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.tank.parts.Turret;
 
 public class MachineGunTurret extends Turret {
+
+    private static URI shootSoundFile;
+    private static URI explosionSoundFile;
 
     public MachineGunTurret() {
         super();
@@ -18,8 +23,16 @@ public class MachineGunTurret extends Turret {
         try {
             this.setSprite(this.getClass().getClassLoader().getResource("MachineGunTurret.png").toURI(), 5);
             this.setzIndex(-10);
+
+            // Load the sound files
+            if (MachineGunTurret.getShootSoundFile() == null) {
+                System.out.println(this.getClass().getResource("/shoot.wav"));
+                MachineGunTurret.setShootSoundFile(this.getClass().getResource("/shoot.wav").toURI());
+            }
         } catch (URISyntaxException e) {e.printStackTrace();}
     }
+
+    boolean bulletShot = false; // Since the machinegun is fast the audio will only play every other time
 
     @Override
     public boolean shoot(GameData gameData, WorldData world) {
@@ -27,6 +40,15 @@ public class MachineGunTurret extends Turret {
         if (tryShoot() == false) {
             return false;
         }
+        if (this.bulletShot) {
+            // Play the shoot sound
+            if (gameData.playAudio(SoundType.SHOOT, getShootSoundFile().toString(), 1f)) {
+                System.out.println("Playing shoot sound");
+            } else {
+                gameData.addAudio(SoundType.SHOOT, getShootSoundFile());
+            }
+        }
+
         MachineGunBullet bullet = new MachineGunBullet();
 
         // Set WeaponDamage for the specific weapon
@@ -49,7 +71,22 @@ public class MachineGunTurret extends Turret {
         bullet.setVelocity(Math.cos(rotationInRadians) * 8, Math.sin(rotationInRadians) * 8);
 
         world.addEntity(bullet);
+        this.bulletShot = !this.bulletShot;
         return true;
+    }
+
+    // Self functions
+    public static URI getShootSoundFile() {
+        return shootSoundFile;
+    }
+    public static URI getExplosionSoundFile() {
+        return explosionSoundFile;
+    }
+    public static void setShootSoundFile(URI shootSoundFile) {
+        MachineGunTurret.shootSoundFile = shootSoundFile;
+    }
+    public static void setExplosionSoundFile(URI explosionSoundFile) {
+        MachineGunTurret.explosionSoundFile = explosionSoundFile;
     }
     
 }

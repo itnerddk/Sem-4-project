@@ -23,19 +23,15 @@ public class CannonTurret extends Turret {
         setMuzzle(new Vector2(0, -25));
         setAttackSpeed(400);
         try {
-            System.out.println(this.getClass().getClassLoader().getResource("CannonTurret.png"));
             this.setSprite(this.getClass().getClassLoader().getResource("CannonTurret.png").toURI(), 5);
             this.setzIndex(-10);
 
             // Load the sound files
             if (CannonTurret.getShootSoundFile() == null) {
-                System.out.println(this.getClass().getResource("/Shoot.wav"));
-                CannonTurret.setShootSoundFile(this.getClass().getResource("/Shoot.wav").toURI());
+                System.out.println(this.getClass().getResource("/shoot.wav"));
+                CannonTurret.setShootSoundFile(this.getClass().getResource("/shoot.wav").toURI());
             }
-        } catch (URISyntaxException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        } catch (URISyntaxException e) {e.printStackTrace();}
     }
 
     @Override
