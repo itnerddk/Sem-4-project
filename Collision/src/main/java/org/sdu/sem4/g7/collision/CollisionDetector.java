@@ -42,7 +42,7 @@ public class CollisionDetector implements IPostEntityProcessingService {
     }
 
     public void handleCollision(Entity entity1, Entity entity2, Vector2 collisionVector) {
-        System.out.println(collisionVector);
+        // System.out.println(collisionVector);
         // Check which is smaller
         if (true) {
             // If the two values of the vector are equal or close (+-5), move both
