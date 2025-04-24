@@ -34,9 +34,9 @@ public class GameInstance {
 
     private final GameData gameData;
     private final WorldData worldData;
-
+    
     private AnimationTimer animationTimer;
-
+    
     private final StackPane rootPane = new StackPane();
     private final Pane gameWindow = new Pane();
     private final int missionId;
@@ -44,8 +44,10 @@ public class GameInstance {
     private final Map<Entity, Node> sprites = new ConcurrentHashMap<>();
     private final Group debugGroup = new Group();
     private static final Text debugText = new Text(10, 20, "");
-
-
+    private boolean paused = false;
+    private Parent pauseMenu;
+    
+    
     private final Collection<IGamePluginService> pluginServices;
 
     public GameInstance(GameData gameData, WorldData worldData, int missionId) {
@@ -67,6 +69,7 @@ public class GameInstance {
         gameWindow.getChildren().addAll(gameCanvas, debugText);
         rootPane.getChildren().add(gameWindow);
         rootPane.setStyle("-fx-background-color: black;");
+        createPauseMenu();
     }
 
     private void startPlugins() {
@@ -92,6 +95,9 @@ public class GameInstance {
             @Override
             public void handle(long now) {
                 if (now - lastTick >= 28_000_000) {
+                    if (paused) {
+                        return;
+                    }
                     update();
                     gameData.updateKeys();
                     gameData.setDelta((now - lastTick) * 1.0e-9);
@@ -190,6 +196,19 @@ public class GameInstance {
         ft.play();
 
         rootPane.getChildren().add(overlay);
+    }
+
+    private void createPauseMenu() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/PauseMenu.fxml"));
+            pauseMenu = loader.load();
+            pauseMenu.setStyle("-fx-background-color: rgba(0,0,0,0.75);");
+
+            rootPane.getChildren().add(pauseMenu);
+            pauseMenu.setVisible(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void update() {
@@ -305,6 +324,11 @@ public class GameInstance {
             case TAB:
                 this.gameData.setPressed(Keys.TAB, pressed);
                 break;
+            case ESCAPE:
+                if (pressed) {
+                    paused = !paused;
+                    pauseMenu.setVisible(paused);
+                }
             default:
                 break;
         }
