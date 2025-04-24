@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.sdu.sem4.g7.UI.controllers.GameResultController;
+import org.sdu.sem4.g7.UI.controllers.PauseMenuController;
 import org.sdu.sem4.g7.common.data.*;
 import org.sdu.sem4.g7.common.data.GameData.Keys;
 import org.sdu.sem4.g7.common.enums.EntityType;
@@ -204,11 +205,21 @@ public class GameInstance {
             pauseMenu = loader.load();
             pauseMenu.setStyle("-fx-background-color: rgba(0,0,0,0.75);");
 
+            PauseMenuController controller = loader.getController();
+            controller.setGameInstance(this);
+            controller.setGameData(gameData);
+            controller.setMissionId(missionId);
+
             rootPane.getChildren().add(pauseMenu);
             pauseMenu.setVisible(false);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void resumeGame() {
+        paused = false;
+        pauseMenu.setVisible(false);
     }
 
     private void update() {

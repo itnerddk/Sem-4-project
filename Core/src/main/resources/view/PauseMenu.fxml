@@ -15,6 +15,12 @@
     <Pane prefWidth="400" prefHeight="400" layoutX="200" layoutY="200"
           styleClass="result-window">
 
+        <Button layoutX="100" layoutY="100" prefWidth="200" prefHeight="60"
+                text="Resume" onAction="#handleResumeGame"
+                styleClass="button-ok" focusTraversable="false"/>
+        <Button layoutX="100" layoutY="200" prefWidth="200" prefHeight="60"
+                text="Restart" onAction="#handleRestartGame"
+                styleClass="button-ok" focusTraversable="false"/>
         <Button layoutX="100" layoutY="300" prefWidth="200" prefHeight="60"
                 text="Main Menu" onAction="#handleMainMenu"
                 styleClass="button-ok" focusTraversable="false"/>
