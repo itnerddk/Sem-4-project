@@ -67,6 +67,11 @@ public class Entity implements Serializable {
     private int shield;
 
     /**
+     * Armor of the entity
+     */
+    private int armor;
+
+    /**
      * Limit for health, to ensure that the player cannot stack health
      */
     private int maxHealth;
@@ -167,6 +172,13 @@ public class Entity implements Serializable {
 
     public void setShield(int shield) {
         this.shield = shield;
+    }
+
+    // Armor
+    public int getArmor() {return armor;}
+
+    public void setArmor(int armor) {
+        this.armor = armor;
     }
 
     /*

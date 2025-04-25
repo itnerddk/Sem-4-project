@@ -25,4 +25,10 @@ public interface IUpgradeService {
     boolean isDamageMaxed();
     int getDamageLevel();
     void setDamageLevel(int level);
+
+    int getArmorUpgradePrice();
+    boolean upgradeArmor();
+    boolean isArmorMaxed();
+    int getArmorLevel();
+    void setArmorLevel(int level);
 }

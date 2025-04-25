@@ -79,6 +79,13 @@ public class MainMenuController implements Initializable {
     @FXML private Label damageUpgradeText;
     @FXML private Circle damageCircle1, damageCircle2, damageCircle3, damageCircle4, damageCircle5;
 
+    // Armor UI
+    @FXML private ImageView armorIcon;
+    @FXML private VBox armorUpgradeBox;
+    @FXML private Button armorPriceButton;
+    @FXML private Label armorUpgradeText;
+    @FXML private Circle armorCircle1, armorCircle2, armorCircle3, armorCircle4, armorCircle5;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -89,6 +96,7 @@ public class MainMenuController implements Initializable {
         shieldIcon.setImage(new Image(getClass().getResource("/images/shield.png").toExternalForm()));
         speedIcon.setImage(new Image(getClass().getResource("/images/speed.png").toExternalForm()));
         damageIcon.setImage(new Image(getClass().getResource("/images/damage.png").toExternalForm()));
+        armorIcon.setImage(new Image(getClass().getResource("/images/armor.png").toExternalForm()));
       
         gameData = new GameData();
 
@@ -97,6 +105,7 @@ public class MainMenuController implements Initializable {
         setupHealthUpgrade();
         setupSpeedUpgrade();
         setupDamageUpgrade();
+        setupArmorUpgrade();
 
         setupSettingsPane();
 
@@ -549,4 +558,57 @@ public class MainMenuController implements Initializable {
             circles[i].getStyleClass().add(i < level ? "filled" : "empty");
         }
     }
+
+    // Armor
+    public void handleArmorUpgrade(ActionEvent actionEvent) {
+        ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
+            gameData.playAudio(SoundType.BUTTON_CLICK);
+            if (upgradeService.isArmorMaxed()) {
+                armorPriceButton.setText("MAX");
+                armorCircle1.setDisable(true);
+                return;
+            }
+
+            if (upgradeService.upgradeArmor()) {
+                int newLevel = upgradeService.getArmorLevel();
+                updateArmorCircles(newLevel);
+
+                if (upgradeService.isArmorMaxed()) {
+                    armorPriceButton.setText("MAX");
+                    armorPriceButton.setDisable(true);
+                } else {
+                    armorPriceButton.setText(upgradeService.getArmorUpgradePrice() + "$");
+                }
+
+                ServiceLocator.getCurrencyService().ifPresent(service ->
+                        coinDisplay.setText("Coins: " + service.getCurrency())
+                );
+            } else {
+                System.out.println("Not enough coins!");
+            }
+        });
+    }
+
+    private void setupArmorUpgrade() {
+        ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
+            int level = upgradeService.getArmorLevel();
+            updateArmorCircles(level);
+
+            if (upgradeService.isArmorMaxed()) {
+                armorPriceButton.setText("MAX");
+                armorPriceButton.setDisable(true);
+            } else {
+                armorPriceButton.setText(upgradeService.getArmorUpgradePrice() + "$");
+            }
+        });
+    }
+
+    private void updateArmorCircles(int level) {
+        Circle[] circles = {armorCircle1, armorCircle2, armorCircle3, armorCircle4, armorCircle5};
+        for (int i = 0; i < circles.length; i++) {
+            circles[i].getStyleClass().removeAll("filled", "empty");
+            circles[i].getStyleClass().add(i < level ? "filled" : "empty");
+        }
+    }
+
 }

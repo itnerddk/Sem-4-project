@@ -56,6 +56,14 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
         this.createdBy = createdBy;
     }
 
+    private int getArmorReduction(Entity entity) {
+        if (entity.getEntityType() != EntityType.PLAYER) return 0;
+
+        return ServiceLocator.getUpgradeStatsService()
+                .map(IUpgradeStatsService::getArmorBonus)
+                .orElse(0);
+    }
+
     private Hitbox hitbox;
 
     public Hitbox getHitbox() {
@@ -76,6 +84,8 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
 
             Entity otherEntity = (Entity) other;
 
+            int effectiveDamage = Math.max(0, damage - getArmorReduction(otherEntity));
+
             try {
                 Method methodGetShield = otherEntity.getClass().getMethod("getShield");
                 Method methodSetShield = otherEntity.getClass().getMethod("setShield", int.class);
@@ -83,25 +93,28 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
                 int shield = (int) methodGetShield.invoke(otherEntity);
 
                 if (shield > 0) {
-                    int damageToShield = Math.min(damage, shield);
-                    int remainingDamage = damage - damageToShield;
+                    int damageToShield = Math.min(effectiveDamage, shield);
+                    int remainingDamage = effectiveDamage - damageToShield;
 
                     methodSetShield.invoke(otherEntity, shield - damageToShield);
                     otherEntity.setHealth(otherEntity.getHealth() - remainingDamage);
                 } else {
-                    otherEntity.setHealth(otherEntity.getHealth() - this.damage);
+                    otherEntity.setHealth(otherEntity.getHealth() - effectiveDamage);
                 }
+
             } catch (Exception e) {
-                otherEntity.setHealth(otherEntity.getHealth() - this.damage);
+
+                otherEntity.setHealth(otherEntity.getHealth() - effectiveDamage);
             }
 
+            System.out.println("Damage was reduced by " + getArmorReduction(otherEntity) + " from armor");
 
             this.setHealth(0);
             gameData.playAudio(SoundType.HIT);
             return true;
         }
 
-
         return false;
     }
+
 }

@@ -5,4 +5,5 @@ public interface IUpgradeStatsService {
     float getSpeedMultiplier(); // + 0.05 speed per level
     int getShieldBonus();        // +5 shield per level
     int getDamageBonus();       // +5 damage per level
+    int getArmorBonus();        // Armor
 }

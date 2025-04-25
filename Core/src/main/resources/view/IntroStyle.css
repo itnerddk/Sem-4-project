@@ -103,27 +103,55 @@
 
 /* Upgrade Boxes */
 .upgrade-box {
-    -fx-background-color: #3a5320;
+    -fx-background-color: linear-gradient(to bottom, #3a5320, #2d3f18);
     -fx-padding: 15px;
-    -fx-background-radius: 15px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0.2, 2, 2);
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-border-color: #00000033;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 6, 0.3, 1, 1);
 }
 
+
 .upgrade-label {
-    -fx-text-fill: white;
-    -fx-font-size: 24px;
+    -fx-font-family: "Arial", sans-serif;
     -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.6), 2, 0, 0, 1);
 }
 
 
 Circle.filled {
-    -fx-fill: #b32d38;
+    -fx-fill: #FFD700;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 2, 0, 0, 1);
 }
 
 Circle.empty {
-    -fx-fill: grey;
+    -fx-fill: #555555;
+    -fx-opacity: 0.3;
 }
 
 .price-button {
-    -fx-font-size: 18px;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFD700;
+    -fx-background-color: linear-gradient(to bottom, #2E7D32, #1B5E20);
+    -fx-background-radius: 10;
+    -fx-border-color: #0f3d11;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-padding: 8 16;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.5), 6, 0, 0, 2);
+    -fx-cursor: hand;
+    -fx-alignment: center;
+}
+
+.price-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #388E3C, #2E7D32);
+}
+
+.price-button:pressed {
+    -fx-background-color: linear-gradient(to bottom, #1B5E20, #2E7D32);
+    -fx-translate-y: 1;
 }

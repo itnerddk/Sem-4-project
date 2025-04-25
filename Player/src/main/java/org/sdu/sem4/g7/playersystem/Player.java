@@ -25,6 +25,14 @@ public class Player extends Tank {
         int totalShield = baseShield + bonusShield;
         this.setShield(totalShield);
 
+        // Armor
+        int baseArmor = 0;
+        int bonusArmor = ServiceLocator.getUpgradeStatsService()
+                .map(IUpgradeStatsService::getArmorBonus)
+                .orElse(0);
+        int totalArmor = baseArmor + bonusArmor;
+        this.setArmor(totalArmor);
+
         // Health
         int baseHealth = 100;
         int bonusHealth = ServiceLocator.getUpgradeStatsService()
@@ -50,11 +58,12 @@ public class Player extends Tank {
         this.setDeceleration(baseDeceleration + speedMultiplier * (baseDeceleration / baseMaxSpeed));
 
         // Debug text for upgrades
-        System.out.println("Player spawned with max health: " + totalHealth);
-        System.out.println("Player spawned with max speed: " + getMaxSpeed());
+        System.out.println("Player spawned with health: " + totalHealth);
+        System.out.println("Player spawned with speed: " + getMaxSpeed());
         System.out.println("Player spawned with acceleration: " + getAcceleration());
         System.out.println("Player spawned with deceleration: " + getDeceleration());
         System.out.println("Player spawned with shield: " + totalShield);
+        System.out.println("Player spawned with armor: " + getArmor());
     }
 
     @Override

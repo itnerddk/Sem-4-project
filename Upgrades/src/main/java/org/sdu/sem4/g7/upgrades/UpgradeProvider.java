@@ -30,10 +30,16 @@ public class UpgradeProvider implements IUpgradeService, IUpgradeStatsService {
     @Override public int getDamageLevel() { return instance.getDamageLevel(); }
     @Override public void setDamageLevel(int level) { instance.setDamageLevel(level); }
 
+    @Override public int getArmorUpgradePrice() { return instance.getArmorUpgradePrice(); }
+    @Override public boolean upgradeArmor() { return instance.upgradeArmor(); }
+    @Override public boolean isArmorMaxed() { return instance.isArmorMaxed(); }
+    @Override public int getArmorLevel() { return instance.getArmorLevel(); }
+    @Override public void setArmorLevel(int level) { instance.setArmorLevel(level); }
 
     @Override public int getHealthBonus() { return instance.getHealthBonus(); }
     @Override public float getSpeedMultiplier() { return instance.getSpeedMultiplier(); }
     @Override public int getShieldBonus() { return instance.getShieldBonus(); }
     @Override public int getDamageBonus() { return instance.getDamageBonus(); }
+    @Override public int getArmorBonus() { return instance.getArmorBonus(); }
 
 }

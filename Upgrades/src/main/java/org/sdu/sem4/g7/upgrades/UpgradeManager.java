@@ -22,6 +22,7 @@ public class UpgradeManager implements IUpgradeService, IUpgradeStatsService {
     private final ShieldUpgrade shield = new ShieldUpgrade();
     private final SpeedUpgrade speed = new SpeedUpgrade();
     private final DamageUpgrade damage = new DamageUpgrade();
+    private final ArmorUpgrade armor = new ArmorUpgrade();
 
     // Health
     @Override public int getHealthUpgradePrice() { return health.getNextPrice(); }
@@ -44,12 +45,19 @@ public class UpgradeManager implements IUpgradeService, IUpgradeStatsService {
     @Override public int getSpeedLevel() { return speed.getLevel(); }
     @Override public void setSpeedLevel(int level) { speed.setLevel(level); }
 
+    // Damage
     @Override public int getDamageUpgradePrice() { return damage.getNextPrice(); }
     @Override public boolean upgradeDamage() { return damage.upgrade(); }
     @Override public boolean isDamageMaxed() { return damage.isMaxed(); }
     @Override public int getDamageLevel() { return damage.getLevel();}
     @Override public void setDamageLevel(int level) { damage.setLevel(level); }
 
+    // Armor
+    @Override public int getArmorUpgradePrice() { return armor.getNextPrice(); }
+    @Override public boolean upgradeArmor() { return armor.upgrade(); }
+    @Override public boolean isArmorMaxed() { return armor.isMaxed(); }
+    @Override public int getArmorLevel() { return armor.getLevel();}
+    @Override public void setArmorLevel(int level) { armor.setLevel(level); }
 
     @Override
     public int getHealthBonus() {
@@ -69,6 +77,11 @@ public class UpgradeManager implements IUpgradeService, IUpgradeStatsService {
     @Override
     public int getDamageBonus() {
         return damage.getLevel();
+    }
+
+    @Override
+    public int getArmorBonus() {
+        return armor.getLevel();
     }
 }
 
