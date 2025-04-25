@@ -195,4 +195,12 @@ public class Vector2 {
     public String toString() {
         return "Vector2 {x=" + x + ", y=" + y + "}";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Vector2 vector2 = (Vector2) obj;
+        return Double.compare(vector2.x, x) == 0 && Double.compare(vector2.y, y) == 0;
+    }
 }

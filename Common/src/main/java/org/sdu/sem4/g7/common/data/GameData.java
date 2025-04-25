@@ -12,6 +12,7 @@ import org.sdu.sem4.g7.common.services.IMissionLoaderService;
 import org.sdu.sem4.g7.common.services.IPersistenceService;
 
 import javafx.scene.Node;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
@@ -278,6 +279,9 @@ public class GameData {
 
 // #endregion
 
+
+    // Temp
+    public GraphicsContext gc;
 
 
 }

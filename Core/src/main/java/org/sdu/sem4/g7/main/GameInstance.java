@@ -57,6 +57,7 @@ public class GameInstance {
         this.gameData = gameData;
         this.worldData = worldData;
         this.gameCanvas = new Canvas(gameData.getMissionLoaderService().getMapSizeX(), gameData.getMissionLoaderService().getMapSizeY());
+        gameData.gc = gameCanvas.getGraphicsContext2D();
         this.pluginServices = loadServices(IGamePluginService.class);
 
         setupCanvas();
@@ -100,6 +101,8 @@ public class GameInstance {
                     if (paused) {
                         return;
                     }
+                    GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+                    gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
                     update();
                     gameData.updateKeys();
                     gameData.setDelta((now - lastTick) * 1.0e-9);
@@ -237,7 +240,7 @@ public class GameInstance {
 
     private void draw() {
         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
+        // gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
 
         // Follow player
         worldData.getEntities().stream()

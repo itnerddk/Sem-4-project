@@ -12,6 +12,7 @@ public class ServiceLocator {
     private static IPersistenceService persistenceLoaderService;
     private static IUpgradeStatsService upgradeStatsService;
     private static IAudioProcessingService audioProcessingService;
+    private static ILogicService logicService;
 
     public static void loadServices() {
         ServiceLoader<ICurrencyService> currencyLoader = ServiceLoader.load(ICurrencyService.class);
@@ -34,6 +35,9 @@ public class ServiceLocator {
 
         ServiceLoader<IAudioProcessingService> audioLoader = ServiceLoader.load(IAudioProcessingService.class);
         audioProcessingService = audioLoader.findFirst().orElse(null);
+
+        ServiceLoader<ILogicService> logicLoader = ServiceLoader.load(ILogicService.class);
+        logicService = logicLoader.findFirst().orElse(null);
     }
 
     public static Optional<ICurrencyService> getCurrencyService() {
@@ -62,6 +66,9 @@ public class ServiceLocator {
 
     public static Optional<IAudioProcessingService> getAudioProcessingService () {
         return Optional.ofNullable(audioProcessingService);
+    }
 
+    public static Optional<ILogicService> getLogicService () {
+        return Optional.ofNullable(logicService);
     }
 }

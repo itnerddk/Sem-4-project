@@ -21,6 +21,7 @@ import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IEntityPluginService;
 import org.sdu.sem4.g7.common.services.IMissionLoaderService;
+import org.sdu.sem4.g7.common.services.ServiceLocator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -204,6 +205,16 @@ public class MissionLoaderService implements IMissionLoaderService {
 			e.printStackTrace();
 			return null;
 		}
+
+		// Fill AI with map
+		ServiceLocator.getLogicService().ifPresentOrElse(
+				service -> {
+					service.init(mission.getMap(), gameData);
+				},
+				() -> {
+					System.err.println("Logic service not found");
+				}
+		);
 
 		// Create a new world
 		WorldData world = new WorldData();

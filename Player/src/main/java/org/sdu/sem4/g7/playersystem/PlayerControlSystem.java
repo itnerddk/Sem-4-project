@@ -12,6 +12,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
         // Borrowing some process space... TODO: Fjern denne linje
 
         for (Entity entity : world.getEntities(Player.class)) {
+            // System.out.println(entity.getPosition());
             // Controls
             Player player = (Player) entity;
 

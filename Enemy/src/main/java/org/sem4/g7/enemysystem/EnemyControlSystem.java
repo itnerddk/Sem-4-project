@@ -1,11 +1,18 @@
 package org.sem4.g7.enemysystem;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
+import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
+import org.sdu.sem4.g7.common.services.ServiceLocator;
 import org.sdu.sem4.g7.playersystem.Player;
+
+import javafx.scene.paint.Paint;
 
 
 public class EnemyControlSystem implements IEntityProcessingService {
@@ -13,11 +20,23 @@ public class EnemyControlSystem implements IEntityProcessingService {
     // Constant for shoot interval in seconds
     private static final double SHOOT_INTERVAL = 3.5; // 3.5 seconds
 
+    // Paths for enemies
+    private static HashMap<String, List<Vector2>> paths = new HashMap<>();
+
     @Override
     public void process(GameData gameData, WorldData world) {
         for (Entity entity : world.getEntities(Enemy.class)) {
             // gameData.addDebug("Enemy"+entity.getID(), entity.getVelocity().toString());
             Enemy enemy = (Enemy) entity;
+            // Check if the enemy is dead
+            if (enemy.isDead()) {
+                gameData.playAudio(SoundType.EXPLOSION);
+                System.out.println("Enemy died!");
+                world.removeEntity(enemy);
+                continue;
+            }
+
+
 
             // Find the player entity
             Player player = (Player) world.getEntities(Player.class).stream().findFirst().orElse(null);
@@ -56,13 +75,45 @@ public class EnemyControlSystem implements IEntityProcessingService {
             // Process the enemy's position
             enemy.processPosition(gameData);
 
-            // Check if the enemy is dead
-            if (enemy.isDead()) {
-                gameData.playAudio(SoundType.EXPLOSION);
-                System.out.println("Enemy died!");
-                world.removeEntity(enemy);
-                continue;
-            }
+            
+            // Logics
+            List<Vector2> specPath = paths.get(entity.getID());
+            // if (paths.containsKey(entity.getID())) {
+            //     if (specPath != null && !specPath.isEmpty()) {
+            //         Vector2 nextPoint = specPath.get(0);
+            //         enemy.setPosition(nextPoint.multiply(96));
+            //         if (enemy.getPosition().equals(nextPoint)) {
+            //             specPath.remove(0);
+            //         }
+            //     }
+            // }
+            // if (specPath == null || specPath.isEmpty()) {
+                ServiceLocator.getLogicService().ifPresentOrElse(
+                    service -> {
+                        List<Vector2> path = service.findPath(entity, new Vector2(player.getPosition()));
+                        if (path == null || path.isEmpty()) {
+                            return;
+                        }
+                        paths.put(entity.getID(), path);
+                        drawPath(gameData, path);
+                    },
+                    () -> {
+                        System.out.println("NOT PRESENT!");
+                    }
+                );
+            // }
+
         }
+    }
+
+    private void drawPath(GameData gd, List<Vector2> path) {
+        System.out.println("Drawing path: " + path);
+        gd.gc.save();
+        gd.gc.setLineWidth(8);
+        gd.gc.setStroke(javafx.scene.paint.Color.RED); // Replace with desired color
+        for (int i = 0; i < path.size()-1; i++) {
+            gd.gc.strokeLine(path.get(i).getX() * 64, path.get(i).getY() * 64, path.get(i+1).getX() * 64, path.get(i+1).getY() * 64);
+        }
+        gd.gc.restore();
     }
 }

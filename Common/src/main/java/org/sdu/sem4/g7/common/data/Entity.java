@@ -15,7 +15,7 @@ import javafx.scene.image.ImageView;
 /**
  * Base object for all visible objects in the game
  */
-public class Entity implements Serializable {
+public class Entity implements Serializable, Cloneable {
 
     /**
      * Unique id for the entity
