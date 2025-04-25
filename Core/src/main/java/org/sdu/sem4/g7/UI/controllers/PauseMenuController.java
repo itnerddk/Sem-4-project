@@ -15,6 +15,8 @@ import java.util.ResourceBundle;
 
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
+import org.sdu.sem4.g7.common.enums.SoundType;
+import org.sdu.sem4.g7.common.services.ServiceLocator;
 import org.sdu.sem4.g7.main.GameInstance;
 
 public class PauseMenuController implements Initializable {
@@ -40,11 +42,21 @@ public class PauseMenuController implements Initializable {
 
     @FXML
     private void handleResumeGame(ActionEvent event) {
+        ServiceLocator.getAudioProcessingService().ifPresent(
+            service -> {
+                service.playSound(SoundType.BUTTON_CLICK, 1.0f);
+            }
+        );
         gameInstance.resumeGame();
     }
 
     @FXML
     private void handleRestartGame(ActionEvent event) {
+        ServiceLocator.getAudioProcessingService().ifPresent(
+            service -> {
+                service.playSound(SoundType.BUTTON_CLICK, 1.0f);
+            }
+        );
         WorldData worldData = gameData.getMissionLoaderService().loadMission(missionId);
         GameInstance game = new GameInstance(gameData, worldData, missionId);
         Stage gameStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -54,6 +66,11 @@ public class PauseMenuController implements Initializable {
     @FXML
     private void handleMainMenu(ActionEvent event) {
         try {
+            ServiceLocator.getAudioProcessingService().ifPresent(
+                service -> {
+                    service.playSound(SoundType.BUTTON_CLICK, 1.0f);
+                }
+            );
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainMenu.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();

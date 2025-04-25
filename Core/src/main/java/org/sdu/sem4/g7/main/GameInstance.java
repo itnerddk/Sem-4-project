@@ -21,6 +21,7 @@ import org.sdu.sem4.g7.UI.controllers.PauseMenuController;
 import org.sdu.sem4.g7.common.data.*;
 import org.sdu.sem4.g7.common.data.GameData.Keys;
 import org.sdu.sem4.g7.common.enums.EntityType;
+import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.*;
 
 import java.io.IOException;
@@ -337,6 +338,11 @@ public class GameInstance {
                 break;
             case ESCAPE:
                 if (pressed) {
+                    ServiceLocator.getAudioProcessingService().ifPresent(
+                        service -> {
+                            service.playSound(SoundType.BUTTON_CLICK, 1.0f);
+                        }
+                    );
                     paused = !paused;
                     pauseMenu.setVisible(paused);
                 }

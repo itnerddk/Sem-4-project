@@ -48,6 +48,11 @@ public class GameResultController implements Initializable {
     @FXML
     private void handleMainMenu(ActionEvent event) {
         try {
+            ServiceLocator.getAudioProcessingService().ifPresent(
+                service -> {
+                    service.playSound(SoundType.BUTTON_CLICK, 1.0f);
+                }
+            );
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainMenu.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
