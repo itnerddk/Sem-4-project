@@ -1,4 +1,5 @@
 import org.sdu.sem4.g7.common.services.IEntityPluginService;
+import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.common.services.IMissionLoaderService;
 import org.sdu.sem4.g7.common.services.IPreGamePluginService;
 
@@ -14,4 +15,5 @@ module MissionLoader {
     exports org.sdu.sem4.g7.MissionLoader.services;
     provides IPreGamePluginService with org.sdu.sem4.g7.MissionLoader.services.Loader;
     provides IMissionLoaderService with org.sdu.sem4.g7.MissionLoader.services.MissionLoaderService;
+    provides IEntityProcessingService with org.sdu.sem4.g7.MissionLoader.services.TileService;
 }

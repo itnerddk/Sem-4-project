@@ -25,26 +25,35 @@ public class TileObject {
      */
     private boolean collision;
 
-    /**
-     * Standard immoveable property
+    /*
+     * Standard invulnerable property
      */
-    private boolean immoveable;
+    private boolean invulnerable;
+
+	/**
+	 * Id of the tile that replaces this tile when it is destroyed
+	 */
+	private int replacedByOnDeath;
 
     /**
      * Standard health
      */
     private int health;
 
-    public TileObject() {}
+	
+	public TileObject() {}
 
-	public TileObject(int id, String image, int z, boolean collision, boolean immoveable, int health) {
+    public TileObject(int id, String image, int z, boolean collision, boolean invulnerable, int replacedByOnDeath,
+			int health) {
 		this.id = id;
 		this.image = image;
 		this.z = z;
 		this.collision = collision;
-		this.immoveable = immoveable;
+		this.invulnerable = invulnerable;
+		this.replacedByOnDeath = replacedByOnDeath;
 		this.health = health;
 	}
+
 
 	public int getId() {
 		return id;
@@ -78,12 +87,20 @@ public class TileObject {
 		this.collision = collision;
 	}
 
-	public boolean isImmoveable() {
-		return immoveable;
+	public boolean isInvulnerable() {
+		return invulnerable;
 	}
 
-	public void setImmoveable(boolean immoveable) {
-		this.immoveable = immoveable;
+	public void setInvulnerable(boolean invulnerable) {
+		this.invulnerable = invulnerable;
+	}
+
+	public int getReplacedByOnDeath() {
+		return replacedByOnDeath;
+	}
+
+	public void setReplacedByOnDeath(int replacedByOnDeath) {
+		this.replacedByOnDeath = replacedByOnDeath;
 	}
 
 	public int getHealth() {
@@ -96,8 +113,7 @@ public class TileObject {
 
 	@Override
 	public String toString() {
-		return "TileObject [id=" + id + ", image=" + image + ", z=" + z + ", collision=" + collision + ", immoveable="
-				+ immoveable + ", health=" + health + "]";
+		return "TileObject [id=" + id + ", image=" + image + ", z=" + z + ", collision=" + collision + ", invulnerable="
+				+ invulnerable + ", replacedByOnDeath=" + replacedByOnDeath + ", health=" + health + "]";
 	}
-    
 }

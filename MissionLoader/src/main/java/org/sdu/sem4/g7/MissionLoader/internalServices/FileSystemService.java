@@ -55,7 +55,8 @@ public class FileSystemService {
 			tile.setImage("0.png"); // images will be loaded from the tiles dir
 			tile.setZ(1);
 			tile.setCollision(true);
-			tile.setImmoveable(true);
+			tile.setInvulnerable(true);
+			tile.setReplacedByOnDeath(0);
 			tile.setHealth(1);
 
 			// Serialize and save as json

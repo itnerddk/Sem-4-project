@@ -150,27 +150,10 @@ public class MissionLoaderService implements IMissionLoaderService {
 				TileObject tileInfo = tiles.get(map.get(y).get(x));
 
 				// Create a entity to render
-				Entity tileEntity = new TileEntity();
+				Entity tileEntity = new TileEntity(tileInfo);
 
-				// set sprite
-				tileEntity.setSprite(new File(Config.tilesDir, tileInfo.getImage()).toURI(), Config.tileSize);
-
-				// set position
 				tileEntity.setPosition(x * tileEntity.getSprite().getImage().getWidth(), y * tileEntity.getSprite().getImage().getHeight());
 
-				// set z index
-				tileEntity.setzIndex(tileInfo.getZ());
-
-				// set collistion of tile
-				tileEntity.setCollision(tileInfo.isCollision());
-
-				// set immoveable
-				tileEntity.setImmoveable(tileInfo.isImmoveable());
-
-				// set health of tile
-				tileEntity.setHealth(tileInfo.getHealth());
-
-				// add tile to world
 				world.addEntity(tileEntity);
 			}
 		}
@@ -262,6 +245,10 @@ public class MissionLoaderService implements IMissionLoaderService {
 	@Override
 	public int getMapSizeY() {
 		return mapSizeY;
+	}
+
+	public Map<Integer, TileObject> getTiles() {
+		return tiles;
 	}
 
 	private Collection<? extends IEntityPluginService> getPluginServices() {
