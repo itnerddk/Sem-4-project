@@ -10,7 +10,7 @@ import org.sdu.sem4.g7.common.services.IPreGamePluginService;
 
 
 
-/*
+/**
  * Game plugin
  */
 public class Loader implements IPreGamePluginService {

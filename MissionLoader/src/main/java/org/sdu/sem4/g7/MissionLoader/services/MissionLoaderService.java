@@ -24,34 +24,34 @@ import org.sdu.sem4.g7.common.services.IMissionLoaderService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/*
+/**
  * Provides an implementation of IMissionLoaderService
  */
 public class MissionLoaderService implements IMissionLoaderService {
 
 	private final static ObjectMapper objectMapper = new ObjectMapper();
 
-	/*
+	/**
 	 * Gamedata
 	 */
 	private GameData gameData;
 
-	/*
+	/**
 	 * WorldData
 	 */
 	private WorldData worldData;
 
-	/*
+	/**
 	 * All missions metadata
 	 */
 	private List<Mission> missions;
 
-	/*
+	/**
 	 * All tiles (full objects)
 	 */
 	private Map<Integer, TileObject> tiles;
 
-	/*
+	/**
 	 * Size of the map (filled by the render method)
 	 */
 	private int mapSizeX;
@@ -132,7 +132,7 @@ public class MissionLoaderService implements IMissionLoaderService {
 		return objectMapper.readValue(new File(Config.missionsDir, String.valueOf(id) + ".json"), MissionObject.class);
 	}
 
-	/*
+	/**
 	 * Render the map tiles
 	 */
 	private void renderMapTiles(List<List<Integer>> map, WorldData world) {

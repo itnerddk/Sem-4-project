@@ -1,22 +1,22 @@
 package org.sdu.sem4.g7.MissionLoader.objects;
 
-/*
+/**
  * Data object containing enemy a enenmy, and its startlocation
  */
 public class EnemyStartPositionObject {
 
-	/*
+	/**
      * Entity type
      */
     private String entityType;
 
-    /*
+    /**
      * Start position
      */
     private int x;
     private int y;
 
-    /*
+    /**
      * Start health
      */
     private int health;

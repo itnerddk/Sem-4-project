@@ -1,13 +1,13 @@
 package org.sdu.sem4.g7.MissionLoader.objects;
 
-/*
+/**
  * Data object containing the players start position
  * 
  * Q&A: Why a seperate object? A: Well, it makes the json (or other type of human readable format) file, in my opinion more readable.
  */
 public class PlayerStartPositionObject {
     
-    /*
+    /**
      * Start position
      */
     private int x;

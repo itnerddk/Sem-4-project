@@ -42,7 +42,7 @@ public class FileSystemService {
 		}
 	}
 
-	/*
+	/**
 	 * Creates a default tile, if it does not exists
 	 */
 	public void createDefaultTile() throws IOException {
@@ -65,7 +65,7 @@ public class FileSystemService {
 		}
 	}
 
-	/*
+	/**
 	 * Create a default mission, if it does not exists
 	 * 
 	 * NOTE: I do this, in order to create a complete json file. With everything set just as the serializer expects it.

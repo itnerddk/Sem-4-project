@@ -1,36 +1,36 @@
 package org.sdu.sem4.g7.MissionLoader.objects;
 
-/*
+/**
  * A metadata object for a tile
  */
 public class TileObject {
     
-    /*
+    /**
      * Tile id
      */
     private int id;
 
-    /*
+    /**
      * Tile Image
      */
     private String image;
 
-    /*
+    /**
      * Standard z index
      */
     private int z;
 
-    /*
+    /**
      * Standard collision property
      */
     private boolean collision;
 
-    /*
+    /**
      * Standard immoveable property
      */
     private boolean immoveable;
 
-    /*
+    /**
      * Standard health
      */
     private int health;
