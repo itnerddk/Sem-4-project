@@ -71,7 +71,7 @@ public class FileSystemService {
 	 * NOTE: I do this, in order to create a complete json file. With everything set just as the serializer expects it.
 	 */
 	public void createDefaultMission() throws IOException {
-		if (!new File(Config.missionsDir, "0.json").exists()) {
+		if (!new File(Config.missionsDir, "1.json").exists()) {
 			System.out.println(" - Creating default mission!");
 
 			// Create a new enenmy start position
@@ -118,7 +118,7 @@ public class FileSystemService {
 			
 
 			// Serialize and save as json
-			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Config.missionsDir, "0.json")));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Config.missionsDir, "1.json")));
 			writer.write(objectMapper.writeValueAsString(mo));
 			writer.close();
 		}
