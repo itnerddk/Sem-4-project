@@ -1,1 +1,15 @@
-{"created":1744363831905,"updated":1745562898979,"revision":308,"stringMap":{"org.sdu.sem4.g7.audio.AudioMASTER":"1.0","org.sdu.sem4.g7.audio.AudioSHOOTEXPLOSIONHIT":"1.0","org.sdu.sem4.g7.audio.AudioBUTTON_CLICK":"1.0"},"intMap":{"currency":31110,"org.sdu.sem4.g7.upgrades.HealthUpgrade":3,"org.sdu.sem4.g7.upgrades.ShieldUpgrade":3,"org.sdu.sem4.g7.upgrades.DamageUpgrade":2,"org.sdu.sem4.g7.upgrades.SpeedUpgrade":1,"Level":58,"xp":895},"stringListMap":{},"intListMap":{"completedMissions":[1,2]}}
+{"created":1744363831905,
+  "updated":1745564288050,
+  "revision":359,
+  "stringMap":{"org.sdu.sem4.g7.audio.AudioMASTER":"1.0",
+    "org.sdu.sem4.g7.audio.AudioSHOOTEXPLOSIONHIT":"1.0",
+    "org.sdu.sem4.g7.audio.AudioBUTTON_CLICK":"1.0"},
+  "intMap":{"currency":999902,"org.sdu.sem4.g7.upgrades.HealthUpgrade":3,
+    "org.sdu.sem4.g7.upgrades.ShieldUpgrade":0,
+    "org.sdu.sem4.g7.upgrades.DamageUpgrade":0,
+    "org.sdu.sem4.g7.upgrades.SpeedUpgrade":0,
+    "Level":63,
+    "xp":1470,
+    "org.sdu.sem4.g7.upgrades.ArmorUpgrade":0},
+  "stringListMap":{},
+  "intListMap":{"completedMissions":[1,2]}}
