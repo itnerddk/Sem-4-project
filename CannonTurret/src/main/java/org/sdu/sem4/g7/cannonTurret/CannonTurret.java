@@ -50,7 +50,7 @@ public class CannonTurret extends Turret {
         CannonBullet bullet = new CannonBullet();
 
         // Set WeaponDamage for the specific weapon
-        bullet.setWeaponBonus(10);
+        bullet.setWeaponBonus(100);
         bullet.finalizeDamage();
 
         bullet.setPosition(this.getPosition());

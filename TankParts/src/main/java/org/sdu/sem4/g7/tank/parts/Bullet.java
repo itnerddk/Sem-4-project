@@ -93,6 +93,7 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
                 int shield = (int) methodGetShield.invoke(otherEntity);
 
                 if (shield > 0) {
+                    System.out.println(otherEntity.getHealth());
                     int damageToShield = Math.min(effectiveDamage, shield);
                     int remainingDamage = effectiveDamage - damageToShield;
 

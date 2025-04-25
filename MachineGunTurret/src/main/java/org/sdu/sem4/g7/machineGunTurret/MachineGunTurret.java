@@ -52,7 +52,7 @@ public class MachineGunTurret extends Turret {
         MachineGunBullet bullet = new MachineGunBullet();
 
         // Set WeaponDamage for the specific weapon
-        bullet.setWeaponBonus(2);
+        bullet.setWeaponBonus(20);
         bullet.finalizeDamage();
 
         bullet.setPosition(this.getPosition());

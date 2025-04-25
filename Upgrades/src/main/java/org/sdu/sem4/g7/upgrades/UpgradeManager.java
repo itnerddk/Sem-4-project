@@ -61,7 +61,7 @@ public class UpgradeManager implements IUpgradeService, IUpgradeStatsService {
 
     @Override
     public int getHealthBonus() {
-        return health.getLevel() * 10;
+        return health.getLevel() * 100;
     }
 
     @Override
