@@ -119,10 +119,13 @@ public class GameInstance {
                             // Get the mission difficulty and multiply it on
                             finalScore *= difficulty;
 
-                            Entity player = worldData.getEntities(EntityType.PLAYER).getFirst();
+                            List<Entity> players = worldData.getEntities(EntityType.PLAYER);
+                            if (players.size() >= 1) {
+                                Entity player = players.getFirst();
+                                int healthBonus = (int) (100.0f * (((float) player.getHealth() / (float) player.getMaxHealth()) * difficulty));
+                                finalScore += healthBonus;
+                            }
 
-                            int healthBonus = (int) (100.0f * (((float) player.getHealth() / (float) player.getMaxHealth()) * difficulty));
-                            finalScore += healthBonus;
 
 
                             gameData.setScore(finalScore);
@@ -144,7 +147,7 @@ public class GameInstance {
 
                             // Reward the player with XP
                             ServiceLocator.getLevelService().ifPresent(service -> {
-                                service.addXP((int) (gameData.getScore() * 0.25)); //TODO: temp amount
+                                service.addXP((int) (gameData.getScore() * 0.1)); //TODO: temp amount
                             });
                             // Save the mission as completed
                             ServiceLocator.getPersistenceService().ifPresent(service -> {
