@@ -41,6 +41,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
 
                 // Update the enemy's rotation
                 enemy.setRotation((float) angle);
+                enemy.getTurret().setRotation((float) angle);
 
                 // Check if enough time has passed to shoot
                 double currentTime = gameData.getTime(); // Assuming `gameData.getTime()` returns time in seconds

@@ -11,6 +11,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -102,6 +103,7 @@ public class GameInstance {
                     }
                     update();
                     gameData.updateKeys();
+                    gameData.updateMouse();
                     gameData.setDelta((now - lastTick) * 1.0e-9);
                     // gameData.addDebug("Entity Count", String.valueOf(worldData.getEntities().size()));
                     // gameData.addDebug("Delta", String.valueOf((Math.round(gameData.getDelta() * 10000) / 10.0)));
@@ -311,6 +313,14 @@ public class GameInstance {
         scene.setFill(Color.BLACK);
         scene.setOnKeyPressed(event -> setupKeys(event, true));
         scene.setOnKeyReleased(event -> setupKeys(event, false));
+        scene.setOnMousePressed(event -> {
+            gameData.setMousePressed(true);
+        });
+        scene.setOnMouseReleased(event -> {
+            gameData.setMousePressed(false);
+        });
+        scene.setOnMouseMoved(event -> setMousePos(event));
+        scene.setOnMouseDragged(event -> setMousePos(event));
         scene.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
         return scene;
     }
@@ -352,6 +362,11 @@ public class GameInstance {
             default:
                 break;
         }
+    }
+
+    private void setMousePos(MouseEvent event) {
+        gameData.setMousePos(event.getX() - gameWindow.translateXProperty().doubleValue(),
+            event.getY() - gameWindow.translateYProperty().doubleValue());
     }
 
     private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {

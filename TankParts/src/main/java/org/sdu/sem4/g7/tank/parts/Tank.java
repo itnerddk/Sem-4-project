@@ -59,7 +59,7 @@ public abstract class Tank extends Entity implements IRigidbodyService {
     private void processTurret() {
         if (turret != null) {
             turret.setPosition(getPosition().getX(), getPosition().getY());
-            turret.setRotation(getRotation());
+            // turret.setRotation(getRotation());
         }
     }
 
