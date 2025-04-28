@@ -115,6 +115,8 @@ public class GameData {
     }
 
     //#region Mouse handling
+    private double gameWindowX;
+    private double gameWindowY;
     private double mouseX;
     private double mouseY;
     private boolean mousePressed;
@@ -124,11 +126,15 @@ public class GameData {
         this.mouseX = mouseX;
         this.mouseY = mouseY;
     }
-    public double getMouseX() {
-        return mouseX;
+    public void setGameWindowPos(double x, double y) {
+        this.gameWindowX = x;
+        this.gameWindowY = y;
     }
-    public double getMouseY() {
-        return mouseY;
+    public double getRelativeMouseX() {
+        return mouseX - gameWindowX;
+    }
+    public double getRelativeMouseY() {
+        return mouseY - gameWindowY;
     }
 
     public boolean isMouseDown() {

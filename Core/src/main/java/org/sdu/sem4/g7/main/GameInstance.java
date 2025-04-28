@@ -250,6 +250,7 @@ public class GameInstance {
                             .add(gameData.getDisplayWidth() / 2, gameData.getDisplayHeight() / 2);
                     gameWindow.setTranslateX(pos.getX());
                     gameWindow.setTranslateY(pos.getY());
+                    gameData.setGameWindowPos(pos.getX(), pos.getY());
                 });
 
         // Sync entities and render
@@ -365,8 +366,7 @@ public class GameInstance {
     }
 
     private void setMousePos(MouseEvent event) {
-        gameData.setMousePos(event.getX() - gameWindow.translateXProperty().doubleValue(),
-            event.getY() - gameWindow.translateYProperty().doubleValue());
+        gameData.setMousePos(event.getX(), event.getY());
     }
 
     private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {

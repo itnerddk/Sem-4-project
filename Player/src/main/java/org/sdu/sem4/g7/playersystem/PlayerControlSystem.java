@@ -36,7 +36,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
             }
 
             // Rotate turret
-            double angle = Math.atan2(gameData.getMouseY() - player.getPosition().getY(), gameData.getMouseX() - player.getPosition().getX());
+            double angle = Math.atan2(gameData.getRelativeMouseY() - player.getPosition().getY(), gameData.getRelativeMouseX() - player.getPosition().getX());
             player.getTurret().setRotation((float)(angle * 180 / (float)Math.PI) + 90);
 
             // Shoot
