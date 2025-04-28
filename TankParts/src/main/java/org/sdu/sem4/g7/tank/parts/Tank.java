@@ -84,13 +84,23 @@ public abstract class Tank extends Entity implements IRigidbodyService {
     }
 
     public void turnLeft() {
-        this.setRotation((float)(this.getRotation() - this.getRotationSpeed()));
+        float newRotation = (float)(this.getRotation() - this.getRotationSpeed());
+        if (newRotation < 0) {
+            newRotation = 360 + newRotation;
+        }
+
+        this.setRotation(newRotation);
         // Turn velocity
         getVelocity().rotate(-this.getRotationSpeed());
     }
 
     public void turnRight() {
-        this.setRotation((float)(this.getRotation() + this.getRotationSpeed()));
+        float newRotation = (float)(this.getRotation() + this.getRotationSpeed());
+        if (newRotation > 360) {
+            newRotation = 0 + newRotation - 360;
+        }
+
+        this.setRotation(newRotation);
         // Turn velocity
         getVelocity().rotate(this.getRotationSpeed());
     }

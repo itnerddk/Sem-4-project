@@ -4,10 +4,13 @@ import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
 
 import org.sdu.sem4.g7.common.data.Entity;
+import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.common.services.ITurretProviderService;
 import org.sdu.sem4.g7.tank.parts.Tank;
 import org.sdu.sem4.g7.tank.parts.Turret;
+
+import javafx.scene.canvas.GraphicsContext;
 
 public class Enemy extends Tank {
 
@@ -46,5 +49,21 @@ public class Enemy extends Tank {
 
     public void setLastShotTime(double lastShotTime) {
         this.lastShotTime = lastShotTime;
+    }
+
+    @Override
+    public void render(GraphicsContext gc) {
+        super.render(gc);
+
+        // Draw rotation
+        gc.save();
+
+        gc.translate(this.getPosition().getX(), this.getPosition().getY());
+
+        gc.fillText(Double.toString(Math.round(this.getRotation()*10)/10.0), 0, 50);
+
+        gc.fillText(Vector2.round(new Vector2(getPosition()).multiply(10)).divide(10).toString(), 0, 72);
+
+        gc.restore();
     }
 }

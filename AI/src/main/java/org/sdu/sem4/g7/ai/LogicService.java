@@ -50,6 +50,39 @@ public class LogicService implements ILogicService {
         
         
 
+        // return optimizePath(path);
         return path;
     }
+
+    private List<Vector2> optimizePath(List<Vector2> path) {
+        System.out.println("Path points before: " + path.size());
+        List<Vector2> newPath = new ArrayList<>();
+        Vector2 past;
+        Vector2 current;
+        Vector2 future;
+
+        past = path.get(0);
+        newPath.add(past);
+        for (int i = 1; i < path.size(); i++) {
+            current = path.get(i);
+            future = path.get(i+1);
+
+            // X Positive
+            if(past.getX() < current.getX() && current.getX() < future.getX()) {
+                // Check if they have any y difference
+                if (past.getY() == current.getY() && current.getY() == future.getY()) {
+
+                }
+            } else if (past.getX() > current.getX() && current.getX() > current.getX()) {
+                
+            }
+
+
+            past = current;
+        }
+
+        System.out.println("Path points after: " + path.size());
+        return newPath;
+    }
+
 }

@@ -2,6 +2,7 @@ package org.sdu.sem4.g7.common.data;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,6 +13,9 @@ public class WorldData {
 
     private final Map<String, Entity> entityMap;
     private Map<String, List<Class<? extends Entity>>> entityTypes;
+
+    // Map referring class that extends entity to a collection of entities
+    Map<Class<? extends Entity>, List<Entity>> entityClassClumps = new HashMap<>();
 
     public WorldData() {
         this.entityMap = new ConcurrentHashMap<>();
@@ -24,7 +28,11 @@ public class WorldData {
 
     public String addEntity(Entity entity) {
         entityMap.put(entity.getID(), entity);
-        entity.getSprite().viewOrderProperty().set(entity.getzIndex());
+        if (entity.getSprite() != null) {
+            entity.getSprite().viewOrderProperty().set(entity.getzIndex());
+        }
+
+        entityClassClumps.computeIfAbsent(entity.getClass(), k -> new ArrayList<>()).add(entity);
 
         return entity.getID();
     }
@@ -37,6 +45,7 @@ public class WorldData {
 
     public void removeEntity(String entityID) {
         entityMap.remove(entityID);
+        entityClassClumps.values().forEach(list -> list.removeIf(entity -> entity.getID().equals(entityID))); // Sorta inefficient
     }
 
     public void removeEntity(Entity entity) {
@@ -52,6 +61,9 @@ public class WorldData {
 
     @SuppressWarnings("unchecked")
     public <E extends Entity> List<E> getEntities(Class<E> entityType) {
+        if (entityClassClumps.containsKey(entityType)) {
+            return (List<E>) entityClassClumps.get(entityType);
+        }
         List<E> r = new ArrayList<>();
         for (Entity e : getEntities()) {
             if (entityType.equals(e.getClass())) {

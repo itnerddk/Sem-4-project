@@ -79,7 +79,14 @@ public class AStar {
                 //     openSet.add(neighbor)
                 cameFrom.put(neighbor, current);
                 gScore.put(neighbor, tentative_gScore);
-                fScore.put(neighbor, tentative_gScore + heuristics(neighbor));
+                int h = heuristics(neighbor);
+                if (steps == 1) {
+                    // First step, taking rotation into account
+                    float rotation = (float) Math.toDegrees((Math.atan2(neighbor.getX() - current.getX(), neighbor.getY() - current.getY()) / (2 * Math.PI)));
+                    float rotationDiff = Math.abs(rotation - from.getRotation());
+                    h += rotationDiff / 45.0f;
+                }
+                fScore.put(neighbor, tentative_gScore + h);
                 if (!openSet.contains(neighbor)) {
                     openSet.add(neighbor);
                 }
@@ -98,18 +105,6 @@ public class AStar {
         // Heuristic function: Euclidean distance
         int distance = (int) Math.sqrt(Math.pow(point.getX() - to.getX(), 2) + Math.pow(point.getY() - to.getY(), 2));
         h = distance;
-
-        // If the tank has to turn, add a penalty
-        if (from.getRotation() != 0) {
-            // Calculate the angle difference
-            double angleDiff = Math.abs(from.getRotation() - Math.atan2(to.getY() - point.getY(), to.getX() - point.getX()));
-            // Normalize the angle difference to [0, 2*PI]
-            if (angleDiff > Math.PI) {
-                angleDiff = 2 * Math.PI - angleDiff;
-            }
-            // Add a penalty based on the angle difference
-            h += (int) (angleDiff * 0.5);
-        }
 
         return h;
     }
