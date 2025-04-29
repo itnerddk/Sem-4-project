@@ -3,6 +3,7 @@ package org.sdu.sem4.g7.tank.parts;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sdu.sem4.g7.common.Config.CommonConfig;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Hitbox;
@@ -31,7 +32,7 @@ public abstract class Tank extends Entity implements IRigidbodyService {
         this.setCollision(true);
         try {
             System.out.println(this.getClass().getClassLoader().getResource("Tank.png"));
-            this.setSprite(this.getClass().getClassLoader().getResource("Tank.png").toURI(), 5);
+            this.setSprite(this.getClass().getClassLoader().getResource("Tank.png").toURI(), CommonConfig.DEFAULT_SCALING);
         } catch (Exception e) {
             // TODO: handle exception
         }

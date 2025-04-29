@@ -4,32 +4,32 @@
   "description": "An open battlefield with scattered cover. Perfect for maneuvering and large-scale fights.",
   "difficulty": 6,
   "player": {
-    "x": 384,
-    "y": 384
+    "x": 6,
+    "y": 6
   },
   "enemies": [
     {
       "entityType": "Enemies",
-      "x": 128,
-      "y": 128,
+      "x": 2,
+      "y": 2,
       "health": 50
     },
     {
       "entityType": "Enemies",
-      "x": 512,
-      "y": 128,
+      "x": 8,
+      "y": 2,
       "health": 75
     },
     {
       "entityType": "Enemies",
-      "x": 128,
-      "y": 512,
+      "x": 2,
+      "y": 8,
       "health": 100
     },
     {
       "entityType": "Enemies",
-      "x": 512,
-      "y": 512,
+      "x": 8,
+      "y": 8,
       "health": 100
     }
   ],

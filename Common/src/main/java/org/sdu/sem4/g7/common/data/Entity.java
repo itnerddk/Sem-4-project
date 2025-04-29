@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.sdu.sem4.g7.common.Config.CommonConfig;
 import org.sdu.sem4.g7.common.enums.EntityType;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -146,7 +147,7 @@ public class Entity implements Serializable, Cloneable {
 
     public void setSprite(URI uri) {
         Image original = new Image(uri.toString());
-        Image scaled = new Image(uri.toString(), original.getWidth() * 8, original.getHeight() * 8, false, false);
+        Image scaled = new Image(uri.toString(), original.getWidth() * CommonConfig.DEFAULT_SCALING , original.getHeight() * CommonConfig.DEFAULT_SCALING, false, false);
 
         this.sprite = new ImageView(scaled);
     }

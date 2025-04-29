@@ -1,6 +1,9 @@
 package org.sdu.sem4.g7.ai;
 
 import java.util.PriorityQueue;
+import java.util.concurrent.TimeUnit;
+
+import org.sdu.sem4.g7.common.Config.CommonConfig;
 import org.sdu.sem4.g7.common.data.*;
 
 import javafx.scene.paint.Color;
@@ -9,7 +12,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+class Cost {
+    Vector2 key;
+    int value;
+
+    public Cost(Vector2 key, int value) {
+        this.key = key;
+        this.value = value;
+    }
+}
+
 public class AStar {
+
+    long started = System.nanoTime();
+    long completed = 0;
+
 
     private EntityShell from; // The starting entity
     private Vector2 to; // The target position
@@ -20,12 +37,15 @@ public class AStar {
     private PriorityQueue<Vector2> openSet;
     private HashMap<Vector2, Vector2> cameFrom;
 
+    private HashMap<Vector2, Integer> gScore = new HashMap<>();
+    private PriorityQueue<Cost> fScore = new PriorityQueue<Cost>((a, b) -> Integer.compare(a.value, b.value)); // Lowest value out first
+
     public AStar(Entity from, Vector2 to, List<List<Integer>> map, GameData gameData) {
         this.gameData = gameData;
         // Initialize the A* algorithm with the starting entity and target position
         this.from = new EntityShell(from);
-        this.from.setPosition(Vector2.round(this.from.getPosition().divide(64)));
-        this.to = Vector2.round((new Vector2(to)).divide(64));
+        this.from.setPosition(Vector2.round(this.from.getPosition().divide(CommonConfig.getTileSize())));
+        this.to = Vector2.round((new Vector2(to)).divide(CommonConfig.getTileSize()));
         this.map = map;
         System.out.println("From: " + this.from.getPosition() + " To: " + this.to);
 
@@ -44,26 +64,24 @@ public class AStar {
     public List<Vector2> step() {
         steps++;
         // System.out.println("Step: " + steps);
-        Vector2 current = openSet.peek();
-        int lowest = fScore.get(current);
-
-        for (Vector2 curr : openSet) {
-            if (fScore.get(curr) < lowest) {
-                current = curr;
-            }
-        }
+        Cost currentCost = fScore.peek();
+        Vector2 current = currentCost.key;
 
         drawCircle(current, Color.YELLOW);
 
         if (current.equals(this.to)) {
-            System.out.println("Found path to: " + this.to);
-            System.out.println("Steps: " + steps);
+
             List<Vector2> path = reconstruct_path(cameFrom, current);
-            System.out.println(path.size());
+            if (completed == 0) {
+                completed = System.nanoTime();
+            }
+            System.out.println(((double) TimeUnit.NANOSECONDS.toMicros(completed - started)) / 1000.0 + " ms");
+
             return path;
         }
 
         openSet.remove(current);
+        fScore.remove(currentCost);
         for (Vector2 neighbor : getNeighbours(current)) {
             // d(current,neighbor) is the weight of the edge from current to neighbor
             // tentative_gScore is the distance from start to the neighbor through current
@@ -86,7 +104,7 @@ public class AStar {
                     float rotationDiff = Math.abs(rotation - from.getRotation());
                     h += rotationDiff / 45.0f;
                 }
-                fScore.put(neighbor, tentative_gScore + h);
+                fScore.add(new Cost(neighbor, tentative_gScore + h));
                 if (!openSet.contains(neighbor)) {
                     openSet.add(neighbor);
                 }
@@ -104,19 +122,27 @@ public class AStar {
         // return Math.abs(point.getX() - to.getX()) + Math.abs(point.getY() - to.getY());
         // Heuristic function: Euclidean distance
         int distance = (int) Math.sqrt(Math.pow(point.getX() - to.getX(), 2) + Math.pow(point.getY() - to.getY(), 2));
-        h = distance;
+        h = distance * 11;
+        
+        Vector2 from = this.cameFrom.containsKey(point) ? this.cameFrom.get(point) : null;
+        // If it has a from, check if it's going diagonal
+        if (from != null) {
+            // Check if the point is diagonal to the from point
+            if (Math.abs(point.getX() - from.getX()) == 1 && Math.abs(point.getY() - from.getY()) == 1) {
+                h += 4; // Add a penalty for diagonal movement
+                // System.out.print("Diagonal ");;
+            }
+        }
 
+        // System.out.println("H: " + h);
         return h;
     }
-
-    HashMap<Vector2, Integer> gScore = new HashMap<>();
-    HashMap<Vector2, Integer> fScore = new HashMap<>();
 
     public List<Vector2> getNeighbours(Vector2 point) {
         // System.out.println("Getting neighbours for: " + point);
         List<Vector2> neighbours = new ArrayList<>();
 
-        // Check the 4 possible directions (up, down, left, right)
+        // Check the possible directions
         int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}, {1, 1}, {-1, -1}, {1, -1}, {-1, 1}};
         for (int[] dir : directions) {
             int newX = (int) point.getX() + dir[0];
@@ -149,10 +175,10 @@ public class AStar {
         // For node n, fScore[n] := gScore[n] + h(n). fScore[n] represents our current best guess as to
         // how cheap a path could be from start to finish if it goes through n.
         // fScore := map with default value of Infinity
-        fScore = new HashMap<>();
+        fScore.clear();
 
         // fScore[start] := heuristics(start)
-        fScore.put(start, heuristics(start));
+        fScore.add(new Cost(start, heuristics(start)));
 
         // while openSet is not empty
         return step();
@@ -174,7 +200,7 @@ public class AStar {
     public boolean isTo(Vector2 to) {
         // Check if the target position is the same as the current position
         Vector2 inToClone = new Vector2(to);
-        inToClone = Vector2.round(inToClone.divide(64));
+        inToClone = Vector2.round(inToClone.divide(CommonConfig.getTileSize()));
         return this.to.equals(inToClone);
     }
 
@@ -184,12 +210,12 @@ public class AStar {
         // Draw circle at vector2 position
         gameData.gc.setFill(color);
         gameData.gc.setStroke(color);
-        gameData.gc.setLineWidth(Math.min(steps, 25));
+        gameData.gc.setLineWidth(Math.min(steps, CommonConfig.DEFAULT_SCALING*2));
         gameData.gc.strokeOval(
-                (int) vector2.getX() * 64 - 32,
-                (int) vector2.getY() * 64 - 32,
-                64,
-                64
+                (int) vector2.getX() * CommonConfig.getTileSize() - CommonConfig.getTileSize()/2,
+                (int) vector2.getY() * CommonConfig.getTileSize() - CommonConfig.getTileSize()/2,
+                CommonConfig.getTileSize(),
+                CommonConfig.getTileSize()
         );
         gameData.gc.restore();
     }

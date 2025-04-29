@@ -7,6 +7,7 @@ module Common {
     exports org.sdu.sem4.g7.common.services;
     exports org.sdu.sem4.g7.common.data;
     exports org.sdu.sem4.g7.common.enums;
+    exports org.sdu.sem4.g7.common.Config;
 
     uses ICurrencyService;
     uses ILevelService;

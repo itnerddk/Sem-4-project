@@ -23,7 +23,7 @@ public class CannonTurret extends Turret {
         setMuzzle(new Vector2(0, -25));
         setAttackSpeed(400);
         try {
-            this.setSprite(this.getClass().getClassLoader().getResource("CannonTurret.png").toURI(), 5);
+            this.setSprite(this.getClass().getClassLoader().getResource("CannonTurret.png").toURI());
             this.setzIndex(-10);
 
             // Load the sound files

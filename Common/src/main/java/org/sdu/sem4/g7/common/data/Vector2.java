@@ -203,4 +203,9 @@ public class Vector2 {
         Vector2 vector2 = (Vector2) obj;
         return Double.compare(vector2.x, x) == 0 && Double.compare(vector2.y, y) == 0;
     }
+
+    @Override
+    public int hashCode() {
+        return 31 * Double.hashCode(x) + Double.hashCode(y);
+    }
 }

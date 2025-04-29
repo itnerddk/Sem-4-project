@@ -15,6 +15,7 @@ import org.sdu.sem4.g7.MissionLoader.objects.EnemyStartPositionObject;
 import org.sdu.sem4.g7.MissionLoader.objects.MissionObject;
 import org.sdu.sem4.g7.MissionLoader.objects.TileEntity;
 import org.sdu.sem4.g7.MissionLoader.objects.TileObject;
+import org.sdu.sem4.g7.common.Config.CommonConfig;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Mission;
@@ -154,7 +155,9 @@ public class MissionLoaderService implements IMissionLoaderService {
 				Entity tileEntity = new TileEntity();
 
 				// set sprite
-				tileEntity.setSprite(new File(Config.tilesDir, tileInfo.getImage()).toURI(), Config.tileSize);
+				tileEntity.setSprite(new File(Config.tilesDir, tileInfo.getImage()).toURI(), CommonConfig.DEFAULT_SCALING);
+			
+				if (y == 0) CommonConfig.setTileSize((int) tileEntity.getSprite().getImage().getWidth());
 
 				// set position
 				tileEntity.setPosition(x * tileEntity.getSprite().getImage().getWidth(), y * tileEntity.getSprite().getImage().getHeight());
@@ -232,7 +235,7 @@ public class MissionLoaderService implements IMissionLoaderService {
 			Entity enemy;
 			try {
 				enemy = world.getEntityTypes().get(espo.getEntityType()).get(0).getDeclaredConstructor().newInstance();
-				enemy.setPosition(espo.getX(), espo.getY());
+				enemy.setPosition(espo.getX() * CommonConfig.getTileSize(), espo.getY() * CommonConfig.getTileSize());
 				enemy.setHealth(espo.getHealth());
 				enemy.setMaxHealth(espo.getHealth());
 				System.out.println("set enemy health from mission: " + espo.getHealth());
@@ -253,7 +256,7 @@ public class MissionLoaderService implements IMissionLoaderService {
 		// Create player
 		try {
 			Entity player = world.getEntityTypes().get("Players").get(0).getDeclaredConstructor().newInstance();
-			player.setPosition(mission.getPlayer().getX(), mission.getPlayer().getY());
+			player.setPosition(mission.getPlayer().getX() * CommonConfig.getTileSize(), mission.getPlayer().getY() * CommonConfig.getTileSize());
 			world.addEntity(player);
 		} catch (Exception ex) {
 			System.err.println("Could not create a player!");

@@ -7,8 +7,6 @@ import java.io.File;
  */
 public class Config {
 
-    public final static int tileSize = 4;
-
     public final static File dataDir = new File("./data");
 	public final static File missionsDir = new File(dataDir, "missions");
 	public final static File tilesDir = new File(dataDir, "tiles");

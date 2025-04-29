@@ -21,7 +21,7 @@ public class MachineGunTurret extends Turret {
         setMuzzle(new Vector2(0, -25));
 
         try {
-            this.setSprite(this.getClass().getClassLoader().getResource("MachineGunTurret.png").toURI(), 5);
+            this.setSprite(this.getClass().getClassLoader().getResource("MachineGunTurret.png").toURI());
             this.setzIndex(-10);
 
             // Load the sound files

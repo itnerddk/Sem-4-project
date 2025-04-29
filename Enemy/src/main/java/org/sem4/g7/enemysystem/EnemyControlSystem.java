@@ -2,7 +2,9 @@ package org.sem4.g7.enemysystem;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import org.sdu.sem4.g7.common.Config.CommonConfig;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Vector2;
@@ -23,11 +25,13 @@ public class EnemyControlSystem implements IEntityProcessingService {
     // Paths for enemies
     private static HashMap<String, List<Vector2>> paths = new HashMap<>();
 
+
+    private static final long MAX_TIME = 4000; // Microseconds, 4000 is 4ms
+
     @Override
     public void process(GameData gameData, WorldData world) {
-        for (Entity entity : world.getEntities(Enemy.class)) {
-            // gameData.addDebug("Enemy"+entity.getID(), entity.getVelocity().toString());
-            Enemy enemy = (Enemy) entity;
+        List<Enemy> enemies = world.getEntities(Enemy.class);
+        for (Enemy enemy : enemies) {
             // Check if the enemy is dead
             if (enemy.isDead()) {
                 gameData.playAudio(SoundType.EXPLOSION);
@@ -77,7 +81,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
 
             
             // Logics
-            List<Vector2> specPath = paths.get(entity.getID());
+            List<Vector2> specPath = paths.get(enemy.getID());
             // if (paths.containsKey(entity.getID())) {
             //     if (specPath != null && !specPath.isEmpty()) {
             //         Vector2 nextPoint = specPath.get(0);
@@ -90,11 +94,15 @@ public class EnemyControlSystem implements IEntityProcessingService {
             // if (specPath == null || specPath.isEmpty()) {
                 ServiceLocator.getLogicService().ifPresentOrElse(
                     service -> {
-                        List<Vector2> path = service.findPath(entity, new Vector2(player.getPosition()));
+                        List<Vector2> path = null;
+                        long timeStarted = System.nanoTime();
+                        while (path == null && (MAX_TIME / enemies.size()) > TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - timeStarted)) {
+                            path = service.findPath(enemy, new Vector2(player.getPosition()));
+                        }
                         if (path == null || path.isEmpty()) {
                             return;
                         }
-                        paths.put(entity.getID(), path);
+                        paths.put(enemy.getID(), path);
                         drawPath(gameData, path);
                     },
                     () -> {
@@ -107,12 +115,13 @@ public class EnemyControlSystem implements IEntityProcessingService {
     }
 
     private void drawPath(GameData gd, List<Vector2> path) {
-        System.out.println("Drawing path: " + path);
+        // System.out.println("Drawing path: " + path);
         gd.gc.save();
         gd.gc.setLineWidth(8);
         gd.gc.setStroke(javafx.scene.paint.Color.RED); // Replace with desired color
+        int sz = CommonConfig.getTileSize(); // sz : Sizing
         for (int i = 0; i < path.size()-1; i++) {
-            gd.gc.strokeLine(path.get(i).getX() * 64, path.get(i).getY() * 64, path.get(i+1).getX() * 64, path.get(i+1).getY() * 64);
+            gd.gc.strokeLine(path.get(i).getX() * sz, path.get(i).getY() * sz, path.get(i+1).getX() * sz, path.get(i+1).getY() * sz);
         }
         gd.gc.restore();
     }
