@@ -92,6 +92,12 @@ public class MainMenuController implements Initializable {
     @FXML private ProgressBar armorProgress;
     @FXML private Text armorUpgradeLevelText;
 
+    // Difficulty
+    @FXML private AnchorPane difficultyPane;
+    @FXML private Button difficultyEasyButton;
+    @FXML private Button difficultyNormalButton;
+    @FXML private Button difficultyHardButton;
+
 
 
     @Override
@@ -246,9 +252,47 @@ public class MainMenuController implements Initializable {
         settingsPane.setVisible(false);
     }
 
+
+    // Difficulty
     @FXML
     private void handleDifficulty(ActionEvent event) {
         gameData.playAudio(SoundType.BUTTON_CLICK);
+
+        difficultyPane.setVisible(true);
+    }
+
+    @FXML
+    private void handleCloseDifficulty(ActionEvent event) {
+        gameData.playAudio(SoundType.BUTTON_CLICK);
+
+        difficultyPane.setVisible(false);
+    }
+
+    @FXML
+    private void handleDifficultyEasy(ActionEvent event) {
+        gameData.playAudio(SoundType.BUTTON_CLICK);
+
+        difficultyEasyButton.setDisable(true);
+        difficultyNormalButton.setDisable(false);
+        difficultyHardButton.setDisable(false);
+    }
+
+    @FXML
+    private void handleDifficultyNormal(ActionEvent event) {
+        gameData.playAudio(SoundType.BUTTON_CLICK);
+
+        difficultyEasyButton.setDisable(false);
+        difficultyNormalButton.setDisable(true);
+        difficultyHardButton.setDisable(false);
+    }
+    
+    @FXML
+    private void handleDifficultyHard(ActionEvent event) {
+        gameData.playAudio(SoundType.BUTTON_CLICK);
+
+        difficultyEasyButton.setDisable(false);
+        difficultyNormalButton.setDisable(false);
+        difficultyHardButton.setDisable(true);
     }
 
     // Health
