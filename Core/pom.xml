@@ -59,6 +59,7 @@
                     <include>**/*.css</include>
                     <include>**/*.mp4</include>
                     <include>**/*.gif</include>
+                    <include>**/*.ttf</include>
                 </includes>
             </resource>
         </resources>

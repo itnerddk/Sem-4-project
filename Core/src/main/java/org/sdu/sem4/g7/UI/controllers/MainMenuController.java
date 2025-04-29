@@ -8,10 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -19,6 +16,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
@@ -50,41 +49,49 @@ public class MainMenuController implements Initializable {
     @FXML private Parent mainMenuPane;
     private Stage stage;
     private GameData gameData = new GameData();
+    @FXML private Text upgradeTankText;
 
     // Health upgrade UI
     @FXML private ImageView healthIcon;
     @FXML private VBox healthUpgradeBox;
     @FXML private Button healthPriceButton;
-    @FXML private Label healthUpgradeText;
-    @FXML private Circle healthCircle1, healthCircle2, healthCircle3, healthCircle4, healthCircle5;
+    @FXML private Text healthUpgradeText;
+    @FXML private ProgressBar healthProgress;
+    @FXML private Text healthUpgradeLevelText;
 
     // Shield UI
     @FXML private ImageView shieldIcon;
     @FXML private VBox shieldUpgradeBox;
     @FXML private Button shieldPriceButton;
-    @FXML private Label shieldUpgradeText;
-    @FXML private Circle shieldCircle1, shieldCircle2, shieldCircle3, shieldCircle4, shieldCircle5;
+    @FXML private Text shieldUpgradeText;
+    @FXML private ProgressBar shieldProgress;
+    @FXML private Text shieldUpgradeLevelText;
 
     // Speed UI
     @FXML private ImageView speedIcon;
     @FXML private VBox speedUpgradeBox;
     @FXML private Button speedPriceButton;
-    @FXML private Label speedUpgradeText;
-    @FXML private Circle speedCircle1, speedCircle2, speedCircle3, speedCircle4, speedCircle5;
+    @FXML private Text speedUpgradeText;
+    @FXML private ProgressBar speedProgress;
+    @FXML private Text speedUpgradeLevelText;
 
     // Damage UI
     @FXML private ImageView damageIcon;
     @FXML private VBox damageUpgradeBox;
     @FXML private Button damagePriceButton;
-    @FXML private Label damageUpgradeText;
-    @FXML private Circle damageCircle1, damageCircle2, damageCircle3, damageCircle4, damageCircle5;
+    @FXML private Text damageUpgradeText;
+    @FXML private ProgressBar damageProgress;
+    @FXML private Text damageUpgradeLevelText;
+
 
     // Armor UI
     @FXML private ImageView armorIcon;
     @FXML private VBox armorUpgradeBox;
     @FXML private Button armorPriceButton;
-    @FXML private Label armorUpgradeText;
-    @FXML private Circle armorCircle1, armorCircle2, armorCircle3, armorCircle4, armorCircle5;
+    @FXML private Text armorUpgradeText;
+    @FXML private ProgressBar armorProgress;
+    @FXML private Text armorUpgradeLevelText;
+
 
 
     @Override
@@ -100,12 +107,23 @@ public class MainMenuController implements Initializable {
       
         gameData = new GameData();
 
+        Font font = Font.loadFont(getClass().getResourceAsStream("/fonts/LuckiestGuy-Regular.ttf"), 20);
+        System.out.println("Loaded font: " + font.getName());
 
         setupShieldUpgrade();
         setupHealthUpgrade();
         setupSpeedUpgrade();
         setupDamageUpgrade();
         setupArmorUpgrade();
+
+        ServiceLocator.getUpgradeService().ifPresent(service -> {
+            updateHealthProgress(service.getHealthLevel());
+            updateArmorProgress(service.getArmorLevel());
+            updateDamageProgress(service.getDamageLevel());
+            updateSpeedProgress(service.getSpeedLevel());
+            updateShieldProgress(service.getShieldLevel());
+
+        });
 
         setupSettingsPane();
 
@@ -237,7 +255,7 @@ public class MainMenuController implements Initializable {
     private void setupHealthUpgrade() {
         ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
             int level = upgradeService.getHealthLevel();
-            updateHealthCircles(level);
+            updateHealthProgress(level);
 
             if (upgradeService.isHealthMaxed()) {
                 healthPriceButton.setText("MAX");
@@ -247,6 +265,14 @@ public class MainMenuController implements Initializable {
             }
         });
     }
+
+    private void updateHealthProgress(int level) {
+        double progress = Math.min(1.0, level / 5.0);
+        healthProgress.setProgress(progress);
+
+        healthUpgradeLevelText.setText(level + "/5");
+    }
+
 
     @FXML
     private void handleHealthUpgrade() {
@@ -260,7 +286,7 @@ public class MainMenuController implements Initializable {
 
             if (upgradeService.upgradeHealth()) {
                 int newLevel = upgradeService.getHealthLevel();
-                updateHealthCircles(newLevel);
+                updateHealthProgress(newLevel);
 
                 if (upgradeService.isHealthMaxed()) {
                     healthPriceButton.setText("MAX");
@@ -278,19 +304,11 @@ public class MainMenuController implements Initializable {
         });
     }
 
-    private void updateHealthCircles(int level) {
-        Circle[] circles = {healthCircle1, healthCircle2, healthCircle3, healthCircle4, healthCircle5};
-        for (int i = 0; i < circles.length; i++) {
-            circles[i].getStyleClass().removeAll("filled", "empty");
-            circles[i].getStyleClass().add(i < level ? "filled" : "empty");
-        }
-    }
-
     // Shield
     private void setupShieldUpgrade() {
         ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
             int level = upgradeService.getShieldLevel();
-            updateShieldCircles(level);
+            updateShieldProgress(level);
 
             if (upgradeService.isShieldMaxed()) {
                 shieldPriceButton.setText("MAX");
@@ -301,19 +319,26 @@ public class MainMenuController implements Initializable {
         });
     }
 
+    private void updateShieldProgress(int level) {
+        double progress = Math.min(1.0, level / 5.0);
+        shieldProgress.setProgress(progress);
+
+        shieldUpgradeLevelText.setText(level + "/5");
+    }
+
     @FXML
     private void handleShieldUpgrade() {
         gameData.playAudio(SoundType.BUTTON_CLICK);
         ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
             if (upgradeService.isShieldMaxed()) {
                 shieldPriceButton.setText("MAX");
-                shieldCircle1.setDisable(true);
+                shieldPriceButton.setDisable(true);
                 return;
             }
 
             if (upgradeService.upgradeShield()) {
                 int newLevel = upgradeService.getShieldLevel();
-                updateShieldCircles(newLevel);
+                updateShieldProgress(newLevel);
 
                 if (upgradeService.isShieldMaxed()) {
                     shieldPriceButton.setText("MAX");
@@ -331,27 +356,18 @@ public class MainMenuController implements Initializable {
         });
     }
 
-    private void updateShieldCircles(int level) {
-        Circle[] circles = {shieldCircle1, shieldCircle2, shieldCircle3, shieldCircle4, shieldCircle5};
-        for (int i = 0; i < circles.length; i++) {
-            circles[i].getStyleClass().removeAll("filled", "empty");
-            circles[i].getStyleClass().add(i < level ? "filled" : "empty");
-        }
-    }
-
-
     // Speed
     public void handleSpeedUpgrade(ActionEvent actionEvent) {
         ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
             if (upgradeService.isSpeedMaxed()) {
                 speedPriceButton.setText("MAX");
-                speedCircle1.setDisable(true);
+                speedPriceButton.setDisable(true);
                 return;
             }
 
             if (upgradeService.upgradeSpeed()) {
                 int newLevel = upgradeService.getSpeedLevel();
-                updateSpeedCircles(newLevel);
+                updateSpeedProgress(newLevel);
 
                 if (upgradeService.isSpeedMaxed()) {
                     speedPriceButton.setText("MAX");
@@ -372,7 +388,7 @@ public class MainMenuController implements Initializable {
     private void setupSpeedUpgrade() {
         ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
             int level = upgradeService.getSpeedLevel();
-            updateSpeedCircles(level);
+            updateSpeedProgress(level);
 
             if (upgradeService.isSpeedMaxed()) {
                 speedPriceButton.setText("MAX");
@@ -383,12 +399,11 @@ public class MainMenuController implements Initializable {
         });
     }
 
-    private void updateSpeedCircles(int level) {
-        Circle[] circles = {speedCircle1, speedCircle2, speedCircle3, speedCircle4, speedCircle5};
-        for (int i = 0; i < circles.length; i++) {
-            circles[i].getStyleClass().removeAll("filled", "empty");
-            circles[i].getStyleClass().add(i < level ? "filled" : "empty");
-        }
+    private void updateSpeedProgress(int level) {
+        double progress = Math.min(1.0, level / 5.0);
+        speedProgress.setProgress(progress);
+
+        speedUpgradeLevelText.setText(level + "/5");
     }
 
 
@@ -513,13 +528,13 @@ public class MainMenuController implements Initializable {
             gameData.playAudio(SoundType.BUTTON_CLICK);
             if (upgradeService.isDamageMaxed()) {
                 damagePriceButton.setText("MAX");
-                damageCircle1.setDisable(true);
+                damagePriceButton.setDisable(true);
                 return;
             }
 
             if (upgradeService.upgradeDamage()) {
                 int newLevel = upgradeService.getDamageLevel();
-                updateDamageCircles(newLevel);
+                updateDamageProgress(newLevel);
 
                 if (upgradeService.isDamageMaxed()) {
                     damagePriceButton.setText("MAX");
@@ -537,10 +552,17 @@ public class MainMenuController implements Initializable {
         });
     }
 
+    private void updateDamageProgress(int level) {
+        double progress = Math.min(1.0, level / 5.0);
+        damageProgress.setProgress(progress);
+
+        damageUpgradeLevelText.setText(level + "/5");
+    }
+
     private void setupDamageUpgrade() {
         ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
             int level = upgradeService.getDamageLevel();
-            updateDamageCircles(level);
+            updateDamageProgress(level);
 
             if (upgradeService.isDamageMaxed()) {
                 damagePriceButton.setText("MAX");
@@ -551,27 +573,19 @@ public class MainMenuController implements Initializable {
         });
     }
 
-    private void updateDamageCircles(int level) {
-        Circle[] circles = {damageCircle1, damageCircle2, damageCircle3, damageCircle4, damageCircle5};
-        for (int i = 0; i < circles.length; i++) {
-            circles[i].getStyleClass().removeAll("filled", "empty");
-            circles[i].getStyleClass().add(i < level ? "filled" : "empty");
-        }
-    }
-
     // Armor
     public void handleArmorUpgrade(ActionEvent actionEvent) {
         ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
             gameData.playAudio(SoundType.BUTTON_CLICK);
             if (upgradeService.isArmorMaxed()) {
                 armorPriceButton.setText("MAX");
-                armorCircle1.setDisable(true);
+                armorPriceButton.setDisable(true);
                 return;
             }
 
             if (upgradeService.upgradeArmor()) {
                 int newLevel = upgradeService.getArmorLevel();
-                updateArmorCircles(newLevel);
+                updateArmorProgress(newLevel);
 
                 if (upgradeService.isArmorMaxed()) {
                     armorPriceButton.setText("MAX");
@@ -589,10 +603,17 @@ public class MainMenuController implements Initializable {
         });
     }
 
+    private void updateArmorProgress(int level) {
+        double progress = Math.min(1.0, level / 5.0);
+        armorProgress.setProgress(progress);
+
+        armorUpgradeLevelText.setText(level + "/5");
+    }
+
     private void setupArmorUpgrade() {
         ServiceLocator.getUpgradeService().ifPresent(upgradeService -> {
             int level = upgradeService.getArmorLevel();
-            updateArmorCircles(level);
+            updateArmorProgress(level);
 
             if (upgradeService.isArmorMaxed()) {
                 armorPriceButton.setText("MAX");
@@ -601,14 +622,6 @@ public class MainMenuController implements Initializable {
                 armorPriceButton.setText(upgradeService.getArmorUpgradePrice() + "$");
             }
         });
-    }
-
-    private void updateArmorCircles(int level) {
-        Circle[] circles = {armorCircle1, armorCircle2, armorCircle3, armorCircle4, armorCircle5};
-        for (int i = 0; i < circles.length; i++) {
-            circles[i].getStyleClass().removeAll("filled", "empty");
-            circles[i].getStyleClass().add(i < level ? "filled" : "empty");
-        }
     }
 
 }

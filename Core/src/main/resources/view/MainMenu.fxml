@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.URL?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="800" prefWidth="800" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.sdu.sem4.g7.UI.controllers.MainMenuController">
 
@@ -28,82 +30,119 @@
     </HBox>
 
     <!-- HBox for Tabs -->
-    <HBox alignment="CENTER" layoutY="170.0" prefWidth="800" spacing="0">
+    <HBox alignment="CENTER" layoutY="170.0" prefWidth="800">
         <Button fx:id="upgradeTabBtn" onAction="#showUpgrades" styleClass="tab-button" text="Upgrades" />
         <Button fx:id="shopTabBtn" onAction="#showShop" prefWidth="400.0" styleClass="tab-button" text="Shop" />
     </HBox>
 
     <!-- Content panes -->
     <AnchorPane fx:id="upgradePane" layoutX="50.0" layoutY="220.0" prefHeight="450.0" prefWidth="700.0">
-      <Label id="upgradeTankLabel" fx:id="healthUpgradeText1" alignment="CENTER" layoutX="161.0" layoutY="77.0" style="-fx-alignment: center;" stylesheets="@IntroStyle.css" text="UPGRADE TANK!" textAlignment="CENTER" textFill="WHITE">
-         <font>
-            <Font name="Arial Bold" size="45.0" />
-         </font>
-      </Label>
+        <Text fx:id="upgradeTankText" styleClass="upgradeTankText" text="UPGRADE TANK!" textAlignment="CENTER" />
 
-              <VBox fx:id="healthUpgradeBox" alignment="CENTER" layoutX="12.5" layoutY="160.0" prefHeight="200" prefWidth="125.0" spacing="15.0" styleClass="upgrade-box">
-            <ImageView fx:id="healthIcon" fitHeight="48" fitWidth="48" preserveRatio="true" />
-            <Label fx:id="healthUpgradeText" styleClass="upgrade-label" text="Health" />
-            <HBox alignment="CENTER" spacing="4.0">
-                <Circle fx:id="healthCircle1" radius="6.0" />
-                <Circle fx:id="healthCircle2" radius="6.0" />
-                <Circle fx:id="healthCircle3" radius="6.0" />
-                <Circle fx:id="healthCircle4" radius="6.0" />
-                <Circle fx:id="healthCircle5" radius="6.0" />
-            </HBox>
-            <Button fx:id="healthPriceButton" focusTraversable="false" onAction="#handleHealthUpgrade" styleClass="price-button" text="2000$" />
+        <!-- Health -->
+        <VBox fx:id="healthUpgradeBox" alignment="TOP_CENTER" layoutX="12.5" layoutY="160.0" pickOnBounds="false" prefHeight="200" prefWidth="125.0" styleClass="upgrade-box">
+            <ImageView fx:id="healthIcon" fitHeight="48" fitWidth="48.0" layoutX="45.0" preserveRatio="true" VBox.vgrow="NEVER" />
+            <Text fx:id="healthUpgradeText" styleClass="upgrade-text, health-upgrade-text" text="Health" VBox.vgrow="NEVER">
+                <VBox.margin>
+                 <Insets bottom="4.0" top="25.0" />
+                </VBox.margin>
+            </Text>
+
+            <StackPane maxHeight="35.0" prefHeight="35.0" prefWidth="90.0">
+                <ProgressBar fx:id="healthProgress" maxHeight="35.0" minHeight="-Infinity" prefHeight="32.0" prefWidth="90.0" styleClass="upgrade-bar" />
+                <Text fx:id="healthUpgradeLevelText" styleClass="progress-text" text="1/5" />
+            </StackPane>
+
+
+            <Button fx:id="healthPriceButton" focusTraversable="false" onAction="#handleHealthUpgrade" styleClass="price-button" text="2000$">
+                <VBox.margin>
+                    <Insets top="15.0" />
+                </VBox.margin>
+            </Button>
         </VBox>
 
-              <VBox fx:id="shieldUpgradeBox" alignment="CENTER" layoutX="150.0" layoutY="160.0" prefHeight="200" prefWidth="125.0" spacing="15.0" styleClass="upgrade-box">
-            <ImageView fx:id="shieldIcon" fitHeight="48" fitWidth="48" preserveRatio="true" />
-            <Label fx:id="shieldUpgradeText" styleClass="upgrade-label" text="Shield" />
-            <HBox alignment="CENTER" spacing="8">
-                <Circle fx:id="shieldCircle1" radius="6" />
-                <Circle fx:id="shieldCircle2" radius="6" />
-                <Circle fx:id="shieldCircle3" radius="6" />
-                <Circle fx:id="shieldCircle4" radius="6" />
-                <Circle fx:id="shieldCircle5" radius="6" />
-            </HBox>
-            <Button fx:id="shieldPriceButton" focusTraversable="false" onAction="#handleShieldUpgrade" styleClass="price-button" text="2000$" />
+        <!-- Shield -->
+        <VBox fx:id="shieldUpgradeBox" alignment="TOP_CENTER" layoutX="150.0" layoutY="160.0" pickOnBounds="false" prefHeight="200" prefWidth="125.0" styleClass="upgrade-box">
+            <ImageView fx:id="shieldIcon" fitHeight="48" fitWidth="48" preserveRatio="true" VBox.vgrow="NEVER" />
+            <Text fx:id="shieldUpgradeText" styleClass="upgrade-text, shield-upgrade-text" text="Shield" VBox.vgrow="NEVER">
+                <VBox.margin>
+                    <Insets bottom="4.0" top="25.0" />
+                </VBox.margin>
+            </Text>
+
+            <StackPane maxHeight="35.0" prefHeight="35.0" prefWidth="90.0">
+                <ProgressBar fx:id="shieldProgress" minHeight="-Infinity" prefHeight="32.0" prefWidth="90.0" styleClass="upgrade-bar" />
+                <Text fx:id="shieldUpgradeLevelText" styleClass="progress-text" text="1/5" />
+            </StackPane>
+
+
+            <Button fx:id="shieldPriceButton" focusTraversable="false" onAction="#handleShieldUpgrade" styleClass="price-button" text="2000$">
+                <VBox.margin>
+                    <Insets top="15.0" />
+                </VBox.margin>
+            </Button>
         </VBox>
 
-              <VBox fx:id="speedUpgradeBox" alignment="CENTER" layoutX="287.5" layoutY="160.0" prefHeight="200" prefWidth="125.0" spacing="15.0" styleClass="upgrade-box">
-            <ImageView fx:id="speedIcon" fitHeight="48" fitWidth="48" preserveRatio="true" />
-            <Label fx:id="speedUpgradeText" styleClass="upgrade-label" text="Speed" />
-            <HBox alignment="CENTER" spacing="8">
-                <Circle fx:id="speedCircle1" radius="6" />
-                <Circle fx:id="speedCircle2" radius="6" />
-                <Circle fx:id="speedCircle3" radius="6" />
-                <Circle fx:id="speedCircle4" radius="6" />
-                <Circle fx:id="speedCircle5" radius="6" />
-            </HBox>
-            <Button fx:id="speedPriceButton" focusTraversable="false" onAction="#handleSpeedUpgrade" styleClass="price-button" text="2000$" />
+        <!-- Speed -->
+        <VBox fx:id="speedUpgradeBox" alignment="TOP_CENTER" layoutX="287.5" layoutY="160.0" pickOnBounds="false" prefHeight="200" prefWidth="125.0" styleClass="upgrade-box">
+            <ImageView fx:id="speedIcon" fitHeight="48" fitWidth="48" preserveRatio="true" VBox.vgrow="NEVER" />
+            <Text fx:id="speedUpgradeText" styleClass="upgrade-text, speed-upgrade-text" text="Shield" VBox.vgrow="NEVER">
+                    <VBox.margin>
+                        <Insets bottom="4.0" top="25.0" />
+                    </VBox.margin>
+            </Text>
+
+            <StackPane maxHeight="35.0" prefHeight="35.0" prefWidth="90.0">
+                <ProgressBar fx:id="speedProgress" minHeight="-Infinity" prefHeight="32.0" prefWidth="90.0" styleClass="upgrade-bar" />
+                <Text fx:id="speedUpgradeLevelText" styleClass="progress-text" text="1/5" />
+            </StackPane>
+
+            <Button fx:id="speedPriceButton" focusTraversable="false" onAction="#handleSpeedUpgrade" styleClass="price-button" text="2000$">
+                    <VBox.margin>
+                        <Insets top="15.0" />
+                    </VBox.margin>
+            </Button>
         </VBox>
 
-              <VBox fx:id="damageUpgradeBox" alignment="CENTER" layoutX="425.0" layoutY="160.0" prefHeight="200" prefWidth="125.0" spacing="15.0" styleClass="upgrade-box">
-            <ImageView fx:id="damageIcon" fitHeight="48" fitWidth="48" preserveRatio="true" />
-            <Label fx:id="damageUpgradeText" styleClass="upgrade-label" text="Damage" />
-            <HBox alignment="CENTER" spacing="8">
-                <Circle fx:id="damageCircle1" radius="6" />
-                <Circle fx:id="damageCircle2" radius="6" />
-                <Circle fx:id="damageCircle3" radius="6" />
-                <Circle fx:id="damageCircle4" radius="6" />
-                <Circle fx:id="damageCircle5" radius="6" />
-            </HBox>
-            <Button fx:id="damagePriceButton" focusTraversable="false" onAction="#handleDamageUpgrade" styleClass="price-button" text="2000$" />
+        <!-- Damage -->
+        <VBox fx:id="damageUpgradeBox" alignment="TOP_CENTER" layoutX="425.0" layoutY="160.0" pickOnBounds="false" prefHeight="200" prefWidth="125.0" styleClass="upgrade-box">
+            <ImageView fx:id="damageIcon" fitHeight="48" fitWidth="48" preserveRatio="true" VBox.vgrow="NEVER" />
+            <Text fx:id="damageUpgradeText" styleClass="upgrade-text, damage-upgrade-text" text="Damage" VBox.vgrow="NEVER">
+                    <VBox.margin>
+                        <Insets bottom="4.0" top="25.0" />
+                    </VBox.margin>
+            </Text>
+
+            <StackPane maxHeight="35.0" prefHeight="35.0" prefWidth="90.0">
+                <ProgressBar fx:id="damageProgress" minHeight="-Infinity" prefHeight="32.0" prefWidth="90.0" styleClass="upgrade-bar" />
+                <Text fx:id="damageUpgradeLevelText" styleClass="progress-text" text="1/5" />
+            </StackPane>
+
+            <Button fx:id="damagePriceButton" focusTraversable="false" onAction="#handleDamageUpgrade" styleClass="price-button" text="2000$">
+                    <VBox.margin>
+                        <Insets top="15.0" />
+                    </VBox.margin>
+            </Button>
         </VBox>
 
-              <VBox fx:id="armorUpgradeBox" alignment="CENTER" layoutX="562.0" layoutY="160.0" prefHeight="200" prefWidth="125.0" spacing="15.0" styleClass="upgrade-box">
-            <ImageView fx:id="armorIcon" fitHeight="48" fitWidth="48" preserveRatio="true" />
-            <Label fx:id="armorUpgradeText" styleClass="upgrade-label" text="Armor" />
-            <HBox alignment="CENTER" spacing="8">
-                <Circle fx:id="armorCircle1" radius="6" />
-                <Circle fx:id="armorCircle2" radius="6" />
-                <Circle fx:id="armorCircle3" radius="6" />
-                <Circle fx:id="armorCircle4" radius="6" />
-                <Circle fx:id="armorCircle5" radius="6" />
-            </HBox>
-            <Button fx:id="armorPriceButton" focusTraversable="false" onAction="#handleArmorUpgrade" styleClass="price-button" text="2000$" />
+        <!-- Armor -->
+        <VBox fx:id="armorUpgradeBox" alignment="TOP_CENTER" layoutX="562.0" layoutY="160.0" pickOnBounds="false" prefHeight="200" prefWidth="125.0" styleClass="upgrade-box">
+            <ImageView fx:id="armorIcon" fitHeight="48" fitWidth="48" preserveRatio="true" VBox.vgrow="NEVER" />
+            <Text fx:id="armorUpgradeText" styleClass="upgrade-text, armor-upgrade-text" text="Armor" VBox.vgrow="NEVER">
+                    <VBox.margin>
+                        <Insets bottom="4.0" top="25.0" />
+                    </VBox.margin>
+            </Text>
+
+            <StackPane maxHeight="35.0" prefHeight="35.0" prefWidth="90.0">
+                <ProgressBar fx:id="armorProgress" minHeight="-Infinity" prefHeight="32.0" prefWidth="90.0" styleClass="upgrade-bar" />
+                <Text fx:id="armorUpgradeLevelText" styleClass="progress-text" text="1/5" />
+            </StackPane>
+            <Button fx:id="armorPriceButton" focusTraversable="false" onAction="#handleArmorUpgrade" styleClass="price-button" text="2000$">
+                    <VBox.margin>
+                        <Insets top="15.0" />
+                    </VBox.margin>
+            </Button>
         </VBox>
     </AnchorPane>
 

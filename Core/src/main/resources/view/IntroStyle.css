@@ -1,4 +1,3 @@
-/* === Custom Button Styling === */
 .button-custom {
     -fx-font-family: "Comic Sans MS", "Arial Black", sans-serif;
     -fx-font-size: 26px;
@@ -25,7 +24,6 @@
     -fx-translate-y: 2;
 }
 
-/* === Simulated Tab Styling Using Buttons === */
 .tab-button {
     -fx-pref-width: 350;
     -fx-pref-height: 50;
@@ -57,7 +55,6 @@
     -fx-border-color: #2e3a15;
 }
 
-/* === Optional cleanup for unwanted elements === */
 .tab-header-background,
 .tab-header-area,
 .tab,
@@ -70,7 +67,7 @@
 }
 
 #upgradePane, #shopPane {
-    -fx-background-color: #556B2F; /* military green */
+    -fx-background-color: linear-gradient(to bottom, #3a5320, #2d3f18);
     -fx-border-color: #2e3a15;
     -fx-border-width: 3;
     -fx-background-radius: 0 0 5 5;
@@ -82,8 +79,8 @@
     -fx-background-color: #3e4e1c;
     -fx-border-color: #2e3a15;
     -fx-border-width: 2;
-    -fx-border-radius: 40; /* mere rund */
-    -fx-background-radius: 40; /* mere rund */
+    -fx-border-radius: 40;
+    -fx-background-radius: 40;
     -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 4, 0, 0, 2);
 }
 
@@ -103,7 +100,7 @@
 
 /* Upgrade Boxes */
 .upgrade-box {
-    -fx-background-color: linear-gradient(to bottom, #3a5320, #2d3f18);
+    -fx-background-color: #556B2F;
     -fx-padding: 15px;
     -fx-background-radius: 15;
     -fx-border-radius: 15;
@@ -111,16 +108,6 @@
     -fx-border-width: 1.5;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 6, 0.3, 1, 1);
 }
-
-
-.upgrade-label {
-    -fx-font-family: "Arial", sans-serif;
-    -fx-font-weight: bold;
-    -fx-text-fill: white;
-    -fx-font-size: 20px;
-    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.6), 2, 0, 0, 1);
-}
-
 
 Circle.filled {
     -fx-fill: #FFD700;
@@ -138,7 +125,6 @@ Circle.empty {
     -fx-text-fill: #FFD700;
     -fx-background-color: linear-gradient(to bottom, #2E7D32, #1B5E20);
     -fx-background-radius: 10;
-    -fx-border-color: #0f3d11;
     -fx-border-width: 2;
     -fx-border-radius: 10;
     -fx-padding: 8 16;
@@ -154,4 +140,83 @@ Circle.empty {
 .price-button:pressed {
     -fx-background-color: linear-gradient(to bottom, #1B5E20, #2E7D32);
     -fx-translate-y: 1;
+}
+
+
+/* Upgrade Bar */
+.level-text {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.7), 2, 0, 0, 1);
+}
+
+
+.upgrade-bar {
+    -fx-background-color: transparent;
+    -fx-border-color: Black;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 0;
+}
+
+.upgrade-bar .track {
+    -fx-background-color: #4d4d4d;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.upgrade-bar .bar {
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%,
+    #d44c4c 49%,
+    #d43838 50%);
+    -fx-background-insets: 0;
+    -fx-background-radius: 6;
+}
+
+.upgradeTankText {
+    -fx-font-family: "Luckiest Guy";
+    -fx-font-size: 45;
+    -fx-font-weight: bold;
+    -fx-fill: white;
+    -fx-effect: dropshadow(gaussian, black, 4, 0.4, 0, 2);
+}
+
+
+/* Upgrade texts */
+.upgrade-text {
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+    -fx-font-family: "Luckiest Guy";
+    -fx-effect: dropshadow(gaussian, black, 5, 0.2, 0, 0);
+}
+
+.health-upgrade-text {
+    -fx-fill: #ff4c4c;
+}
+
+.armor-upgrade-text {
+    -fx-fill: #3751b2;
+}
+
+.shield-upgrade-text {
+    -fx-fill: #964b00;
+}
+
+.speed-upgrade-text {
+    -fx-fill: #ffe900;
+
+}
+
+.damage-upgrade-text {
+    -fx-fill: #25a12b;
+}
+
+/* Progress Bar x/x text */
+.progress-text {
+    -fx-font-size: 17px;
+    -fx-fill: white;
+    -fx-font-weight: bold;
 }
