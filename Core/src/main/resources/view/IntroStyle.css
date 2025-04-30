@@ -184,6 +184,14 @@ Circle.empty {
     -fx-effect: dropshadow(gaussian, black, 4, 0.4, 0, 2);
 }
 
+.upgrade-taps-pane {
+    -fx-background-color: #3E4E1C;
+    -fx-border-color: #2e3a15;
+    -fx-border-width: 3;
+    -fx-background-radius: 0 0 5 5;
+    -fx-border-radius: 0 0 5 5;
+}
+
 
 /* Upgrade texts */
 .upgrade-text {

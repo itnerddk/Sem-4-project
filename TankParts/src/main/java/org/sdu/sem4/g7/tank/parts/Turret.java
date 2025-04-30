@@ -4,8 +4,9 @@ import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.data.Vector2;
+import org.sdu.sem4.g7.common.services.IWeaponInstance;
 
-public abstract class Turret extends Entity {
+public abstract class Turret extends Entity implements IWeaponInstance {
     private Tank tank;
     private Bullet bullet;
     private Vector2 offset;
@@ -66,4 +67,6 @@ public abstract class Turret extends Entity {
     }
 
     abstract public boolean shoot(GameData gameData, WorldData world);
+
+    public abstract String getWeaponId();
 }

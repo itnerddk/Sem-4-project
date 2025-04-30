@@ -75,6 +75,11 @@ public class MachineGunTurret extends Turret {
         return true;
     }
 
+    @Override
+    public String getWeaponId() {
+        return "machine_gun";
+    }
+
     // Self functions
     public static URI getShootSoundFile() {
         return shootSoundFile;

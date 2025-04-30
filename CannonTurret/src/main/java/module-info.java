@@ -11,4 +11,8 @@ module CannonTurret {
     // provides IEntityProcessingService with CannonTurretProcessor;
     // provides IPreGamePluginService with CannonTurretPlugin;
     provides Turret with CannonTurret;
+
+
+    provides org.sdu.sem4.g7.common.services.IWeaponShopInfo
+            with org.sdu.sem4.g7.cannonTurret.CannonTurretShopInfo;
 }

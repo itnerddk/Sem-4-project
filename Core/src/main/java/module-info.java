@@ -23,6 +23,7 @@ module Core {
     uses org.sdu.sem4.g7.common.services.ISettingPluginService;
     uses org.sdu.sem4.g7.common.services.IInventoryService;
     uses org.sdu.sem4.g7.common.services.ITurretProviderService;
+    uses org.sdu.sem4.g7.common.services.IWeaponShopInfo;
 
     // Exports
     exports org.sdu.sem4.g7.main;

@@ -13,6 +13,8 @@ public class ServiceLocator {
     private static IUpgradeStatsService upgradeStatsService;
     private static IAudioProcessingService audioProcessingService;
     private static IDifficultyService difficultyService;
+    private static IBoughtWeaponsService boughtWeaponsService;
+
 
     public static void loadServices() {
         ServiceLoader<ICurrencyService> currencyLoader = ServiceLoader.load(ICurrencyService.class);
@@ -38,6 +40,10 @@ public class ServiceLocator {
 
         ServiceLoader<IDifficultyService> difficultyLoader = ServiceLoader.load(IDifficultyService.class);
         difficultyService = difficultyLoader.findFirst().orElse(null);
+
+        ServiceLoader<IBoughtWeaponsService> boughtWeaponsLoader = ServiceLoader.load(IBoughtWeaponsService.class);
+        boughtWeaponsService = boughtWeaponsLoader.findFirst().orElse(null);
+
     }
 
     public static Optional<ICurrencyService> getCurrencyService() {
@@ -50,6 +56,10 @@ public class ServiceLocator {
 
     public static Optional<IUpgradeService> getUpgradeService() {
         return Optional.ofNullable(upgradeService);
+    }
+
+    public static Optional<IBoughtWeaponsService> getBoughtWeaponsService() {
+        return Optional.ofNullable(boughtWeaponsService);
     }
 
     public static Optional<IMissionLoaderService> getMissionLoaderService() {

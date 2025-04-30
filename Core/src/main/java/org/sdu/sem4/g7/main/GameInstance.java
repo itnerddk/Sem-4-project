@@ -19,6 +19,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.sdu.sem4.g7.UI.controllers.GameResultController;
 import org.sdu.sem4.g7.UI.controllers.PauseMenuController;
+import org.sdu.sem4.g7.UI.controllers.WeaponSelectorController;
 import org.sdu.sem4.g7.common.data.*;
 import org.sdu.sem4.g7.common.data.GameData.Keys;
 import org.sdu.sem4.g7.common.enums.EntityType;
@@ -49,8 +50,9 @@ public class GameInstance {
     private static final Text debugText = new Text(10, 20, "");
     private boolean paused = false;
     private Parent pauseMenu;
-    
-    
+
+    private WeaponSelectorController weaponSelectorController;
+
     private final Collection<IGamePluginService> pluginServices;
 
     public GameInstance(GameData gameData, WorldData worldData, int missionId) {
@@ -108,6 +110,15 @@ public class GameInstance {
                     // gameData.addDebug("Entity Count", String.valueOf(worldData.getEntities().size()));
                     // gameData.addDebug("Delta", String.valueOf((Math.round(gameData.getDelta() * 10000) / 10.0)));
                     lastTick = now;
+
+                    if (weaponSelectorController != null) {
+                        weaponSelectorController.init();
+                    }
+
+                    if (gameData.isPressed(GameData.Keys.TAB)) {
+                        weaponSelectorController.init();
+                    }
+
                     draw();
 
                     try {
@@ -185,8 +196,24 @@ public class GameInstance {
                 }
             }
         };
+        loadWeaponSelectorUI();
         animationTimer.start();
     }
+
+    private void loadWeaponSelectorUI() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/WeaponSelector.fxml"));
+            Parent selectorUI = loader.load();
+            weaponSelectorController = loader.getController();
+            weaponSelectorController.init(); // Første init
+            rootPane.getChildren().add(selectorUI);
+
+        } catch (IOException e) {
+            System.err.println("Failed to load WeaponSelector.fxml");
+            e.printStackTrace();
+        }
+    }
+
 
     private void showResultOverlay(boolean isWin, int score, int target, int coins) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/GameResult.fxml"));
@@ -376,4 +403,15 @@ public class GameInstance {
     private Collection<? extends IPostEntityProcessingService> getPostEntityProcessingServices() {
         return ServiceLoader.load(IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
+
+    private boolean isWeaponAvailable(String weaponId) {
+        Optional<IBoughtWeaponsService> ownershipServiceOpt =
+                ServiceLocator.getBoughtWeaponsService();
+
+        return ownershipServiceOpt
+                .map(service -> service.isWeaponBought(weaponId))
+                .orElse(true);
+    }
+
+
 }

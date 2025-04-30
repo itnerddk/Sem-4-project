@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 
 public class MainMenuController implements Initializable {
 
+    @FXML private AnchorPane UpgradeTapsPane;
     @FXML private Button upgradeTabBtn, shopTabBtn;
     @FXML private ImageView coinIcon, levelIcon;
     @FXML private Label coinDisplay, levelDisplay;

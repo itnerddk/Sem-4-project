@@ -27,6 +27,7 @@
         <module>MachineGunTurret</module>
         <module>Inventory</module>
         <module>Difficulty</module>
+        <module>Shop</module>
     </modules>
 
     <properties>

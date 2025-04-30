@@ -9,4 +9,8 @@ module MachineGunTurret {
 
     provides IEntityProcessingService with MachineGunProcceser;
     provides Turret with MachineGunTurret;
+
+
+    provides org.sdu.sem4.g7.common.services.IWeaponShopInfo
+            with org.sdu.sem4.g7.machineGunTurret.MachineGunShopInfo;
 }

@@ -36,12 +36,13 @@
         <Button fx:id="shopTabBtn" onAction="#showShop" prefWidth="400.0" styleClass="tab-button" text="Shop" />
     </HBox>
 
+    <AnchorPane fx:id="upgradePane" layoutX="50.0" layoutY="220.0" prefHeight="450.0" prefWidth="700.0" />
+
     <!-- Content panes -->
-    <AnchorPane fx:id="upgradePane" layoutX="50.0" layoutY="220.0" prefHeight="450.0" prefWidth="700.0">
-        <Text fx:id="upgradeTankText" styleClass="upgradeTankText" text="UPGRADE TANK!" textAlignment="CENTER" />
+    <AnchorPane fx:id="UpgradeTapsPane" layoutX="55.0" layoutY="319.0" prefHeight="260.0" prefWidth="690.0" styleClass="upgrade-taps-pane">
 
         <!-- Health -->
-        <VBox fx:id="healthUpgradeBox" alignment="TOP_CENTER" layoutX="12.5" layoutY="160.0" pickOnBounds="false" prefHeight="200" prefWidth="125.0" styleClass="upgrade-box">
+        <VBox fx:id="healthUpgradeBox" alignment="TOP_CENTER" layoutX="7.5" layoutY="20.0" pickOnBounds="false" prefHeight="200" prefWidth="125.0" styleClass="upgrade-box">
             <ImageView fx:id="healthIcon" fitHeight="48" fitWidth="48.0" layoutX="45.0" preserveRatio="true" VBox.vgrow="NEVER" />
             <Text fx:id="healthUpgradeText" styleClass="upgrade-text, health-upgrade-text" text="Health" VBox.vgrow="NEVER">
                 <VBox.margin>
@@ -63,7 +64,7 @@
         </VBox>
 
         <!-- Shield -->
-        <VBox fx:id="shieldUpgradeBox" alignment="TOP_CENTER" layoutX="150.0" layoutY="160.0" pickOnBounds="false" prefHeight="200" prefWidth="125.0" styleClass="upgrade-box">
+        <VBox fx:id="shieldUpgradeBox" alignment="TOP_CENTER" layoutX="145.0" layoutY="20.0" pickOnBounds="false" prefHeight="200" prefWidth="125.0" styleClass="upgrade-box">
             <ImageView fx:id="shieldIcon" fitHeight="48" fitWidth="48" preserveRatio="true" VBox.vgrow="NEVER" />
             <Text fx:id="shieldUpgradeText" styleClass="upgrade-text, shield-upgrade-text" text="Shield" VBox.vgrow="NEVER">
                 <VBox.margin>
@@ -85,7 +86,7 @@
         </VBox>
 
         <!-- Speed -->
-        <VBox fx:id="speedUpgradeBox" alignment="TOP_CENTER" layoutX="287.5" layoutY="160.0" pickOnBounds="false" prefHeight="200" prefWidth="125.0" styleClass="upgrade-box">
+        <VBox fx:id="speedUpgradeBox" alignment="TOP_CENTER" layoutX="282.5" layoutY="20.0" pickOnBounds="false" prefHeight="200" prefWidth="125.0" styleClass="upgrade-box">
             <ImageView fx:id="speedIcon" fitHeight="48" fitWidth="48" preserveRatio="true" VBox.vgrow="NEVER" />
             <Text fx:id="speedUpgradeText" styleClass="upgrade-text, speed-upgrade-text" text="Shield" VBox.vgrow="NEVER">
                     <VBox.margin>
@@ -106,7 +107,7 @@
         </VBox>
 
         <!-- Damage -->
-        <VBox fx:id="damageUpgradeBox" alignment="TOP_CENTER" layoutX="425.0" layoutY="160.0" pickOnBounds="false" prefHeight="200" prefWidth="125.0" styleClass="upgrade-box">
+        <VBox fx:id="damageUpgradeBox" alignment="TOP_CENTER" layoutX="420.0" layoutY="20.0" pickOnBounds="false" prefHeight="200" prefWidth="125.0" styleClass="upgrade-box">
             <ImageView fx:id="damageIcon" fitHeight="48" fitWidth="48" preserveRatio="true" VBox.vgrow="NEVER" />
             <Text fx:id="damageUpgradeText" styleClass="upgrade-text, damage-upgrade-text" text="Damage" VBox.vgrow="NEVER">
                     <VBox.margin>
@@ -127,7 +128,7 @@
         </VBox>
 
         <!-- Armor -->
-        <VBox fx:id="armorUpgradeBox" alignment="TOP_CENTER" layoutX="562.0" layoutY="160.0" pickOnBounds="false" prefHeight="200" prefWidth="125.0" styleClass="upgrade-box">
+        <VBox fx:id="armorUpgradeBox" alignment="TOP_CENTER" layoutX="557.0" layoutY="20.0" pickOnBounds="false" prefHeight="200" prefWidth="125.0" styleClass="upgrade-box">
             <ImageView fx:id="armorIcon" fitHeight="48" fitWidth="48" preserveRatio="true" VBox.vgrow="NEVER" />
             <Text fx:id="armorUpgradeText" styleClass="upgrade-text, armor-upgrade-text" text="Armor" VBox.vgrow="NEVER">
                     <VBox.margin>
@@ -164,7 +165,10 @@
         </VBox>
         <Button layoutX="315" layoutY="10" onAction="#handleCloseSettings" prefHeight="25" prefWidth="25" style="-fx-background-color: red; -fx-text-fill: white; -fx-background-radius: 100%; -fx-font-weight: bold; -fx-cursor: hand;" text="X" />
     </AnchorPane>
-   <AnchorPane fx:id="difficultyPane" layoutX="235.0" layoutY="160.0" prefHeight="500" prefWidth="350" styleClass="generic-pane" visible="false">
+     <Text fx:id="upgradeTankText" layoutX="236.0" layoutY="297.0" styleClass="upgradeTankText" text="UPGRADE TANK!" textAlignment="CENTER" />
+
+    <!-- Difficulty Pane -->
+    <AnchorPane fx:id="difficultyPane" layoutX="235.0" layoutY="160.0" prefHeight="500" prefWidth="350" styleClass="generic-pane" visible="false">
       <children>
          <VBox fx:id="settingsVbox1" alignment="TOP_CENTER" layoutX="20" layoutY="20" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>

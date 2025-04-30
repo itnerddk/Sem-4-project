@@ -14,4 +14,5 @@ module Common {
     uses org.sdu.sem4.g7.common.services.IUpgradeStatsService;
     uses org.sdu.sem4.g7.common.services.IAudioProcessingService;
     uses org.sdu.sem4.g7.common.services.IDifficultyService;
+    uses org.sdu.sem4.g7.common.services.IBoughtWeaponsService;
 }

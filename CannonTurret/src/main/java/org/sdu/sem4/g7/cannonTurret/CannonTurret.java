@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import javafx.scene.image.Image;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.enums.SoundType;
@@ -72,6 +73,11 @@ public class CannonTurret extends Turret {
 
         mission.addEntity(bullet);
         return true;
+    }
+
+    @Override
+    public String getWeaponId() {
+        return "cannon_turret";
     }
 
     // Self functions
