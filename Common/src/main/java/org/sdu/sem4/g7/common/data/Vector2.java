@@ -127,6 +127,14 @@ public class Vector2 {
         return this;
     }
 
+    public Vector2 divideInt(double scalar) {
+        this.divide(scalar);
+        Vector2 newThis = Vector2.round(this);
+        this.x = newThis.getX();
+        this.y = newThis.getY();
+        return this;
+    }
+
     public Vector2 normalize() {
         double length = Math.sqrt(x * x + y * y);
         if (length != 0) {
@@ -183,6 +191,14 @@ public class Vector2 {
         this.x = x;
         this.y = y;
         return this;
+    }
+
+    public double rotation() {
+        double angle = Math.atan2(x, -y);
+        if (angle < 0) {
+            angle += 2 * Math.PI;
+        }
+        return Math.toDegrees(angle);
     }
 
     public static Vector2 round(Vector2 vector) {

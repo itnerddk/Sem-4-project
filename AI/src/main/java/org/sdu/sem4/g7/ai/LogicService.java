@@ -1,6 +1,7 @@
 package org.sdu.sem4.g7.ai;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import org.sdu.sem4.g7.common.data.Entity;
@@ -29,7 +30,7 @@ public class LogicService implements ILogicService {
         float range = (float) new Vector2(from.getPosition()).distance(to) / 5f;
         bayesianNetwork.evaluate(health, range, false, false);
 
-        List<Vector2> path = new ArrayList<>();
+        ArrayList<Vector2> path = new ArrayList<>();
 
         AStar aStar = null;
 
@@ -47,48 +48,53 @@ public class LogicService implements ILogicService {
         }
 
         if (!aStar.isDone()) {
-            path = aStar.step();
+            path = (ArrayList) aStar.step();
         } else {
-            path = aStar.step();
+            path = (ArrayList) aStar.step();
             aStarCache.remove(from.getID());
         }
             
         
         
-
-        // return optimizePath(path);
-        return path;
+        return optimizePath(path);
+        // return path;
     }
 
-    private List<Vector2> optimizePath(List<Vector2> path) {
-        System.out.println("Path points before: " + path.size());
-        List<Vector2> newPath = new ArrayList<>();
+    private ArrayList<Vector2> optimizePath(ArrayList<Vector2> path) {
+        long startTime = System.nanoTime();
+        if (path == null || path.size() < 3) {
+            return path;
+        }
+        ArrayList<Vector2> newPath = new ArrayList<>();
         Vector2 past;
         Vector2 current;
         Vector2 future;
 
         past = path.get(0);
         newPath.add(past);
-        for (int i = 1; i < path.size(); i++) {
+        for (int i = 1; i < path.size() - 1; i++) {
+            past = path.get(i-1);
             current = path.get(i);
             future = path.get(i+1);
 
-            // X Positive
-            if(past.getX() < current.getX() && current.getX() < future.getX()) {
-                // Check if they have any y difference
-                if (past.getY() == current.getY() && current.getY() == future.getY()) {
-
-                }
-            } else if (past.getX() > current.getX() && current.getX() > current.getX()) {
-                
+            if (new Vector2(past).subtract(current).equals(new Vector2(current).subtract(future))) {
+                continue;
             }
 
+            newPath.add(current);
 
-            past = current;
         }
+        newPath.add(path.getLast());
 
-        System.out.println("Path points after: " + path.size());
-        return newPath;
+        // reversed as A* finds the path from target to start
+
+        ArrayList<Vector2> reversedPath = new ArrayList<>();
+        for (int i = newPath.size() - 1; i >= 0; i--) {
+            reversedPath.add(newPath.get(i));
+        }
+        
+
+        return reversedPath;
     }
 
 }

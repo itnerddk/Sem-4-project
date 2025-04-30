@@ -61,7 +61,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
                 angle += 90; // Add 90 degrees if the "front" of the enemy is offset by 90 degrees
 
                 // Update the enemy's rotation
-                enemy.setRotation((float) angle);
+                //enemy.setRotation((float) angle);
 
                 // Check if enough time has passed to shoot
                 double currentTime = gameData.getTime(); // Assuming `gameData.getTime()` returns time in seconds
@@ -78,24 +78,43 @@ public class EnemyControlSystem implements IEntityProcessingService {
             enemy.processPosition(gameData);
 
             
+
+
+            
             // Logics
-            ServiceLocator.getLogicService().ifPresentOrElse(
-                service -> {
-                    List<Vector2> path = null;
-                    long timeStarted = System.nanoTime();
-                    while (path == null && (MAX_TIME / enemies.size()) > TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - timeStarted)) {
-                        path = service.findPath(enemy, new Vector2(player.getPosition()));
-                    }
-                    if (path == null || path.isEmpty()) {
-                        return;
-                    }
-                    enemy.setPath((ArrayList) path);
-                    drawPath(gameData, path);
-                },
-                () -> {
-                    System.out.println("NOT PRESENT!");
+            Vector2 target = new Vector2(player.getPosition());
+            
+            
+            
+            // Checking if path has the right goal
+            if (enemy.getPath() != null && !enemy.getPath().isEmpty()) {
+                drawPath(gameData, enemy.getPath());
+                if (!enemy.getPath().getLast().equals(new Vector2(target).divideInt(CommonConfig.getTileSize()))) {
+                    // System.out.println(enemy.getPath().getLast() + " != " + new Vector2(target).divideInt(CommonConfig.getTileSize()));
+                    System.out.println("Path is no longer valid, removing it");
+                    enemy.setPath(null);
                 }
-            );
+            }
+            // If it doesn't have a path, find one
+            else if (enemy.getPath() == null || enemy.getPath().isEmpty()) {
+                ServiceLocator.getLogicService().ifPresentOrElse(
+                    service -> {
+                        List<Vector2> path = null;
+                        long timeStarted = System.nanoTime();
+                        while (path == null && (MAX_TIME / enemies.size()) > TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - timeStarted)) {
+                            path = service.findPath(enemy, new Vector2(player.getPosition()));
+                        }
+                        if (path == null || path.isEmpty()) {
+                            return;
+                        }
+                        enemy.setPath((ArrayList) path);
+                        drawPath(gameData, path);
+                    },
+                    () -> {
+                        System.out.println("NOT PRESENT!");
+                    }
+                );
+            }
         }
     }
 

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
 
+import org.sdu.sem4.g7.common.Config.CommonConfig;
 import org.sdu.sem4.g7.common.data.Entity;
+import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.enums.EntityActions;
 import org.sdu.sem4.g7.common.enums.EntityType;
@@ -62,6 +64,41 @@ public class Enemy extends Tank {
     public ArrayList<Vector2> getPath() {
         return path;
     }
+
+
+    @Override
+    public void processPosition(GameData gameData) {
+        super.processPosition(gameData);
+        if (this.path == null || this.path.isEmpty()) {
+            this.currentAction = EntityActions.IDLE;
+            return;
+        }
+        if (new Vector2(this.getPosition()).distance(new Vector2(this.path.getFirst()).multiply(CommonConfig.getTileSize())) < (0.3 * CommonConfig.getTileSize())) {
+            System.out.println("Removing point");
+            this.path.remove(0);
+            if (this.path.isEmpty()) this.currentAction = EntityActions.IDLE;
+            
+            // This is where we move
+            
+        } else {
+            this.currentAction = EntityActions.MOVING;
+
+            System.out.println(Vector2.round(this.getPosition()) + " -> " + new Vector2(this.path.getFirst()).multiply(CommonConfig.getTileSize()));
+
+            double targetRotation = Math.round(new Vector2(this.path.getFirst()).subtract(new Vector2(this.getPosition()).divideInt(CommonConfig.getTileSize())).rotation());
+            System.out.println(Math.round(this.getRotation()) + " -> " + targetRotation);
+            if (targetRotation - Math.round(this.getRotation()) > 5) {
+                this.turnRight();
+            } else if (targetRotation - Math.round(this.getRotation()) < -5) {
+                this.turnLeft();
+            }
+            else if (targetRotation - Math.round(this.getRotation()) < 5) {
+                this.accelerate();
+            }
+        }
+
+    }
+
 
     @Override
     public void render(GraphicsContext gc) {

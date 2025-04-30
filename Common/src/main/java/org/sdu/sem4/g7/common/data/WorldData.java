@@ -2,10 +2,10 @@ package org.sdu.sem4.g7.common.data;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.sdu.sem4.g7.common.enums.EntityType;
 
@@ -15,11 +15,12 @@ public class WorldData {
     private Map<String, List<Class<? extends Entity>>> entityTypes;
 
     // Map referring class that extends entity to a collection of entities
-    Map<Class<? extends Entity>, List<Entity>> entityClassClumps = new HashMap<>();
+    Map<Class<? extends Entity>, CopyOnWriteArrayList<Entity>> entityClassClumps;
 
     public WorldData() {
         this.entityMap = new ConcurrentHashMap<>();
         this.entityTypes = new ConcurrentHashMap<>();
+        this.entityClassClumps = new ConcurrentHashMap<>();
     }
 
     public void start() {
@@ -32,7 +33,7 @@ public class WorldData {
             entity.getSprite().viewOrderProperty().set(entity.getzIndex());
         }
 
-        entityClassClumps.computeIfAbsent(entity.getClass(), k -> new ArrayList<>()).add(entity);
+        entityClassClumps.computeIfAbsent(entity.getClass(), k -> new CopyOnWriteArrayList<>()).add(entity);
 
         return entity.getID();
     }
@@ -44,11 +45,12 @@ public class WorldData {
     }
 
     public void removeEntity(String entityID) {
-        entityMap.remove(entityID);
-        entityClassClumps.values().forEach(list -> list.removeIf(entity -> entity.getID().equals(entityID))); // Sorta inefficient
+        Entity entity = entityMap.get(entityID);
+        this.removeEntity(entity);
     }
 
     public void removeEntity(Entity entity) {
+        entityClassClumps.get(entity.getClass()).remove(entity);
         entityMap.remove(entity.getID());
         for (Entity e : entity.getChildren()) {
             removeEntity(e);
