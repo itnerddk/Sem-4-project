@@ -122,7 +122,7 @@ public class AStar {
         // return Math.abs(point.getX() - to.getX()) + Math.abs(point.getY() - to.getY());
         // Heuristic function: Euclidean distance
         int distance = (int) Math.sqrt(Math.pow(point.getX() - to.getX(), 2) + Math.pow(point.getY() - to.getY(), 2));
-        h = distance * 11;
+        h = distance * 10;
         
         Vector2 from = this.cameFrom.containsKey(point) ? this.cameFrom.get(point) : null;
         // If it has a from, check if it's going diagonal
