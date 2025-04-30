@@ -22,8 +22,16 @@ public class DifficultyService implements IDifficultyService {
         ServiceLocator.getPersistenceService().ifPresent(
             persistenceService -> {
                 // load difficulty level from persistence
-                DifficultyEnum difficulty = DifficultyEnum.valueOf(persistenceService.getString(persistenceKey));
-                localDifficulty = difficulty;
+                String difficultyString = persistenceService.getString(persistenceKey);
+
+                // if difficulty is null, then set the difficulty to normal
+                if (difficultyString == null) {
+                    setDifficulty(DifficultyEnum.NORMAL);
+                    difficultyString = "normal";
+                }
+
+                // set local difficulty
+                localDifficulty = DifficultyEnum.valueOf(difficultyString);
             }
         );
         return localDifficulty;
@@ -33,7 +41,7 @@ public class DifficultyService implements IDifficultyService {
     public void setDifficulty(DifficultyEnum difficulty) {
         ServiceLocator.getPersistenceService().ifPresent(
             persistenceService -> {
-                persistenceService.setString(persistenceKey, difficulty.name());
+                persistenceService.setString(persistenceKey, difficulty.toString());
             }
         );
         localDifficulty = difficulty;
