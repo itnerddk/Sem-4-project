@@ -118,6 +118,13 @@ public class MainMenuController implements Initializable {
         Font font = Font.loadFont(getClass().getResourceAsStream("/fonts/LuckiestGuy-Regular.ttf"), 20);
         System.out.println("Loaded font: " + font.getName());
 
+        // make non visible if module is not found
+        if (ServiceLocator.getUpgradeService().isEmpty()) {
+            UpgradeTapsPane.setVisible(false);
+            upgradeTankText.setVisible(false);
+            return;
+        }
+
         setupShieldUpgrade();
         setupHealthUpgrade();
         setupSpeedUpgrade();
