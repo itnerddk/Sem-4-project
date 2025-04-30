@@ -107,11 +107,19 @@ public class MissionLoaderService implements IMissionLoaderService {
 			Mission mission = objectMapper.readValue(missionFile, Mission.class); // NOTE: This does not load the entire mission object, just the metadata!
 			// Iterate all enemies and based on max health multiple difficulty
 
+			// Get difficulty multiplier
+			float difficultyMultiplier = 1f; // default value if difficulty service does not exists
+			if (ServiceLocator.getDifficultyService().isPresent()) {
+				difficultyMultiplier = ServiceLocator.getDifficultyService().get().getMultiplier();
+			}
+
 			try {
 				List<EnemyStartPositionObject> enemies = getMissionObject(mission.getId()).getEnemies();
 				System.out.println(mission.getName() + "(" + mission.getId() + ") has " + enemies.size() + " enemies" + " with a difficulty of " + mission.getDifficulty());
 
 				for (EnemyStartPositionObject enemy : enemies) {
+					enemy.setHealth(Math.round(enemy.getHealth() * difficultyMultiplier)); // set health using the difficultyMultiplier
+
 					// Enemies with a max health of 100 should contribute with something around 1.05x
 					// f(x)=0.7+1.5 (1-ℯ^(-((x)/(400))))
 					mission.setDifficulty((float)(mission.getDifficulty() * Math.max(1.0, (0.7 + 1.5 * (1 - Math.exp(-(((float)enemy.getHealth()) / (400))))))));
