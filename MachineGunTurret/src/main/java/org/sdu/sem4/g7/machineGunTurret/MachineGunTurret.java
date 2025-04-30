@@ -10,10 +10,6 @@ import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.tank.parts.Turret;
 
 public class MachineGunTurret extends Turret {
-
-    private static URI shootSoundFile;
-    private static URI explosionSoundFile;
-
     public MachineGunTurret() {
         super();
         setAttackSpeed(50); // 20 shots per second
@@ -79,19 +75,4 @@ public class MachineGunTurret extends Turret {
     public String getWeaponId() {
         return "machine_gun";
     }
-
-    // Self functions
-    public static URI getShootSoundFile() {
-        return shootSoundFile;
-    }
-    public static URI getExplosionSoundFile() {
-        return explosionSoundFile;
-    }
-    public static void setShootSoundFile(URI shootSoundFile) {
-        MachineGunTurret.shootSoundFile = shootSoundFile;
-    }
-    public static void setExplosionSoundFile(URI explosionSoundFile) {
-        MachineGunTurret.explosionSoundFile = explosionSoundFile;
-    }
-
 }

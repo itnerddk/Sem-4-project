@@ -12,9 +12,6 @@ import org.sdu.sem4.g7.tank.parts.Turret;
 
 public class CannonTurret extends Turret {
 
-    private static URI shootSoundFile;
-    private static URI explosionSoundFile;
-
     public CannonTurret() {
         super();
         setOffset(new Vector2(0, 0));
@@ -75,19 +72,5 @@ public class CannonTurret extends Turret {
     @Override
     public String getWeaponId() {
         return "cannon_turret";
-    }
-
-    // Self functions
-    public static URI getShootSoundFile() {
-        return shootSoundFile;
-    }
-    public static URI getExplosionSoundFile() {
-        return explosionSoundFile;
-    }
-    public static void setShootSoundFile(URI shootSoundFile) {
-        CannonTurret.shootSoundFile = shootSoundFile;
-    }
-    public static void setExplosionSoundFile(URI explosionSoundFile) {
-        CannonTurret.explosionSoundFile = explosionSoundFile;
     }
 }
