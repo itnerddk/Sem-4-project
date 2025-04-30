@@ -9,6 +9,7 @@ public class CannonBullet extends Bullet {
     public CannonBullet() {
         super(); // TODO: Find a better way to set bullet damage #HACKFIX
         setCollision(true);
+        setMaxFlightTime(3);
         setHealth(1);
         try {
             // System.out.println(this.getClass().getClassLoader().getResource("CannonBullet.png"));

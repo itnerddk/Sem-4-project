@@ -7,6 +7,7 @@ public class MachineGunBullet extends Bullet {
     public MachineGunBullet() {
         super();
         setCollision(true);
+        setMaxFlightTime(1.1 + Math.random() * 0.3);
         setHealth(1);
         try {
             this.setSprite(this.getClass().getClassLoader().getResource("MachineGunBullet.png").toURI(), 2);

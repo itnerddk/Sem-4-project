@@ -54,13 +54,13 @@ public class MachineGunTurret extends Turret {
         // Set WeaponDamage for the specific weapon
         bullet.setWeaponBonus(20);
         bullet.finalizeDamage();
+        
+        bullet.setRotation(this.getRotation() + (float)(Math.random() * 15 - 7.5));
 
         bullet.setPosition(this.getPosition());
         Vector2 rotatedMuzzle = new Vector2(this.getMuzzle().getX(), this.getMuzzle().getY());
-        rotatedMuzzle.rotate(this.getRotation());
+        rotatedMuzzle.rotate(bullet.getRotation());
         bullet.getPosition().add(rotatedMuzzle);
-        
-        bullet.setRotation(this.getRotation());
 
         // set the tank as the createdBy
         bullet.setCreatedBy(this.getTank());
