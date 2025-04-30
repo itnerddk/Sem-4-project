@@ -23,7 +23,7 @@ public class FetchTest {
     }
 
     @BeforeEach
-    public void setUp() {
+    public static void setUp() {
         worldData = new WorldData();
         // Create a world with 1000 entities of different classes
         for (int i = 0; i < 1000; i++) {

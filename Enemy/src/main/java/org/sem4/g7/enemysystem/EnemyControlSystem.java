@@ -1,5 +1,6 @@
 package org.sem4.g7.enemysystem;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -21,9 +22,6 @@ public class EnemyControlSystem implements IEntityProcessingService {
 
     // Constant for shoot interval in seconds
     private static final double SHOOT_INTERVAL = 3.5; // 3.5 seconds
-
-    // Paths for enemies
-    private static HashMap<String, List<Vector2>> paths = new HashMap<>();
 
 
     private static final long MAX_TIME = 4000; // Microseconds, 4000 is 4ms
@@ -54,7 +52,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
             double distance = Math.sqrt(dx * dx + dy * dy);
 
             // Check if the enemy is within x amount tiles of the player
-            double tileSize = 96; // Each tile is 96x96 pixels
+            double tileSize = CommonConfig.getTileSize(); // Each tile is 96x96 pixels
             if (distance <= 2 * tileSize) {
                 // Calculate the angle to face the player
                 double angle = Math.toDegrees(Math.atan2(dy, dx));
@@ -81,36 +79,23 @@ public class EnemyControlSystem implements IEntityProcessingService {
 
             
             // Logics
-            List<Vector2> specPath = paths.get(enemy.getID());
-            // if (paths.containsKey(entity.getID())) {
-            //     if (specPath != null && !specPath.isEmpty()) {
-            //         Vector2 nextPoint = specPath.get(0);
-            //         enemy.setPosition(nextPoint.multiply(96));
-            //         if (enemy.getPosition().equals(nextPoint)) {
-            //             specPath.remove(0);
-            //         }
-            //     }
-            // }
-            // if (specPath == null || specPath.isEmpty()) {
-                ServiceLocator.getLogicService().ifPresentOrElse(
-                    service -> {
-                        List<Vector2> path = null;
-                        long timeStarted = System.nanoTime();
-                        while (path == null && (MAX_TIME / enemies.size()) > TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - timeStarted)) {
-                            path = service.findPath(enemy, new Vector2(player.getPosition()));
-                        }
-                        if (path == null || path.isEmpty()) {
-                            return;
-                        }
-                        paths.put(enemy.getID(), path);
-                        drawPath(gameData, path);
-                    },
-                    () -> {
-                        System.out.println("NOT PRESENT!");
+            ServiceLocator.getLogicService().ifPresentOrElse(
+                service -> {
+                    List<Vector2> path = null;
+                    long timeStarted = System.nanoTime();
+                    while (path == null && (MAX_TIME / enemies.size()) > TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - timeStarted)) {
+                        path = service.findPath(enemy, new Vector2(player.getPosition()));
                     }
-                );
-            // }
-
+                    if (path == null || path.isEmpty()) {
+                        return;
+                    }
+                    enemy.setPath((ArrayList) path);
+                    drawPath(gameData, path);
+                },
+                () -> {
+                    System.out.println("NOT PRESENT!");
+                }
+            );
         }
     }
 

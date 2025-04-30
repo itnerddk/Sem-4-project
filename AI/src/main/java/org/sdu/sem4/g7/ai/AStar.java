@@ -75,7 +75,7 @@ public class AStar {
             if (completed == 0) {
                 completed = System.nanoTime();
             }
-            System.out.println(((double) TimeUnit.NANOSECONDS.toMicros(completed - started)) / 1000.0 + " ms");
+            // System.out.println(((double) TimeUnit.NANOSECONDS.toMicros(completed - started)) / 1000.0 + " ms");
 
             return path;
         }

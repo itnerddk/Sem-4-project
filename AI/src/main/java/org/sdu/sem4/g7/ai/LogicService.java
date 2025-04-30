@@ -23,6 +23,12 @@ public class LogicService implements ILogicService {
 
     @Override
     public List<Vector2> findPath(Entity from, Vector2 to) {
+
+        BayesianNetwork bayesianNetwork = new BayesianNetwork();
+        float health = from.getHealth() / from.getMaxHealth();
+        float range = (float) new Vector2(from.getPosition()).distance(to) / 5f;
+        bayesianNetwork.evaluate(health, range, false, false);
+
         List<Vector2> path = new ArrayList<>();
 
         AStar aStar = null;

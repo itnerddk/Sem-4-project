@@ -1,10 +1,12 @@
 package org.sem4.g7.enemysystem;
 
+import java.util.ArrayList;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
 
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.Vector2;
+import org.sdu.sem4.g7.common.enums.EntityActions;
 import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.common.services.ITurretProviderService;
 import org.sdu.sem4.g7.tank.parts.Tank;
@@ -15,6 +17,9 @@ import javafx.scene.canvas.GraphicsContext;
 public class Enemy extends Tank {
 
     private double lastShotTime = 0.0; // Initialize last shot time to 0
+
+    private ArrayList<Vector2> path = new ArrayList<>();
+    private EntityActions currentAction = EntityActions.IDLE;
 
     public Enemy() {
         super();
@@ -49,6 +54,13 @@ public class Enemy extends Tank {
 
     public void setLastShotTime(double lastShotTime) {
         this.lastShotTime = lastShotTime;
+    }
+
+    public void setPath(ArrayList<Vector2> path) {
+        this.path = path;
+    }
+    public ArrayList<Vector2> getPath() {
+        return path;
     }
 
     @Override
