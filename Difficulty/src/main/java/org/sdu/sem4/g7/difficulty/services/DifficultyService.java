@@ -14,7 +14,7 @@ public class DifficultyService implements IDifficultyService {
     /**
      * Local difficulty level, if the persistence service is not present
      */
-    private DifficultyEnum localDifficulty;
+    private DifficultyEnum localDifficulty = DifficultyEnum.NORMAL;
 
 
     @Override
@@ -50,10 +50,8 @@ public class DifficultyService implements IDifficultyService {
             
             case HARD:
                 return 30;
-            
-            default:
-                return 20;
         }
+        return 20;
     }
     
 
