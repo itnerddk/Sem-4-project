@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefWidth="80.0" stylesheets="@weaponSelector.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="org.sdu.sem4.g7.UI.controllers.WeaponSelectorController">
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.sdu.sem4.g7.UI.controllers.WeaponSelectorController"
+            stylesheets="@weaponSelector.css"
+            pickOnBounds="false">
 
-    <StackPane prefWidth="80.0" AnchorPane.leftAnchor="0.0">
-
-        <VBox fx:id="weaponBox" alignment="CENTER" spacing="12" styleClass="weapon-menu" />
-    </StackPane>
-
+    <VBox fx:id="weaponBox"
+          layoutX="10"
+          prefWidth="80"
+          alignment="CENTER"
+          spacing="12"
+          styleClass="weapon-menu"
+          AnchorPane.leftAnchor="10.0">
+    </VBox>
 </AnchorPane>
+
