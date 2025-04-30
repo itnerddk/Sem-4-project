@@ -8,6 +8,6 @@ public interface IDifficultyService {
 
     public void setDifficulty(DifficultyEnum difficulty);
 
-    public int getMultiplier();
-    
+    public float getMultiplier();
+
 }

@@ -48,18 +48,18 @@ public class DifficultyService implements IDifficultyService {
     }
 
     @Override
-    public int getMultiplier() {
+    public float getMultiplier() {
         switch (getDifficulty()) {
             case EASY:
-                return 10;
+                return 0.8f;
 
             case NORMAL:
-                return 20;
+                return 1f;
             
             case HARD:
-                return 30;
+                return 1.5f;
         }
-        return 20;
+        return 1f;
     }
     
 

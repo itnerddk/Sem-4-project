@@ -21,6 +21,7 @@ import org.sdu.sem4.g7.common.data.Mission;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IEntityPluginService;
 import org.sdu.sem4.g7.common.services.IMissionLoaderService;
+import org.sdu.sem4.g7.common.services.ServiceLocator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -105,9 +106,11 @@ public class MissionLoaderService implements IMissionLoaderService {
 		for (File missionFile : Config.missionsDir.listFiles()) {
 			Mission mission = objectMapper.readValue(missionFile, Mission.class); // NOTE: This does not load the entire mission object, just the metadata!
 			// Iterate all enemies and based on max health multiple difficulty
+
 			try {
 				List<EnemyStartPositionObject> enemies = getMissionObject(mission.getId()).getEnemies();
 				System.out.println(mission.getName() + "(" + mission.getId() + ") has " + enemies.size() + " enemies" + " with a difficulty of " + mission.getDifficulty());
+
 				for (EnemyStartPositionObject enemy : enemies) {
 					// Enemies with a max health of 100 should contribute with something around 1.05x
 					// f(x)=0.7+1.5 (1-ℯ^(-((x)/(400))))
@@ -199,25 +202,31 @@ public class MissionLoaderService implements IMissionLoaderService {
 		// render map
 		renderMapTiles(mission.getMap(), world);
 
+		// Get difficulty multiplier
+		float difficultyMultiplier = 1f; // default value if difficulty service does not exists
+		if (ServiceLocator.getDifficultyService().isPresent()) {
+			difficultyMultiplier = ServiceLocator.getDifficultyService().get().getMultiplier();
+		}
+
 		// Create enemies
 		for (EnemyStartPositionObject espo : mission.getEnemies()) {
 			Entity enemy;
 			try {
 				enemy = world.getEntityTypes().get(espo.getEntityType()).get(0).getDeclaredConstructor().newInstance();
 				enemy.setPosition(espo.getX(), espo.getY());
-				enemy.setHealth(espo.getHealth());
-				enemy.setMaxHealth(espo.getHealth());
-				System.out.println("set enemy health from mission: " + espo.getHealth());
+				enemy.setHealth(Math.round(espo.getHealth() * difficultyMultiplier)); // set health using the difficultyMultiplier
+				enemy.setMaxHealth(Math.round(espo.getHealth() * difficultyMultiplier));
+				System.out.println("set enemy health from mission: " + Math.round(espo.getHealth() * difficultyMultiplier));
 				
 				// Set maxHealth to the same value as health if not explicitly defined
         		if (enemy.getMaxHealth() == 0) {
-            	enemy.setMaxHealth(espo.getHealth());
-}
+            		enemy.setMaxHealth(espo.getHealth());
+				}
 				
 				world.addEntity(enemy);
 				world.addEntity(enemy.getChildren());
 			} catch (Exception ex) {
-				System.err.println("Could not create a player!");
+				System.err.println("Could not create a enemy!");
 				ex.printStackTrace();
 			}
 		}
