@@ -28,6 +28,7 @@
         <module>Inventory</module>
         <module>Difficulty</module>
         <module>Shop</module>
+        <module>BounceTurret</module>
     </modules>
 
     <properties>

@@ -25,6 +25,18 @@ public class Hitbox {
         this.rotation = rotation;
     }
 
+    public Vector2 getPosition() {
+        return position;
+    }
+
+    public Vector2 getSize() {
+        return size;
+    }
+
+    public double getRotation() {
+        return rotation;
+    }
+
     public void render(GraphicsContext gc) {
         gc.save();
         gc.translate(position.getX(), position.getY());
