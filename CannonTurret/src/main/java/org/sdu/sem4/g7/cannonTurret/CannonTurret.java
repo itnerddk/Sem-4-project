@@ -1,6 +1,5 @@
 package org.sdu.sem4.g7.cannonTurret;
 
-import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -10,8 +9,6 @@ import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.tank.parts.Turret;
-
-import javafx.scene.canvas.GraphicsContext;
 
 public class CannonTurret extends Turret {
 
@@ -28,9 +25,9 @@ public class CannonTurret extends Turret {
             this.setzIndex(-10);
 
             // Load the sound files
-            if (CannonTurret.getShootSoundFile() == null) {
+            if (getShootSoundFile() == null) {
                 System.out.println(this.getClass().getResource("/shoot.wav"));
-                CannonTurret.setShootSoundFile(this.getClass().getResource("/shoot.wav").toURI());
+                setShootSoundFile(this.getClass().getResource("/shoot.wav").toURI());
             }
         } catch (URISyntaxException e) {e.printStackTrace();}
     }

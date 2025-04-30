@@ -1,5 +1,7 @@
 package org.sdu.sem4.g7.tank.parts;
 
+import java.net.URI;
+
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
@@ -13,6 +15,9 @@ public abstract class Turret extends Entity implements IWeaponInstance {
     private Vector2 muzzle;
     private int attackSpeed;
     private long lastShotTime;
+
+    private URI shootSoundFile;
+    private URI explosionSoundFile;
 
     public Turret() {
     }
@@ -67,6 +72,20 @@ public abstract class Turret extends Entity implements IWeaponInstance {
     }
 
     abstract public boolean shoot(GameData gameData, WorldData world);
+
+    // Self functions
+    public URI getShootSoundFile() {
+        return shootSoundFile;
+    }
+    public URI getExplosionSoundFile() {
+        return explosionSoundFile;
+    }
+    public void setShootSoundFile(URI shootSoundFile) {
+        this.shootSoundFile = shootSoundFile;
+    }
+    public void setExplosionSoundFile(URI explosionSoundFile) {
+        this.explosionSoundFile = explosionSoundFile;
+    }
 
     public abstract String getWeaponId();
 }

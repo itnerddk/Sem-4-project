@@ -25,9 +25,9 @@ public class MachineGunTurret extends Turret {
             this.setzIndex(-10);
 
             // Load the sound files
-            if (MachineGunTurret.getShootSoundFile() == null) {
+            if (getShootSoundFile() == null) {
                 System.out.println(this.getClass().getResource("/shoot.wav"));
-                MachineGunTurret.setShootSoundFile(this.getClass().getResource("/shoot.wav").toURI());
+                setShootSoundFile(this.getClass().getResource("/shoot.wav").toURI());
             }
         } catch (URISyntaxException e) {e.printStackTrace();}
     }
@@ -93,5 +93,5 @@ public class MachineGunTurret extends Turret {
     public static void setExplosionSoundFile(URI explosionSoundFile) {
         MachineGunTurret.explosionSoundFile = explosionSoundFile;
     }
-    
+
 }
