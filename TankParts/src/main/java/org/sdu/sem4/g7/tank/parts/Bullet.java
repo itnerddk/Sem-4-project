@@ -26,6 +26,7 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
     public Bullet() {
         super();
         setEntityType(EntityType.BULLET);
+        setCollision(true);
     }
 
     public void finalizeDamage() {
@@ -124,7 +125,7 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
 
             System.out.println("Damage was reduced by " + getArmorReduction(otherEntity) + " from armor");
 
-            this.setHealth(0);
+            this.setHealth(this.getHealth() - 1);
             gameData.playAudio(SoundType.HIT);
             return true;
         }
