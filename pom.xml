@@ -26,6 +26,7 @@
         <module>Persistence</module>
         <module>MachineGunTurret</module>
         <module>Inventory</module>
+        <module>Difficulty</module>
     </modules>
 
     <properties>
