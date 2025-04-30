@@ -30,6 +30,7 @@ import java.io.IOException;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Setting;
 import org.sdu.sem4.g7.common.data.SettingGroup;
+import org.sdu.sem4.g7.common.enums.DifficultyEnum;
 import org.sdu.sem4.g7.common.enums.SoundType;
 
 import java.net.URL;
@@ -258,6 +259,39 @@ public class MainMenuController implements Initializable {
     private void handleDifficulty(ActionEvent event) {
         gameData.playAudio(SoundType.BUTTON_CLICK);
 
+        // set all buttons to enabled
+        difficultyEasyButton.setDisable(false);
+        difficultyNormalButton.setDisable(false);
+        difficultyHardButton.setDisable(false);
+
+        // load difficulty service
+        ServiceLocator.getDifficultyService().ifPresentOrElse(
+            difficultyService -> {
+                // disabled the button for the difficultylevel already set
+                switch (difficultyService.getDifficulty()) {
+                    case EASY:
+                        difficultyEasyButton.setDisable(true);
+                        break;
+
+                    case NORMAL:
+                        difficultyNormalButton.setDisable(true);
+                        break;
+
+                    case HARD:
+                        difficultyHardButton.setDisable(true);
+                        break;
+                
+                    default:
+                        difficultyNormalButton.setDisable(true);
+                        break;
+                }
+            },
+            () -> {
+                System.out.println("Could not find a DifficultyService!");
+                difficultyNormalButton.setDisable(true); // default to normal selected 
+            }
+        );
+
         difficultyPane.setVisible(true);
     }
 
@@ -272,6 +306,12 @@ public class MainMenuController implements Initializable {
     private void handleDifficultyEasy(ActionEvent event) {
         gameData.playAudio(SoundType.BUTTON_CLICK);
 
+        ServiceLocator.getDifficultyService().ifPresent(
+            difficultyService -> {
+                difficultyService.setDifficulty(DifficultyEnum.EASY);
+            }
+        );
+
         difficultyEasyButton.setDisable(true);
         difficultyNormalButton.setDisable(false);
         difficultyHardButton.setDisable(false);
@@ -281,6 +321,12 @@ public class MainMenuController implements Initializable {
     private void handleDifficultyNormal(ActionEvent event) {
         gameData.playAudio(SoundType.BUTTON_CLICK);
 
+        ServiceLocator.getDifficultyService().ifPresent(
+            difficultyService -> {
+                difficultyService.setDifficulty(DifficultyEnum.NORMAL);
+            }
+        );
+
         difficultyEasyButton.setDisable(false);
         difficultyNormalButton.setDisable(true);
         difficultyHardButton.setDisable(false);
@@ -289,6 +335,12 @@ public class MainMenuController implements Initializable {
     @FXML
     private void handleDifficultyHard(ActionEvent event) {
         gameData.playAudio(SoundType.BUTTON_CLICK);
+
+        ServiceLocator.getDifficultyService().ifPresent(
+            difficultyService -> {
+                difficultyService.setDifficulty(DifficultyEnum.HARD);
+            }
+        );
 
         difficultyEasyButton.setDisable(false);
         difficultyNormalButton.setDisable(false);
