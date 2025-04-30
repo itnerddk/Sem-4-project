@@ -1,6 +1,5 @@
 package org.sdu.sem4.g7.machineGunTurret;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.sdu.sem4.g7.common.data.GameData;
@@ -10,10 +9,6 @@ import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.tank.parts.Turret;
 
 public class MachineGunTurret extends Turret {
-
-    private static URI shootSoundFile;
-    private static URI explosionSoundFile;
-
     public MachineGunTurret() {
         super();
         setAttackSpeed(50); // 20 shots per second
@@ -25,9 +20,9 @@ public class MachineGunTurret extends Turret {
             this.setzIndex(-10);
 
             // Load the sound files
-            if (MachineGunTurret.getShootSoundFile() == null) {
+            if (getShootSoundFile() == null) {
                 System.out.println(this.getClass().getResource("/shoot.wav"));
-                MachineGunTurret.setShootSoundFile(this.getClass().getResource("/shoot.wav").toURI());
+                setShootSoundFile(this.getClass().getResource("/shoot.wav").toURI());
             }
         } catch (URISyntaxException e) {e.printStackTrace();}
     }
@@ -74,19 +69,4 @@ public class MachineGunTurret extends Turret {
         this.bulletShot = !this.bulletShot;
         return true;
     }
-
-    // Self functions
-    public static URI getShootSoundFile() {
-        return shootSoundFile;
-    }
-    public static URI getExplosionSoundFile() {
-        return explosionSoundFile;
-    }
-    public static void setShootSoundFile(URI shootSoundFile) {
-        MachineGunTurret.shootSoundFile = shootSoundFile;
-    }
-    public static void setExplosionSoundFile(URI explosionSoundFile) {
-        MachineGunTurret.explosionSoundFile = explosionSoundFile;
-    }
-    
 }

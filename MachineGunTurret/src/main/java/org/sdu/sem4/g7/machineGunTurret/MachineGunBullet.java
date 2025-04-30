@@ -6,7 +6,6 @@ import org.sdu.sem4.g7.tank.parts.Bullet;
 public class MachineGunBullet extends Bullet {
     public MachineGunBullet() {
         super();
-        setCollision(true);
         setMaxFlightTime(1.1 + Math.random() * 0.3);
         setHealth(1);
         try {
