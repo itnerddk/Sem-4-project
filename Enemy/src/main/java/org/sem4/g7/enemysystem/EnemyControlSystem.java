@@ -84,7 +84,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
             // Checking if path has the right goal
             if (enemy.getPath() != null && !enemy.getPath().isEmpty()) {
                 drawPath(gameData, enemy.getPath());
-                if (!enemy.getPath().getLast().equals(new Vector2(target).divideInt(CommonConfig.getTileSize()))) {
+                if (!enemy.getPath().get(enemy.getPath().size() - 1).equals(new Vector2(target).divideInt(CommonConfig.getTileSize()))) {
                     // System.out.println(enemy.getPath().getLast() + " != " + new Vector2(target).divideInt(CommonConfig.getTileSize()));
                     System.out.println("Path is no longer valid, removing it");
                     enemy.setPath(null);

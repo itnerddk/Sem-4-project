@@ -123,7 +123,7 @@ public class GameInstance {
 
                             List<Entity> players = worldData.getEntities(EntityType.PLAYER);
                             if (players.size() >= 1) {
-                                Entity player = players.getFirst();
+                                Entity player = players.iterator().next();
                                 int healthBonus = (int) (100.0f * (((float) player.getHealth() / (float) player.getMaxHealth()) * difficulty));
                                 finalScore += healthBonus;
                             }

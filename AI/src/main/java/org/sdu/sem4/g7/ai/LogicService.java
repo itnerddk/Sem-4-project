@@ -84,7 +84,7 @@ public class LogicService implements ILogicService {
             newPath.add(current);
 
         }
-        newPath.add(path.getLast());
+        newPath.add(path.get(path.size() - 1));
 
         // reversed as A* finds the path from target to start
 
