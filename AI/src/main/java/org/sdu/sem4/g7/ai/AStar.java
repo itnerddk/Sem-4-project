@@ -61,7 +61,7 @@ public class AStar {
 
     int steps = 0;
 
-    public List<Vector2> step() {
+    public ArrayList<Vector2> step() {
         steps++;
         // System.out.println("Step: " + steps);
         Cost currentCost = fScore.peek();
@@ -71,7 +71,7 @@ public class AStar {
 
         if (current.equals(this.to)) {
 
-            List<Vector2> path = reconstruct_path(cameFrom, current);
+            ArrayList<Vector2> path = reconstruct_path(cameFrom, current);
             if (completed == 0) {
                 completed = System.nanoTime();
             }
@@ -186,8 +186,8 @@ public class AStar {
         
     }
 
-    private List<Vector2> reconstruct_path(HashMap<Vector2, Vector2> cameFrom, Vector2 current) {
-        List<Vector2> totalPath = new ArrayList<>();
+    private ArrayList<Vector2> reconstruct_path(HashMap<Vector2, Vector2> cameFrom, Vector2 current) {
+        ArrayList<Vector2> totalPath = new ArrayList<>();
         totalPath.add(current);
         while (cameFrom.containsKey(current)) {
             current = cameFrom.get(current);

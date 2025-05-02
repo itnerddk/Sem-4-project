@@ -1,12 +1,10 @@
 package org.sem4.g7.enemysystem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.sdu.sem4.g7.common.Config.CommonConfig;
-import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
@@ -14,9 +12,6 @@ import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
 import org.sdu.sem4.g7.playersystem.Player;
-
-import javafx.scene.paint.Paint;
-
 
 public class EnemyControlSystem implements IEntityProcessingService {
 
@@ -41,7 +36,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
 
 
             // Find the player entity
-            Player player = (Player) world.getEntities(Player.class).stream().findFirst().orElse(null);
+            Player player = world.getEntities(Player.class).stream().findFirst().orElse(null);
             if (player == null) {
                 continue; // No player found, skip
             }
@@ -99,7 +94,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
             else if (enemy.getPath() == null || enemy.getPath().isEmpty()) {
                 ServiceLocator.getLogicService().ifPresentOrElse(
                     service -> {
-                        List<Vector2> path = null;
+                        ArrayList<Vector2> path = null;
                         long timeStarted = System.nanoTime();
                         while (path == null && (MAX_TIME / enemies.size()) > TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - timeStarted)) {
                             path = service.findPath(enemy, new Vector2(player.getPosition()));
@@ -107,7 +102,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
                         if (path == null || path.isEmpty()) {
                             return;
                         }
-                        enemy.setPath((ArrayList) path);
+                        enemy.setPath(path);
                         drawPath(gameData, path);
                     },
                     () -> {

@@ -1,5 +1,6 @@
 package org.sdu.sem4.g7.common.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.sdu.sem4.g7.common.data.Entity;
@@ -20,5 +21,5 @@ public interface ILogicService {
      * @param to where the path ends
      * @return List of corner coordinates
      */
-    public List<Vector2> findPath(Entity from, Vector2 to);
+    public ArrayList<Vector2> findPath(Entity from, Vector2 to);
 }

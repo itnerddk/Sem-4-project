@@ -73,7 +73,7 @@ public class Enemy extends Tank {
             this.currentAction = EntityActions.IDLE;
             return;
         }
-        if (new Vector2(this.getPosition()).distance(new Vector2(this.path.getFirst()).multiply(CommonConfig.getTileSize())) < (0.3 * CommonConfig.getTileSize())) {
+        if (new Vector2(this.getPosition()).distance(new Vector2(this.path.getFirst()).multiply(CommonConfig.getTileSize())) < (1 * CommonConfig.getTileSize())) {
             System.out.println("Removing point");
             this.path.remove(0);
             if (this.path.isEmpty()) this.currentAction = EntityActions.IDLE;
@@ -87,12 +87,22 @@ public class Enemy extends Tank {
 
             double targetRotation = Math.round(new Vector2(this.path.getFirst()).subtract(new Vector2(this.getPosition()).divideInt(CommonConfig.getTileSize())).rotation());
             System.out.println(Math.round(this.getRotation()) + " -> " + targetRotation);
-            if (targetRotation - Math.round(this.getRotation()) > 5) {
-                this.turnRight();
-            } else if (targetRotation - Math.round(this.getRotation()) < -5) {
-                this.turnLeft();
+            // turnLeft and turnRight within 5 degrees
+            double angleDiff = Math.round(this.getRotation()) - targetRotation;
+            if (angleDiff > 180) {
+                angleDiff -= 2 * 180;
+            } else if (angleDiff < -180) {
+                angleDiff += 2 * 180;
             }
-            else if (targetRotation - Math.round(this.getRotation()) < 5) {
+
+            if (angleDiff > 5) {
+                this.turnLeft();
+            } else if (angleDiff < -5) {
+                this.turnRight();
+            }
+
+            // Move forward
+            if (Math.abs(Math.round(this.getRotation()) - targetRotation) < 10) {
                 this.accelerate();
             }
         }

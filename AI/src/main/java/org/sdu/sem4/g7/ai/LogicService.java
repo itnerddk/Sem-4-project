@@ -1,7 +1,6 @@
 package org.sdu.sem4.g7.ai;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import org.sdu.sem4.g7.common.data.Entity;
@@ -23,7 +22,7 @@ public class LogicService implements ILogicService {
     HashMap<String, AStar> aStarCache = new HashMap<>();
 
     @Override
-    public List<Vector2> findPath(Entity from, Vector2 to) {
+    public ArrayList<Vector2> findPath(Entity from, Vector2 to) {
 
         BayesianNetwork bayesianNetwork = new BayesianNetwork();
         float health = from.getHealth() / from.getMaxHealth();
@@ -48,20 +47,21 @@ public class LogicService implements ILogicService {
         }
 
         if (!aStar.isDone()) {
-            path = (ArrayList) aStar.step();
+            path = aStar.step();
         } else {
-            path = (ArrayList) aStar.step();
+            path = aStar.step();
             aStarCache.remove(from.getID());
         }
             
-        
+        if (path != null && path.size() > 0) {
+            aStarCache.remove(from.getID());
+        }
         
         return optimizePath(path);
         // return path;
     }
 
     private ArrayList<Vector2> optimizePath(ArrayList<Vector2> path) {
-        long startTime = System.nanoTime();
         if (path == null || path.size() < 3) {
             return path;
         }

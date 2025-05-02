@@ -2,9 +2,7 @@ package org.sdu.sem4.g7.ai;
 
 import java.util.*;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
-import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.enums.EntityActions;
 
 public class BayesianNetwork {
