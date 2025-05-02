@@ -1,20 +1,24 @@
 package org.sdu.sem4.g7.bounceTurret;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Hitbox;
+import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.IRigidbodyService;
 import org.sdu.sem4.g7.tank.parts.Bullet;
 
 public class BounceBullet extends Bullet {
     IRigidbodyService lastHit = null;
+    URI bounceSoundFile = null;
     BounceBullet() {
         super();
         setMaxFlightTime(3);
         setHealth(10);
         try {
             this.setSprite(this.getClass().getClassLoader().getResource("BounceBullet.png").toURI(), 2);
+            bounceSoundFile = this.getClass().getClassLoader().getResource("bounce.wav").toURI();
         } catch (URISyntaxException e) {e.printStackTrace();}
     }
 
@@ -41,6 +45,13 @@ public class BounceBullet extends Bullet {
             angle = (float) Math.toRadians(angle);
             this.setVelocity((float) Math.cos(angle) * 8, (float) Math.sin(angle) * 8);
             this.setPosition(this.getPosition().getX() + this.getVelocity().getX(), this.getPosition().getY() + this.getVelocity().getY());
+
+            // play bounce sound
+            if (gameData.playAudio(SoundType.HIT, bounceSoundFile.toString(), 0.25f)) {
+                System.out.println("Playing bounce sound");
+            } else {
+                gameData.addAudio(SoundType.HIT, bounceSoundFile);
+            }
         }
         return true;
     }

@@ -4,6 +4,7 @@ import java.net.URISyntaxException;
 
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
+import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.tank.parts.Turret;
 
@@ -20,7 +21,7 @@ public class BounceTurret extends Turret {
             // Load the sound files
             if (getShootSoundFile() == null) {
                 System.out.println(this.getClass().getResource("/shoot.wav"));
-                // setShootSoundFile(this.getClass().getResource("/shoot.wav").toURI());
+                setShootSoundFile(this.getClass().getResource("/shoot.wav").toURI());
             }
         } catch (URISyntaxException e) {e.printStackTrace();}
     }
@@ -32,11 +33,11 @@ public class BounceTurret extends Turret {
             return false;
         }
         // Play the shoot sound
-        // if (gameData.playAudio(SoundType.SHOOT, getShootSoundFile().toString(), 1.0f)) {
-        //     System.out.println("Playing shoot sound");
-        // } else {
-        //     gameData.addAudio(SoundType.SHOOT, getShootSoundFile());
-        // }
+        if (gameData.playAudio(SoundType.SHOOT, getShootSoundFile().toString(), 1.0f)) {
+            System.out.println("Playing shoot sound");
+        } else {
+            gameData.addAudio(SoundType.SHOOT, getShootSoundFile());
+        }
 
         BounceBullet bullet = new BounceBullet();
 
