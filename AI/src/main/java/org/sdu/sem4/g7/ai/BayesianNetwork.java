@@ -39,17 +39,19 @@ public class BayesianNetwork {
         public float evaluate() {
             if (callback != null) {
                 try {
-                    return callback.call();
+                    float value = callback.call();
+                    System.out.println("Evaluated " + name + " to " + value);
+                    return value;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
-            float result = 1f;
+            float result = 0f;
             for (Map.Entry<BayesianNode, Float> entry : parents.entrySet()) {
                 BayesianNode parent = entry.getKey();
                 float weight = entry.getValue();
-                result *= parent.evaluate() * weight;
+                result += parent.evaluate() * weight;
             }
             return result;
         }
@@ -71,20 +73,38 @@ public class BayesianNetwork {
     boolean teammateInLine;
 
     public BayesianNetwork() {
-
-        nodes = new ArrayList<>(
+        this.nodes = new ArrayList<>(
             List.of(
-                new BayesianNode("Health Remaining", () -> healthRemaining),
-                new BayesianNode("Range", () -> range),
-                new BayesianNode("In Group", () -> inGroup ? 1f : 0f),
-                new BayesianNode("Teammate in Line", () -> teammateInLine ? 1f : 0f),
-                new BayesianNode("Attack or Flee", Map.of()),
-                new BayesianNode("Attack", Map.of()),
-                new BayesianNode("Flee", Map.of()),
-                new BayesianNode("Group Up", Map.of()),
-                new BayesianNode("Move Aside", Map.of())   
+                new BayesianNode("Health Remaining", () -> {return healthRemaining;}),
+                new BayesianNode("Range", () -> {return range;}),
+                new BayesianNode("In Group", () -> {return inGroup ? 1f : 0f;}),
+                new BayesianNode("Teammate in Line", () -> {return teammateInLine ? 1f : 0f;})
             )
         );
+        // Add nodes to the network
+        this.nodes.add(new BayesianNode("Attack or Flee", Map.of(
+            this.nodes.get(0), 0.25f,
+            this.nodes.get(1), 0.15f,
+            this.nodes.get(2), 0.6f
+        )));
+
+        this.nodes.add(new BayesianNode("Group Up", Map.of(
+            this.nodes.get(0), 0.5f,
+            this.nodes.get(2), -0.5f
+        ), EntityActions.GROUP_UP));
+
+        this.nodes.add(new BayesianNode("Attack", Map.of(
+            this.nodes.get(5), 1f
+        ), EntityActions.ATTACK));
+
+        this.nodes.add(new BayesianNode("Flee", Map.of(
+            this.nodes.get(5), -0.4f
+        ), EntityActions.FLEE));
+
+        this.nodes.add(new BayesianNode("Move Aside", Map.of(
+            this.nodes.get(3), 0.9f,
+            this.nodes.get(6), 0.1f
+        ), EntityActions.MOVE_ASIDE));
     }
 
     public EntityActions evaluate(float healthRemaining, float range, boolean inGroup, boolean teammateInLine) {
@@ -101,12 +121,14 @@ public class BayesianNetwork {
                 outputNodes.add(node);
             }
         }
+        System.out.println(outputNodes.size());
 
         float cumulativeChance = 0f;
         Map<BayesianNode, Float> chances = new HashMap<>();
         
         for (BayesianNode node : outputNodes) {
             float chance = node.evaluate();
+            System.out.println(node.name + " chance: " + chance);
             cumulativeChance += chance;
             chances.put(node, chance);
         }
@@ -129,7 +151,7 @@ public class BayesianNetwork {
         // Print out the time taken for evaluation
         // System.out.print("Chosen action " + action + " time taken: ");
         // System.out.println(TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - startTime) / 1000.0 + "ms");
-
+        System.out.println("Chosen action " + action + " time taken: " + (System.nanoTime() - startTime) / 1000000.0 + "ms");
         return action;
     }
 }

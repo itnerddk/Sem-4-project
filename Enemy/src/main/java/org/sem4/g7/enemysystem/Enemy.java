@@ -68,12 +68,14 @@ public class Enemy extends Tank {
 
     @Override
     public void processPosition(GameData gameData) {
+        // Point radius is for checking if close enough to the point
+        float pointRadius = 0.5f;
         super.processPosition(gameData);
         if (this.path == null || this.path.isEmpty()) {
             this.currentAction = EntityActions.IDLE;
             return;
         }
-        if (new Vector2(this.getPosition()).distance(new Vector2(this.path.get(0)).multiply(CommonConfig.getTileSize())) < (1 * CommonConfig.getTileSize())) {
+        if (new Vector2(this.getPosition()).distance(new Vector2(this.path.get(0)).multiply(CommonConfig.getTileSize())) < (pointRadius * CommonConfig.getTileSize())) {
             System.out.println("Removing point");
             this.path.remove(0);
             if (this.path.isEmpty()) this.currentAction = EntityActions.IDLE;
@@ -83,10 +85,10 @@ public class Enemy extends Tank {
         } else {
             this.currentAction = EntityActions.MOVING;
 
-            System.out.println(Vector2.round(this.getPosition()) + " -> " + new Vector2(this.path.get(0)).multiply(CommonConfig.getTileSize()));
+            // System.out.println(Vector2.round(this.getPosition()) + " -> " + new Vector2(this.path.get(0)).multiply(CommonConfig.getTileSize()));
 
             double targetRotation = Math.round(new Vector2(this.path.get(0)).subtract(new Vector2(this.getPosition()).divideInt(CommonConfig.getTileSize())).rotation());
-            System.out.println(Math.round(this.getRotation()) + " -> " + targetRotation);
+            // System.out.println(Math.round(this.getRotation()) + " -> " + targetRotation);
             // turnLeft and turnRight within 5 degrees
             double angleDiff = Math.round(this.getRotation()) - targetRotation;
             if (angleDiff > 180) {

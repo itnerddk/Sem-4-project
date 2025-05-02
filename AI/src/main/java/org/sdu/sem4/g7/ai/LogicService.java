@@ -3,10 +3,59 @@ package org.sdu.sem4.g7.ai;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import org.sdu.sem4.g7.common.Config.CommonConfig;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Vector2;
+import org.sdu.sem4.g7.common.enums.EntityActions;
 import org.sdu.sem4.g7.common.services.ILogicService;
+
+class CompositeKey {
+    String id;
+
+    public CompositeKey(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof CompositeKey) {
+            CompositeKey other = (CompositeKey) obj;
+            return this.id.equals(other.id);
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "CompositeKey [id=" + id + "]";
+    }
+}
+class CompositeValue {
+    public AStar aStar;
+    public Vector2 to;
+    public EntityActions action;
+    public long decisionTaken;
+
+    public CompositeValue(AStar aStar, Vector2 to, EntityActions action, long decisionTaken) {
+        this.aStar = aStar;
+        this.to = to;
+        this.action = action;
+        this.decisionTaken = decisionTaken;
+    }
+
+    @Override
+    public String toString() {
+        return "CompositeValue [aStar=" + aStar + ", to=" + to + ", action=" + action
+                + ", decisionTaken=" + decisionTaken + "]";
+    }
+}
 
 public class LogicService implements ILogicService {
     
@@ -19,44 +68,68 @@ public class LogicService implements ILogicService {
         LogicService.gameData = gameData;
     }
 
-    HashMap<String, AStar> aStarCache = new HashMap<>();
+    BayesianNetwork bayesianNetwork = new BayesianNetwork();
+    HashMap<CompositeKey, CompositeValue> decisionMap = new HashMap<>();
+
+
+    private CompositeValue getOrCreateValue(CompositeKey key, Entity from, Vector2 to) {
+        CompositeValue compValue = decisionMap.computeIfPresent(key, (_key, val) -> {return val;});
+        if (compValue == null) {
+            decisionMap.put(key, new CompositeValue(new AStar(from, to, map, gameData), to, EntityActions.IDLE, 0));
+            compValue = decisionMap.get(key);
+        }
+        return compValue;
+    }
+
 
     @Override
-    public ArrayList<Vector2> findPath(Entity from, Vector2 to) {
+    public EntityActions getAction(Entity entity, Vector2 playerPosition) {
+        // Get the health of the entity
+        float health = entity.getHealth() / entity.getMaxHealth();
+        // Get the distance to the player
+        float distance = (float) entity.getPosition().distance(playerPosition);
+        // Get the range modifier
+        float rangeModifier = (float) ((-0.17f * Math.pow(distance, 2)) + (1.5f * distance) - 2.33f);
+        rangeModifier = Math.clamp(rangeModifier, 0.0f, 1.0f);
 
-        BayesianNetwork bayesianNetwork = new BayesianNetwork();
-        float health = from.getHealth() / from.getMaxHealth();
-        float range = (float) new Vector2(from.getPosition()).distance(to) / 5f;
-        bayesianNetwork.evaluate(health, range, false, false);
+        CompositeValue compValue = getOrCreateValue(new CompositeKey(entity.getID()), entity, playerPosition);
 
-        ArrayList<Vector2> path = new ArrayList<>();
+        // If 5 seconds has passed since last decision, re-evaluate
+        if ((System.currentTimeMillis() - compValue.decisionTaken) > 5*1000) {
+            System.out.println("Time passed re-evaluate");
+            compValue.action = bayesianNetwork.evaluate(health, rangeModifier, false, false);
+            compValue.decisionTaken = System.currentTimeMillis();
+        }
+        // Return the action
+        return compValue.action;
+    }
 
-        AStar aStar = null;
+    @Override
+    public ArrayList<Vector2> findPath(Entity from, Vector2 _to) {
 
-        if (aStarCache.containsKey(from.getID())) {
-            aStar = aStarCache.get(from.getID());
-            if (!aStar.isTo(to)) {
-                aStar = new AStar(from, to, map, gameData);
-                aStar.findPath();
-                aStarCache.put(from.getID(), aStar);
-            }
+        Vector2 to = new Vector2(_to).divideInt(CommonConfig.getTileSize());
+
+        CompositeKey key = new CompositeKey(from.getID());
+        // Check if decision map has a value if not, make one.
+        CompositeValue compValue = getOrCreateValue(key, from, to);
+        compValue.to = to;
+
+        ArrayList<Vector2> path = null;
+        if (compValue.aStar == null) {
+            compValue.aStar = new AStar(from, to, map, gameData);
+            path = compValue.aStar.step();
+        } else if (compValue.aStar.getTo().equals(compValue.to)) {
+            path = compValue.aStar.step();
         } else {
-            aStar = new AStar(from, to, map, gameData);
-            aStar.findPath();
-            aStarCache.put(from.getID(), aStar);
+            compValue.aStar = new AStar(from, to, map, gameData);
+            path = compValue.aStar.step();
         }
 
-        if (!aStar.isDone()) {
-            path = aStar.step();
-        } else {
-            path = aStar.step();
-            aStarCache.remove(from.getID());
+        // If the path isn't empty set astar to null
+        if (path != null && !path.isEmpty()) {
+            compValue.aStar = null;
         }
-            
-        if (path != null && path.size() > 0) {
-            aStarCache.remove(from.getID());
-        }
-        
+
         return optimizePath(path);
         // return path;
     }

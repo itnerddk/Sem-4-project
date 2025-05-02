@@ -45,7 +45,7 @@ public class AStar {
         // Initialize the A* algorithm with the starting entity and target position
         this.from = new EntityShell(from);
         this.from.setPosition(Vector2.round(this.from.getPosition().divide(CommonConfig.getTileSize())));
-        this.to = Vector2.round((new Vector2(to)).divide(CommonConfig.getTileSize()));
+        this.to = new Vector2(to);
         this.map = map;
         System.out.println("From: " + this.from.getPosition() + " To: " + this.to);
 
@@ -62,6 +62,10 @@ public class AStar {
     int steps = 0;
 
     public ArrayList<Vector2> step() {
+        if (steps == 0) {
+            steps++;
+            return this.findPath();
+        }
         steps++;
         // System.out.println("Step: " + steps);
         Cost currentCost = fScore.peek();
@@ -151,6 +155,13 @@ public class AStar {
             // Check if the new position is within bounds and not an obstacle
             if (newX >= 0 && newX < map.get(0).size() && newY >= 0 && newY < map.size()) {
                 if (map.get(newY).get(newX) == 0) {
+                    // If diagonal movement, check if the tile is free
+                    if (Math.abs(dir[0]) + Math.abs(dir[1]) == 2) {
+                        // Check the two adjacent tiles
+                        if (map.get((int)point.getY()).get(newX) != 0 || map.get(newY).get((int)point.getX()) != 0) {
+                            continue; // One of the adjacent tiles is an obstacle
+                        }
+                    }
                     neighbours.add(new Vector2(newX, newY));
                     drawCircle(new Vector2(newX, newY), Color.BLUE);
                 }
@@ -159,7 +170,7 @@ public class AStar {
         return neighbours;
     }
 
-    public List<Vector2> findPath() {
+    public ArrayList<Vector2> findPath() {
 
         Vector2 start = from.getPosition();
         openSet.add(start);
@@ -204,6 +215,9 @@ public class AStar {
         return this.to.equals(inToClone);
     }
 
+    public Vector2 getTo() {
+        return to;
+    }
 
     private void drawCircle(Vector2 vector2, Color color) {
         gameData.gc.save();
