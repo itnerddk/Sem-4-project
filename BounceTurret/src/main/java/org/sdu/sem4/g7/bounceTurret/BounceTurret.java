@@ -50,12 +50,12 @@ public class BounceTurret extends Turret {
         rotatedMuzzle.rotate(this.getRotation());
         bullet.getPosition().add(rotatedMuzzle);
         
-        bullet.setRotation(this.getRotation());
+        bullet.setRotation(this.getRotation() - 90);
 
         // set the tank as the createdBy
         bullet.setCreatedBy(this.getTank());
         
-        float rotationInRadians = bullet.getRotation() - 90;
+        float rotationInRadians = bullet.getRotation();
         rotationInRadians = (float) Math.toRadians(rotationInRadians);
 
 

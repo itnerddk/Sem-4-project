@@ -8,6 +8,7 @@ import org.sdu.sem4.g7.common.services.IRigidbodyService;
 import org.sdu.sem4.g7.tank.parts.Bullet;
 
 public class BounceBullet extends Bullet {
+    IRigidbodyService lastHit = null;
     BounceBullet() {
         super();
         setMaxFlightTime(3);
@@ -19,18 +20,21 @@ public class BounceBullet extends Bullet {
 
     @Override
     public boolean onCollision(IRigidbodyService other, GameData gameData) {
+        if (other == lastHit) {
+            return true;
+        }
+        lastHit = other;
         int oldHealth = this.getHealth();
         super.onCollision(other, gameData);
         int newHealth = this.getHealth();
         if (oldHealth > newHealth) {
             // Some collision happened so make bounce
             Hitbox hitbox = other.getHitbox();
-            // float angle = (float) Math.toDegrees(Math.atan2(hitbox.getPosition().getY() - this.getPosition().getY(), hitbox.getPosition().getX() - this.getPosition().getX()));
-            float wallAngle = getBounceAngle(hitbox);
-            System.out.println(this.getHitbox().checkCollision(hitbox));
-            float thisAngle = this.getRotation() % 90;
-            float angle = thisAngle - wallAngle * 2;
-            // angle += 180;
+            float wallAngle = (getBounceAngle(hitbox) + 180) % 360;
+            float thisAngle = this.getRotation();
+            float angleDiff = thisAngle - wallAngle;
+            float angle = thisAngle - (angleDiff * 2);
+            angle += 180;
             angle = (angle + 360) % 360;
             // float angle = wallAngle;
             this.setRotation(angle);
