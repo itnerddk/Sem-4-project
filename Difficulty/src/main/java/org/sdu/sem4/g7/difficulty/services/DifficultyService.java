@@ -27,7 +27,7 @@ public class DifficultyService implements IDifficultyService {
                 // if difficulty is null, then set the difficulty to normal
                 if (difficultyString == null) {
                     setDifficulty(DifficultyEnum.NORMAL);
-                    difficultyString = "normal";
+                    difficultyString = "NORMAL";
                 }
 
                 // set local difficulty
