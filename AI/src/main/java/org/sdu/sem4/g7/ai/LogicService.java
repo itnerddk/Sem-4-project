@@ -112,8 +112,19 @@ public class LogicService implements ILogicService {
         // If 5 seconds has passed since last decision, re-evaluate
         if ((System.currentTimeMillis() - compValue.decisionTaken) > 5*1000) {
             System.out.println("Time passed re-evaluate");
-            compValue.action = bayesianNetwork.evaluate(health, rangeModifier, false, false);
-            // compValue.action = EntityActions.ATTACK;
+            HashMap<EntityActions, Float> chances = bayesianNetwork.evaluate(health, rangeModifier, false, false);
+            // Get the action with the highest chance
+            EntityActions newAction = bayesianNetwork.pickAction(chances);
+            // If the old action still has a high chance, keep it
+            System.out.println(compValue.action);
+            if (!chances.containsKey(compValue.action)) {
+            } else if (compValue.action != null && chances.get(compValue.action) > 0.4f && chances.get(compValue.action) > chances.get(newAction) + 0.1f) {
+                newAction = compValue.action;
+            } else {
+                compValue.aStar = null;
+            }
+            // Set the new action
+            compValue.action = newAction;
             compValue.decisionTaken = System.currentTimeMillis();
         }
         // Return the action
@@ -211,7 +222,13 @@ public class LogicService implements ILogicService {
     }
     
     private static Vector2 flee(Entity entity, Vector2 targetPosition) {
-        return targetPosition;
+        // Path towards the target but stay 8 tiles away from the target
+        Vector2 target = new Vector2(targetPosition);
+        Vector2 from = new Vector2(entity.getPosition());
+        Vector2 direction = new Vector2(target).subtract(from).normalize();
+        Vector2 newTarget = target.subtract(direction.multiply(8 * CommonConfig.getTileSize()));
+        
+        return closestPoint(newTarget);
     }
     
     private static Vector2 groupUp(Entity entity, Vector2 targetPosition) {
@@ -219,8 +236,16 @@ public class LogicService implements ILogicService {
     }
 
     private static Vector2 closestPoint(Vector2 from) {
+        if (from == null) {
+            return null;
+        }
         // Check the map of the from point and find the closest open point.
         Vector2 point = new Vector2(from).divideInt(CommonConfig.getTileSize());
+
+        if (point.getX() < 0) point.setX(0);
+        if (point.getY() < 0) point.setY(0);
+        if (point.getX() >= map.get(0).size()) point.setX(map.get(0).size() - 1);
+        if (point.getY() >= map.size()) point.setY(map.size() - 1);
 
         // Check if the point is open
         if (map.get((int) point.getY()).get((int) point.getX()) == 0) {

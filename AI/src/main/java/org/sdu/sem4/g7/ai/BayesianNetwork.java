@@ -59,6 +59,7 @@ public class BayesianNetwork {
                 // System.out.println("Evaluated " + parent.name + " to " + parentValue);
                 result += parentValue * Math.abs(weight);
             }
+            System.out.println("Evaluated " + name + " to " + result);
             return result;
         }
 
@@ -89,9 +90,9 @@ public class BayesianNetwork {
         );
         // Add nodes to the network
         this.nodes.add(new BayesianNode("Attack or Flee", Map.of(
-            this.nodes.get(0), 0.25f,
-            this.nodes.get(1), 0.15f,
-            this.nodes.get(2), 0.6f
+            this.nodes.get(0), 0.4f,
+            this.nodes.get(1), 0.4f,
+            this.nodes.get(2), 0.2f
         )));
 
         this.nodes.add(new BayesianNode("Group Up", Map.of(
@@ -100,11 +101,11 @@ public class BayesianNetwork {
         ), EntityActions.GROUP_UP));
 
         this.nodes.add(new BayesianNode("Attack", Map.of(
-            this.nodes.get(5), 1f
+            this.nodes.get(4), 1f
         ), EntityActions.ATTACK));
 
         this.nodes.add(new BayesianNode("Flee", Map.of(
-            this.nodes.get(5), -1f
+            this.nodes.get(4), -1f
         ), EntityActions.FLEE));
 
         this.nodes.add(new BayesianNode("Move Aside", Map.of(
@@ -113,7 +114,7 @@ public class BayesianNetwork {
         ), EntityActions.MOVE_ASIDE));
     }
 
-    public EntityActions evaluate(float healthRemaining, float range, boolean inGroup, boolean teammateInLine) {
+    public HashMap<EntityActions, Float> evaluate(float healthRemaining, float range, boolean inGroup, boolean teammateInLine) {
         // Set values for evaluation needs
         this.healthRemaining = healthRemaining;
         this.range = range;
@@ -121,43 +122,44 @@ public class BayesianNetwork {
         this.teammateInLine = teammateInLine;
         long startTime = System.nanoTime();
         // Sort nodes
-        List<BayesianNode> outputNodes = new ArrayList<>();
+
+        HashMap<EntityActions, Float> chances = new HashMap<>();
+        float cumulativeChance = 0f;
+
         for(BayesianNode node : nodes){
             if(node.getAction() != null){
-                outputNodes.add(node);
+                float chance = node.evaluate();
+                cumulativeChance += chance;
+                chances.put(node.action, chance);
             }
         }
-        System.out.println(outputNodes.size());
+        System.out.println(chances.size());
 
-        float cumulativeChance = 0f;
-        Map<BayesianNode, Float> chances = new HashMap<>();
-        
-        for (BayesianNode node : outputNodes) {
-            float chance = node.evaluate();
-            System.out.println(node.name + " chance: " + chance);
-            cumulativeChance += chance;
-            chances.put(node, chance);
-        }
 
-        float randomValue = (float) Math.random() * cumulativeChance;
-        float cumulativeValue = 0f;
-
-        EntityActions action = null;
-
-        for (Map.Entry<BayesianNode, Float> entry : chances.entrySet()) {
-            BayesianNode node = entry.getKey();
+        for (Map.Entry<EntityActions, Float> entry : chances.entrySet()) {
+            EntityActions action = entry.getKey();
             float chance = entry.getValue();
-            cumulativeValue += chance;
-            if (cumulativeValue >= randomValue) {
-                action = node.getAction();
-                break;
-            }
+            // Normalize the chance
+            chances.put(action, chance / cumulativeChance);
         }
 
         // Print out the time taken for evaluation
         // System.out.print("Chosen action " + action + " time taken: ");
         // System.out.println(TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - startTime) / 1000.0 + "ms");
-        System.out.println("Chosen action " + action + " time taken: " + (System.nanoTime() - startTime) / 1000000.0 + "ms");
+        // System.out.println("Chosen action " + action + " time taken: " + (System.nanoTime() - startTime) / 1000000.0 + "ms");
+        return chances;
+    }
+
+    public EntityActions pickAction(HashMap<EntityActions, Float> chances) {
+        // Pick the action with the highest chance
+        EntityActions action = null;
+        float maxChance = 0f;
+        for (Map.Entry<EntityActions, Float> entry : chances.entrySet()) {
+            if (entry.getValue() > maxChance) {
+                maxChance = entry.getValue();
+                action = entry.getKey();
+            }
+        }
         return action;
     }
 }

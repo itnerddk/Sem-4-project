@@ -24,6 +24,11 @@ public class Enemy extends Tank {
     private Vector2 target = null;
     private EntityActions currentAction = EntityActions.IDLE;
 
+    /**
+     * This action is only what it's doing at the moment, doesn't have any effect on anything as of now.
+     */
+    public EntityActions logicalAction;
+
     public Enemy() {
         super();
         this.getSprite().setEffect(new javafx.scene.effect.ColorAdjust(0, 0, 0, 0));
@@ -112,9 +117,9 @@ public class Enemy extends Tank {
                 angleDiff += 2 * 180;
             }
 
-            if (angleDiff > 5) {
+            if (angleDiff > 3) {
                 this.turnLeft();
-            } else if (angleDiff < -5) {
+            } else if (angleDiff < -3) {
                 this.turnRight();
             }
 
@@ -153,6 +158,9 @@ public class Enemy extends Tank {
         gc.fillText(Double.toString(Math.round(this.getRotation()*10)/10.0), 0, 50);
 
         gc.fillText(Vector2.round(new Vector2(getPosition()).multiply(10)).divide(10).toString(), 0, 72);
+
+        // Format to fill 8 characters
+        gc.fillText(String.format("%s\n->%s", this.getCurrentAction().toString(), this.logicalAction.toString()), 0, 100);
 
         gc.restore();
 

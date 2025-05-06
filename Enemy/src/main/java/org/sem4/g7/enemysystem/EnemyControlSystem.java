@@ -87,7 +87,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
                 service -> {
                     // Actions
 
-                    service.getAction(enemy, playerPosition);
+                    enemy.logicalAction = service.getAction(enemy, playerPosition);
 
                     enemy.setTarget(service.evaluateAction(enemy, playerPosition));
                     // System.out.println("Target: " + enemy.getTarget());
