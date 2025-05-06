@@ -32,4 +32,12 @@ public interface ILogicService {
      * @return List of corner coordinates
      */
     public ArrayList<Vector2> findPath(Entity from, Vector2 to);
+
+    /**
+     * Evaluates an action and returns a position to path find to
+     * @param entity The entity itself
+     * @param targetPosition The target (Player or other enemy)
+     * @return Where to go
+     */
+    public Vector2 evaluateAction(Entity entity, Vector2 targetPosition);
 }

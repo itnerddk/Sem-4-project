@@ -44,10 +44,10 @@ public class AStar {
         this.gameData = gameData;
         // Initialize the A* algorithm with the starting entity and target position
         this.from = new EntityShell(from);
-        this.from.setPosition(Vector2.round(this.from.getPosition().divide(CommonConfig.getTileSize())));
+        this.from.setPosition(new Vector2(this.from.getPosition()).divideInt(CommonConfig.getTileSize()));
         this.to = new Vector2(to);
         this.map = map;
-        System.out.println("From: " + this.from.getPosition() + " To: " + this.to);
+        // System.out.println("From: " + this.from.getPosition() + " To: " + this.to);
 
         this.openSet = new PriorityQueue<>((a, b) -> {
             return Integer.compare(heuristics(a), heuristics(b));
@@ -69,6 +69,9 @@ public class AStar {
         steps++;
         // System.out.println("Step: " + steps);
         Cost currentCost = fScore.peek();
+        if (currentCost == null) {
+            return null;
+        }
         Vector2 current = currentCost.key;
 
         drawCircle(current, Color.YELLOW);

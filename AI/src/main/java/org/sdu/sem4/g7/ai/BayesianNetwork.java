@@ -50,8 +50,14 @@ public class BayesianNetwork {
             float result = 0f;
             for (Map.Entry<BayesianNode, Float> entry : parents.entrySet()) {
                 BayesianNode parent = entry.getKey();
+                // If the weight is negative, then the parent is inverted
                 float weight = entry.getValue();
-                result += parent.evaluate() * weight;
+                float parentValue = parent.evaluate();
+                if (weight < 0) {
+                    parentValue = 1 - parentValue;
+                }
+                // System.out.println("Evaluated " + parent.name + " to " + parentValue);
+                result += parentValue * Math.abs(weight);
             }
             return result;
         }
@@ -98,7 +104,7 @@ public class BayesianNetwork {
         ), EntityActions.ATTACK));
 
         this.nodes.add(new BayesianNode("Flee", Map.of(
-            this.nodes.get(5), -0.4f
+            this.nodes.get(5), -1f
         ), EntityActions.FLEE));
 
         this.nodes.add(new BayesianNode("Move Aside", Map.of(

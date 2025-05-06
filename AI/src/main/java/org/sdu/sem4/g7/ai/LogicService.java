@@ -1,8 +1,10 @@
 package org.sdu.sem4.g7.ai;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.BiFunction;
 
 import org.sdu.sem4.g7.common.Config.CommonConfig;
 import org.sdu.sem4.g7.common.data.Entity;
@@ -62,6 +64,18 @@ public class LogicService implements ILogicService {
     static List<List<Integer>> map;
     static GameData gameData;
 
+    private static final EnumMap<EntityActions, BiFunction<Entity, Vector2, Vector2>> actionMap = new EnumMap<>(EntityActions.class);
+
+    static {
+        actionMap.put(EntityActions.IDLE, (entity, playerPosition) -> {return null;});
+        actionMap.put(EntityActions.MOVING, (entity, playerPosition) -> {return null;});
+
+        actionMap.put(EntityActions.ATTACK, (entity, playerPosition) -> attack(entity, playerPosition));
+        actionMap.put(EntityActions.FLEE, (entity, playerPosition) -> flee(entity, playerPosition));
+        actionMap.put(EntityActions.GROUP_UP, (entity, playerPosition) -> groupUp(entity, playerPosition));
+        actionMap.put(EntityActions.MOVE_ASIDE, (entity, playerPosition) -> {return null;});
+    }
+
     @Override
     public void init(List<List<Integer>> map, GameData gameData) {
         LogicService.map = map;
@@ -77,6 +91,7 @@ public class LogicService implements ILogicService {
         if (compValue == null) {
             decisionMap.put(key, new CompositeValue(new AStar(from, to, map, gameData), to, EntityActions.IDLE, 0));
             compValue = decisionMap.get(key);
+            getAction(from, to);
         }
         return compValue;
     }
@@ -85,7 +100,7 @@ public class LogicService implements ILogicService {
     @Override
     public EntityActions getAction(Entity entity, Vector2 playerPosition) {
         // Get the health of the entity
-        float health = entity.getHealth() / entity.getMaxHealth();
+        float health = (float) entity.getHealth() / (float) entity.getMaxHealth();
         // Get the distance to the player
         float distance = (float) entity.getPosition().distance(playerPosition);
         // Get the range modifier
@@ -98,6 +113,7 @@ public class LogicService implements ILogicService {
         if ((System.currentTimeMillis() - compValue.decisionTaken) > 5*1000) {
             System.out.println("Time passed re-evaluate");
             compValue.action = bayesianNetwork.evaluate(health, rangeModifier, false, false);
+            // compValue.action = EntityActions.ATTACK;
             compValue.decisionTaken = System.currentTimeMillis();
         }
         // Return the action
@@ -168,6 +184,66 @@ public class LogicService implements ILogicService {
         
 
         return reversedPath;
+    }
+
+
+    @Override
+    public Vector2 evaluateAction(Entity entity, Vector2 targetPosition) {
+        CompositeValue compValue = getOrCreateValue(new CompositeKey(entity.getID()), entity, targetPosition);
+        if (compValue.to.equals(new Vector2(targetPosition).divideInt(CommonConfig.getTileSize()))) {
+            return targetPosition;
+        }
+        // System.out.println("Evaluating " + compValue.action.name() + " action for entity: " + entity.getID() + " with target position: " + new Vector2(targetPosition).divideInt(CommonConfig.getTileSize()));
+        return LogicService.actionMap.get(compValue.action).apply(entity, targetPosition);
+    }
+
+
+
+    private static Vector2 attack(Entity entity, Vector2 targetPosition) {
+        // This should only be called if the entity is in range of the target
+        // Path towards the target but stay 3 tiles away from the target
+        Vector2 target = new Vector2(targetPosition);
+        Vector2 from = new Vector2(entity.getPosition());
+        Vector2 direction = new Vector2(target).subtract(from).normalize();
+        Vector2 newTarget = target.subtract(direction.multiply(3 * CommonConfig.getTileSize()));
+        
+        return closestPoint(newTarget);
+    }
+    
+    private static Vector2 flee(Entity entity, Vector2 targetPosition) {
+        return targetPosition;
+    }
+    
+    private static Vector2 groupUp(Entity entity, Vector2 targetPosition) {
+        return targetPosition;
+    }
+
+    private static Vector2 closestPoint(Vector2 from) {
+        // Check the map of the from point and find the closest open point.
+        Vector2 point = new Vector2(from).divideInt(CommonConfig.getTileSize());
+
+        // Check if the point is open
+        if (map.get((int) point.getY()).get((int) point.getX()) == 0) {
+            return point.multiply(CommonConfig.getTileSize());
+        }
+        
+        // Walk in a circle until we find an open point
+        for (int i = 1; i < 10; i++) {
+            for (int j = -i; j <= i; j++) {
+                for (int k = -i; k <= i; k++) {
+                    if (Math.abs(j) + Math.abs(k) == i) {
+                        Vector2 newPoint = new Vector2(point).add(j, k);
+                        if (newPoint.getX() >= 0 && newPoint.getX() < map.get(0).size() && newPoint.getY() >= 0 && newPoint.getY() < map.size()) {
+                            if (map.get((int) newPoint.getY()).get((int) newPoint.getX()) == 0) {
+                                return newPoint.multiply(CommonConfig.getTileSize());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // If we don't find an open point, return null
+        return null;
     }
 
 }

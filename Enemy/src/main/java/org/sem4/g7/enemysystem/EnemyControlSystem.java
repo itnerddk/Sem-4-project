@@ -1,13 +1,16 @@
 package org.sem4.g7.enemysystem;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiFunction;
 
 import org.sdu.sem4.g7.common.Config.CommonConfig;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
+import org.sdu.sem4.g7.common.enums.EntityActions;
 import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
@@ -71,44 +74,54 @@ public class EnemyControlSystem implements IEntityProcessingService {
 
             // Process the enemy's position
             enemy.processPosition(gameData);
-
-            
-
-
             
             // Logics
-            Vector2 target = new Vector2(player.getPosition());
+            Vector2 playerPosition = new Vector2(player.getPosition());
             
-            
-            
-            // Checking if path has the right goal
-            if (enemy.getPath() != null && !enemy.getPath().isEmpty()) {
-                drawPath(gameData, enemy.getPath());
-                if (!enemy.getPath().get(enemy.getPath().size() - 1).equals(new Vector2(target).divideInt(CommonConfig.getTileSize()))) {
-                    // System.out.println(enemy.getPath().getLast() + " != " + new Vector2(target).divideInt(CommonConfig.getTileSize()));
-                    System.out.println("Path is no longer valid, removing it");
-                    enemy.setPath(null);
-                }
+            if (enemy.getTarget() == null) {
+                enemy.setTarget(new Vector2(enemy.getPosition()));
             }
+            
             // If it doesn't have a path, find one
-            else if (enemy.getPath() == null || enemy.getPath().isEmpty()) {
-                ServiceLocator.getLogicService().ifPresentOrElse(
-                    service -> {
+            ServiceLocator.getLogicService().ifPresentOrElse(
+                service -> {
+                    // Actions
+
+                    service.getAction(enemy, playerPosition);
+
+                    enemy.setTarget(service.evaluateAction(enemy, playerPosition));
+                    // System.out.println("Target: " + enemy.getTarget());
+                    // Path finding
+                    if (enemy.getPath() == null || enemy.getPath().isEmpty()) {
                         ArrayList<Vector2> path = null;
                         long timeStarted = System.nanoTime();
+                        if (enemy.getTarget() == null) {
+                            return;
+                        }
                         while (path == null && (MAX_TIME / enemies.size()) > TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - timeStarted)) {
-                            path = service.findPath(enemy, new Vector2(player.getPosition()));
+                            path = service.findPath(enemy, enemy.getTarget());
                         }
                         if (path == null || path.isEmpty()) {
                             return;
                         }
                         enemy.setPath(path);
                         drawPath(gameData, path);
-                    },
-                    () -> {
-                        System.out.println("NOT PRESENT!");
                     }
-                );
+                },
+                () -> {
+                    System.out.println("NOT PRESENT!");
+                }
+            );
+
+            // Checking if path has the right goal
+            if (enemy.getPath() != null && !enemy.getPath().isEmpty()) {
+                drawPath(gameData, enemy.getPath());
+                // System.out.println(enemy.getPath().get(enemy.getPath().size() - 1) + " == " + new Vector2(enemy.getTarget()).divideInt(CommonConfig.getTileSize()));
+                if (!enemy.getPath().get(enemy.getPath().size() - 1).equals(new Vector2(enemy.getTarget()).divideInt(CommonConfig.getTileSize()))) {
+                    // System.out.println(enemy.getPath().getLast() + " != " + new Vector2(target).divideInt(CommonConfig.getTileSize()));
+                    // System.out.println("Path is no longer valid, removing it");
+                    enemy.setPath(null);
+                }
             }
         }
     }

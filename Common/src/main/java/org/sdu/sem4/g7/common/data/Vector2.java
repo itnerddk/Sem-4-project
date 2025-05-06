@@ -135,6 +135,15 @@ public class Vector2 {
         return this;
     }
 
+
+    /**
+     * Get the length of the vector
+     * @return the length of the vector
+     */
+    public double length() {
+        return Math.sqrt(x * x + y * y);
+    }
+
     public Vector2 normalize() {
         double length = Math.sqrt(x * x + y * y);
         if (length != 0) {

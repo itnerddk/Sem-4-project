@@ -64,24 +64,32 @@ public abstract class Tank extends Entity implements IRigidbodyService {
         }
     }
 
-    public void accelerate() {
+    public void accelerate(float weight) {
         this.setSpeed(
             lerp(
                 this.getSpeed(),
-                Math.min(this.getSpeed() + (this.getAcceleration()), this.getMaxSpeed()),
+                Math.min(this.getSpeed() + (this.getAcceleration() * weight), this.getMaxSpeed()),
                 0.7
+            )
+        );
+    }
+    
+    public void accelerate() {
+        this.accelerate(1.0f);
+    }
+
+    public void decelerate(float weight) {
+        this.setSpeed(
+            lerp(
+                this.getSpeed(),
+                Math.max(this.getSpeed() - (this.getDeceleration() * weight), -(this.getMaxSpeed()/2)),
+                0.5
             )
         );
     }
 
     public void decelerate() {
-        this.setSpeed(
-            lerp(
-                this.getSpeed(),
-                Math.max(this.getSpeed() - (this.getDeceleration()), -(this.getMaxSpeed()/2)),
-                0.5
-            )
-        );
+        this.decelerate(1.0f);
     }
 
     public void turnLeft() {

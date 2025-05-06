@@ -21,6 +21,7 @@ public class Enemy extends Tank {
     private double lastShotTime = 0.0; // Initialize last shot time to 0
 
     private ArrayList<Vector2> path = new ArrayList<>();
+    private Vector2 target = null;
     private EntityActions currentAction = EntityActions.IDLE;
 
     public Enemy() {
@@ -65,6 +66,20 @@ public class Enemy extends Tank {
         return path;
     }
 
+    public void setTarget(Vector2 target) {
+        this.target = target;
+    }
+    public Vector2 getTarget() {
+        return target;
+    }
+
+    public void setCurrentAction(EntityActions currentAction) {
+        this.currentAction = currentAction;
+    }
+    public EntityActions getCurrentAction() {
+        return currentAction;
+    }
+
 
     @Override
     public void processPosition(GameData gameData) {
@@ -76,7 +91,7 @@ public class Enemy extends Tank {
             return;
         }
         if (new Vector2(this.getPosition()).distance(new Vector2(this.path.get(0)).multiply(CommonConfig.getTileSize())) < (pointRadius * CommonConfig.getTileSize())) {
-            System.out.println("Removing point");
+            // System.out.println("Removing point");
             this.path.remove(0);
             if (this.path.isEmpty()) this.currentAction = EntityActions.IDLE;
             
@@ -104,8 +119,22 @@ public class Enemy extends Tank {
             }
 
             // Move forward
-            if (Math.abs(Math.round(this.getRotation()) - targetRotation) < 10) {
-                this.accelerate();
+            if (path.size() > 1) {
+                // Based on angle accelerate more but if the angle is too big, don't accelerate
+                float acceleration = (Math.abs(angleDiff) < 5) ? 1.0f : (Math.abs(angleDiff) < 10) ? 0.5f : (Math.abs(angleDiff) < 20) ? 0.2f : (Math.abs(angleDiff) < 30) ? 0.1f : 0.0f;
+                this.accelerate(acceleration);
+                // System.out.println("Accelerating: " + acceleration);
+            } else if (Math.abs(angleDiff) < 10) {
+                // Based on distance to the next point accelerate less
+                // If the distance is less than 1 tile, accelerate less
+                double distance = new Vector2(this.path.get(0)).subtract(new Vector2(this.getPosition()).divideInt(CommonConfig.getTileSize())).length();
+                if (distance < 1) {
+                    this.accelerate((float) new Vector2(this.path.get(0)).subtract(new Vector2(this.getPosition()).divideInt(CommonConfig.getTileSize())).length());
+                } else if (distance < 2) {
+                    this.accelerate(0.7f);
+                } else {
+                    this.accelerate(1.0f);
+                }
             }
         }
 
@@ -126,5 +155,13 @@ public class Enemy extends Tank {
         gc.fillText(Vector2.round(new Vector2(getPosition()).multiply(10)).divide(10).toString(), 0, 72);
 
         gc.restore();
+
+        // Draw target
+        if (this.target != null) {
+            gc.save();
+            gc.setFill(javafx.scene.paint.Color.RED);
+            gc.fillOval(this.target.getX(), this.target.getY(), 10, 10);
+            gc.restore();
+        }
     }
 }
