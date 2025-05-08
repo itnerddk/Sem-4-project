@@ -1,6 +1,7 @@
 package org.sdu.sem4.g7.common.services;
 
-import java.util.ArrayList;
+import java.util.List;
+
 import org.sdu.sem4.g7.common.data.*;
 
 public interface IRayCastingService {
@@ -9,7 +10,7 @@ public interface IRayCastingService {
      * Initializes the ray casting service with a map
      * @param map The map to be used for ray casting
      */    
-    public void init(ArrayList<ArrayList<Integer>> map);
+    public void init(List<List<Integer>> map);
 
 
     /**

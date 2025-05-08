@@ -218,6 +218,15 @@ public class MissionLoaderService implements IMissionLoaderService {
 					System.err.println("Logic service not found");
 				}
 		);
+		// Fill Raycasting with map
+		ServiceLocator.getRayCastingService().ifPresentOrElse(
+			service -> {
+				service.init(mission.getMap());
+			},
+			() -> {
+				System.err.println("Raycasting service not found");
+			}
+		);
 
 		// Create a new world
 		WorldData world = new WorldData();

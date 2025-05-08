@@ -17,4 +17,5 @@ module Common {
     uses IUpgradeStatsService;
     uses IAudioProcessingService;
     uses ILogicService;
+    uses IRayCastingService;
 }

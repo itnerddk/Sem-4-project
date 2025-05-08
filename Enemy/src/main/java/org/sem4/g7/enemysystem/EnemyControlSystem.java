@@ -90,6 +90,17 @@ public class EnemyControlSystem implements IEntityProcessingService {
                     enemy.logicalAction = service.getAction(enemy, playerPosition);
 
                     enemy.setTarget(service.evaluateAction(enemy, playerPosition));
+
+                    ServiceLocator.getRayCastingService().ifPresent(
+                        (rayCasting) -> {
+                            Vector2 directionVector = new Vector2(playerPosition).subtract(enemy.getPosition()).normalize();
+                            if (rayCasting.isInMap(enemy.getPosition(), directionVector, 5 * CommonConfig.getTileSize(), 5) == null) {
+                                System.out.println(directionVector);
+                                System.out.println("Can see player");
+                            }
+                        }
+                    );
+
                     // System.out.println("Target: " + enemy.getTarget());
                     // Path finding
                     if (enemy.getPath() == null || enemy.getPath().isEmpty()) {
