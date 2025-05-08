@@ -1,15 +1,16 @@
 package org.sdu.sem4.g7.bounceTurret;
 
-import javafx.scene.image.Image;
+import java.util.Objects;
+
 import org.sdu.sem4.g7.common.services.IWeaponShopInfo;
 
-import java.util.Objects;
+import javafx.scene.image.Image;
 
 public class BounceTurretShopInfo implements IWeaponShopInfo {
 
     @Override
     public String getWeaponId() {
-        return "bounce_gun";
+        return "bounce_turret";
     }
 
     @Override
