@@ -46,6 +46,10 @@ public class Vector2 {
         this.y = vector.getY();
     }
 
+    public Vector2 copy() {
+        return new Vector2(this);
+    }
+
     /**
      * Set the x and y values based on other vector
      * @param vector
@@ -147,8 +151,8 @@ public class Vector2 {
     public Vector2 normalize() {
         double length = Math.sqrt(x * x + y * y);
         if (length != 0) {
-            x /= length;
-            y /= length;
+            this.x /= length;
+            this.y /= length;
         }
         return this;
     }

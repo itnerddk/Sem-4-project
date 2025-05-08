@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.sdu.sem4.g7.common.enums.EntityType;
+import org.sdu.sem4.g7.common.services.IRigidbodyService;
 
 public class WorldData {
 
@@ -81,6 +82,16 @@ public class WorldData {
         for (Entity e : getEntities()) {
             if (entityType.equals(e.getEntityType())) {
                 r.add((E) e);
+            }
+        }
+        return r;
+    }
+
+    public List<IRigidbodyService> getRigidBodyEntities(Class<? extends Entity> entities) {
+        List<IRigidbodyService> r = new ArrayList<>();
+        for (Entity e : getEntities(entities)) {
+            if (e instanceof IRigidbodyService) {
+                r.add((IRigidbodyService) e);
             }
         }
         return r;

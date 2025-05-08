@@ -1,16 +1,13 @@
 package org.sem4.g7.enemysystem;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiFunction;
 
 import org.sdu.sem4.g7.common.Config.CommonConfig;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
-import org.sdu.sem4.g7.common.enums.EntityActions;
 import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
@@ -87,19 +84,9 @@ public class EnemyControlSystem implements IEntityProcessingService {
                 service -> {
                     // Actions
 
-                    enemy.logicalAction = service.getAction(enemy, playerPosition);
+                    enemy.logicalAction = service.getAction(enemy, playerPosition, world);
 
                     enemy.setTarget(service.evaluateAction(enemy, playerPosition));
-
-                    ServiceLocator.getRayCastingService().ifPresent(
-                        (rayCasting) -> {
-                            Vector2 directionVector = new Vector2(playerPosition).subtract(enemy.getPosition()).normalize();
-                            if (rayCasting.isInMap(enemy.getPosition(), directionVector, 5 * CommonConfig.getTileSize(), 5) == null) {
-                                System.out.println(directionVector);
-                                System.out.println("Can see player");
-                            }
-                        }
-                    );
 
                     // System.out.println("Target: " + enemy.getTarget());
                     // Path finding

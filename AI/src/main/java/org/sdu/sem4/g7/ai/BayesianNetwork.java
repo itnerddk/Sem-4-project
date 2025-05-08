@@ -40,7 +40,7 @@ public class BayesianNetwork {
             if (callback != null) {
                 try {
                     float value = callback.call();
-                    System.out.println("Evaluated " + name + " to " + value);
+                    // System.out.println("Evaluated " + name + " to " + value);
                     return value;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -59,7 +59,7 @@ public class BayesianNetwork {
                 // System.out.println("Evaluated " + parent.name + " to " + parentValue);
                 result += parentValue * Math.abs(weight);
             }
-            System.out.println("Evaluated " + name + " to " + result);
+            // System.out.println("Evaluated " + name + " to " + result);
             return result;
         }
 
@@ -96,8 +96,9 @@ public class BayesianNetwork {
         )));
 
         this.nodes.add(new BayesianNode("Group Up", Map.of(
-            this.nodes.get(0), 0.5f,
-            this.nodes.get(2), -0.5f
+            this.nodes.get(0), 0.4f,
+            this.nodes.get(2), -0.2f,
+            this.nodes.get(4), -0.4f
         ), EntityActions.GROUP_UP));
 
         this.nodes.add(new BayesianNode("Attack", Map.of(
@@ -141,6 +142,13 @@ public class BayesianNetwork {
             float chance = entry.getValue();
             // Normalize the chance
             chances.put(action, chance / cumulativeChance);
+        }
+
+        // Print out the chances
+        for (Map.Entry<EntityActions, Float> entry : chances.entrySet()) {
+            EntityActions action = entry.getKey();
+            float chance = entry.getValue();
+            System.out.println("Action: " + action + ", Chance: " + chance);
         }
 
         // Print out the time taken for evaluation

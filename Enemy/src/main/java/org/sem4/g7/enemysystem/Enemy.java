@@ -107,26 +107,40 @@ public class Enemy extends Tank {
 
             // System.out.println(Vector2.round(this.getPosition()) + " -> " + new Vector2(this.path.get(0)).multiply(CommonConfig.getTileSize()));
 
-            double targetRotation = Math.round(new Vector2(this.path.get(0)).subtract(new Vector2(this.getPosition()).divideInt(CommonConfig.getTileSize())).rotation());
+            double targetRotation = Math.round(new Vector2(this.path.get(0)).subtract(new Vector2(this.getPosition()).divide(CommonConfig.getTileSize())).rotation());
             // System.out.println(Math.round(this.getRotation()) + " -> " + targetRotation);
             // turnLeft and turnRight within 5 degrees
             double angleDiff = Math.round(this.getRotation()) - targetRotation;
-            if (angleDiff > 180) {
-                angleDiff -= 2 * 180;
-            } else if (angleDiff < -180) {
-                angleDiff += 2 * 180;
+            if (angleDiff > 180.0) {
+                angleDiff -= 2.0 * 180.0;
+            } else if (angleDiff < -180.0) {
+                angleDiff += 2.0 * 180.0;
             }
 
-            if (angleDiff > 3) {
-                this.turnLeft();
-            } else if (angleDiff < -3) {
-                this.turnRight();
+            // Above 5 degrees, turn with 1.0f weight
+            // Below 5 degrees, turn with variable weight
+            float weight = 1.0f;
+            if (Math.abs(angleDiff) < 25) {
+                weight = (float) Math.abs((float) angleDiff / 12.5f);
+            }
+
+            if (angleDiff > 0) {
+                this.turnLeft(weight);
+            } else if (angleDiff < 0) {
+                this.turnRight(weight);
             }
 
             // Move forward
             if (path.size() > 1) {
                 // Based on angle accelerate more but if the angle is too big, don't accelerate
-                float acceleration = (Math.abs(angleDiff) < 5) ? 1.0f : (Math.abs(angleDiff) < 10) ? 0.5f : (Math.abs(angleDiff) < 20) ? 0.2f : (Math.abs(angleDiff) < 30) ? 0.1f : 0.0f;
+                // If the angle is less than 10 degrees accelerate 1.0f
+                float acceleration = 1.0f;
+                if (Math.abs(angleDiff) > 10) {
+                    acceleration = (float) Math.abs((float) angleDiff / 45.0f);
+                }
+                if (Math.abs(angleDiff) > 45) {
+                    acceleration = 0.0f;
+                }
                 this.accelerate(acceleration);
                 // System.out.println("Accelerating: " + acceleration);
             } else if (Math.abs(angleDiff) < 10) {

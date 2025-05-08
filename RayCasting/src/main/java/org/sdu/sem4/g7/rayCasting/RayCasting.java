@@ -7,8 +7,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.sdu.sem4.g7.common.Config.CommonConfig;
 import org.sdu.sem4.g7.common.data.Entity;
+import org.sdu.sem4.g7.common.data.Hitbox;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.services.IRayCastingService;
+import org.sdu.sem4.g7.common.services.IRigidbodyService;
 
 public class RayCasting implements IRayCastingService {
 
@@ -47,15 +49,28 @@ public class RayCasting implements IRayCastingService {
     }
 
     @Override
-    public Vector2 isInEntities(Vector2 start, Vector2 direction, int maxDistance, int stepSize,
-            Class<? extends Entity>... entityClasses) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isInEntities'");
+    public Vector2 isInEntities(Vector2 start, Vector2 direction, int maxDistance, int stepSize, IRigidbodyService... entities) {
+        
+        if (stepSize > maxDistance) return null;
+
+        Vector2 point = new Vector2(start);
+        Vector2 change = new Vector2(direction).multiply(stepSize);
+        for (int i = 0; i < maxDistance; i += stepSize) {
+            point.add(change);
+            Hitbox pointHitbox = new Hitbox(point, new Vector2(stepSize, stepSize), 0);
+            for (IRigidbodyService rb : entities) {
+                if (rb.getHitbox().checkCollision(pointHitbox) != null) {
+                    return point;
+                }
+            }
+        }
+
+        return null;
     }
 
     @Override
-    public Vector2 isInEntities(Vector2 start, Vector2 direction, Class<? extends Entity> entityClasses) {
-        return this.isInEntities(start, direction, 5 * CommonConfig.getTileSize(), (int) (0.1 * CommonConfig.getTileSize()), entityClasses);
+    public Vector2 isInEntities(Vector2 start, Vector2 direction, IRigidbodyService... entities) {
+        return this.isInEntities(start, direction, 5 * CommonConfig.getTileSize(), (int) (0.1 * CommonConfig.getTileSize()), entities);
     }
     
 

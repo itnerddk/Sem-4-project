@@ -10,8 +10,11 @@ import org.sdu.sem4.g7.common.Config.CommonConfig;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Vector2;
+import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.enums.EntityActions;
 import org.sdu.sem4.g7.common.services.ILogicService;
+import org.sdu.sem4.g7.common.services.IRigidbodyService;
+import org.sdu.sem4.g7.common.services.ServiceLocator;
 
 class CompositeKey {
     String id;
@@ -73,7 +76,7 @@ public class LogicService implements ILogicService {
         actionMap.put(EntityActions.ATTACK, (entity, playerPosition) -> attack(entity, playerPosition));
         actionMap.put(EntityActions.FLEE, (entity, playerPosition) -> flee(entity, playerPosition));
         actionMap.put(EntityActions.GROUP_UP, (entity, playerPosition) -> groupUp(entity, playerPosition));
-        actionMap.put(EntityActions.MOVE_ASIDE, (entity, playerPosition) -> {return null;});
+        actionMap.put(EntityActions.MOVE_ASIDE, (entity, playerPosition) -> moveAside(entity, playerPosition));
     }
 
     @Override
@@ -91,14 +94,14 @@ public class LogicService implements ILogicService {
         if (compValue == null) {
             decisionMap.put(key, new CompositeValue(new AStar(from, to, map, gameData), to, EntityActions.IDLE, 0));
             compValue = decisionMap.get(key);
-            getAction(from, to);
+            getAction(from, to, null);
         }
         return compValue;
     }
 
 
     @Override
-    public EntityActions getAction(Entity entity, Vector2 playerPosition) {
+    public EntityActions getAction(Entity entity, Vector2 playerPosition, WorldData worldData) {
         // Get the health of the entity
         float health = (float) entity.getHealth() / (float) entity.getMaxHealth();
         // Get the distance to the player
@@ -112,7 +115,32 @@ public class LogicService implements ILogicService {
         // If 5 seconds has passed since last decision, re-evaluate
         if ((System.currentTimeMillis() - compValue.decisionTaken) > 5*1000) {
             System.out.println("Time passed re-evaluate");
-            HashMap<EntityActions, Float> chances = bayesianNetwork.evaluate(health, rangeModifier, false, false);
+
+            final boolean[] raycasts = {false, false};
+            // Check if can see player
+            ServiceLocator.getRayCastingService().ifPresent(
+                (rayCasting) -> {
+                    Vector2 directionVector = new Vector2(playerPosition).subtract(entity.getPosition()).normalize();
+                    
+                    System.out.println("Direction vector: " + directionVector);
+                    List<IRigidbodyService> entities = worldData.getRigidBodyEntities(entity.getClass());
+                    entities.remove((IRigidbodyService) entity);
+                    if (rayCasting.isInEntities(entity.getPosition(), directionVector, entities.toArray(new IRigidbodyService[0])) != null) {
+                        // System.out.println("Hitting another of same entity type");
+                        raycasts[0] = true;
+                    }
+                    if (rayCasting.isInMap(entity.getPosition(), directionVector, (int) distance, 5) == null) {
+                        // System.out.println("No tiles in the way");
+                        raycasts[1] = true;
+                    }
+                }
+            );
+            
+            if (raycasts[1]) {
+                rangeModifier = 0;
+            }
+
+            HashMap<EntityActions, Float> chances = bayesianNetwork.evaluate(health, rangeModifier, false, raycasts[0]);
             // Get the action with the highest chance
             EntityActions newAction = bayesianNetwork.pickAction(chances);
             // If the old action still has a high chance, keep it
@@ -209,6 +237,12 @@ public class LogicService implements ILogicService {
     }
 
 
+    private static boolean isPathClear(Vector2 from, Vector2 to) {
+        // Placeholder for actual raycast or collision check
+        // This should check if the path between from and to is clear
+        // For now, we will just return true
+        return true;
+    }
 
     private static Vector2 attack(Entity entity, Vector2 targetPosition) {
         // This should only be called if the entity is in range of the target
@@ -234,6 +268,35 @@ public class LogicService implements ILogicService {
     private static Vector2 groupUp(Entity entity, Vector2 targetPosition) {
         return targetPosition;
     }
+
+    private static Vector2 moveAside(Entity entity, Vector2 targetPosition) {
+        Vector2 currentPos = entity.getPosition();
+        Vector2 toTarget = targetPosition.copy().subtract(currentPos);
+        
+        // Get a perpendicular direction to sidestep
+        Vector2 perp = new Vector2(-toTarget.getY(), toTarget.getX()).normalize(); // Clockwise perpendicular
+        
+        float sidestepDistance = 1.0f; // Tweak this value as needed
+    
+        // Try both sides and pick the one that’s clear
+        Vector2 option1 = currentPos.copy().add(perp.copy().multiply(sidestepDistance));
+        Vector2 option2 = currentPos.copy().subtract(perp.copy().multiply(sidestepDistance));
+    
+        // Placeholder for actual raycast or collision check
+        boolean option1Clear = isPathClear(currentPos, option1); // You'll implement this
+        boolean option2Clear = isPathClear(currentPos, option2);
+    
+        if (option1Clear && !option2Clear) return option1;
+        if (!option1Clear && option2Clear) return option2;
+        if (option1Clear && option2Clear) {
+            // Pick the one closer to the original direction of motion
+            return option1.distance(targetPosition) < option2.distance(targetPosition) ? option1 : option2;
+        }
+    
+        // If both are blocked, just try to move back a bit
+        return currentPos.copy().subtract(toTarget.normalize().multiply(0.5f));
+    }
+    
 
     private static Vector2 closestPoint(Vector2 from) {
         if (from == null) {

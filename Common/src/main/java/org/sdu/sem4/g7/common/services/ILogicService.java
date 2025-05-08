@@ -6,6 +6,7 @@ import java.util.List;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Vector2;
+import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.enums.EntityActions;
 
 public interface ILogicService {
@@ -21,9 +22,10 @@ public interface ILogicService {
      * Returns the action for the entity based on the player position
      * @param entity
      * @param playerPosition Used for range checking
+     * @param worldData The world data, used for finding if teammates are in the way or where they are
      * @return
      */
-    public EntityActions getAction(Entity entity, Vector2 playerPosition);
+    public EntityActions getAction(Entity entity, Vector2 playerPosition, WorldData worldData);
 
     /**
      * Finds a path between the points, returning only corner points
