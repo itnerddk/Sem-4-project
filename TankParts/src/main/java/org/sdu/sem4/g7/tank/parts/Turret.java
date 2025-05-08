@@ -50,7 +50,7 @@ public abstract class Turret extends Entity implements IWeaponInstance {
         bullet.setWeaponBonus(damageUpgradeBonus);
         bullet.setCreatedBy(this.tank);
 
-        bullet.setPosition(this.getPosition());
+        bullet.setPosition(new Vector2(this.getPosition()));
         bullet.getPosition().add(this.getOffset());
         Vector2 rotatedMuzzle = new Vector2(this.getMuzzle().getX(), this.getMuzzle().getY());
         rotatedMuzzle.rotate(this.getRotation());

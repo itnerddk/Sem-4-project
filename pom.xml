@@ -29,6 +29,7 @@
         <module>Difficulty</module>
         <module>Shop</module>
         <module>BounceTurret</module>
+        <module>ShotgunTurret</module>
     </modules>
 
     <properties>
