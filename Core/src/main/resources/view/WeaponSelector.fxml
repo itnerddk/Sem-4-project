@@ -16,7 +16,7 @@
           alignment="CENTER"
           spacing="12"
           styleClass="weapon-menu"
-          AnchorPane.leftAnchor="10.0">
+          AnchorPane.leftAnchor="5.0">
     </VBox>
 </AnchorPane>
 

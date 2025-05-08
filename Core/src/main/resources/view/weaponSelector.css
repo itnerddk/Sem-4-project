@@ -1,11 +1,15 @@
 .weapon-menu {
     -fx-padding: 10;
-    -fx-background-color: rgba(255, 255, 255, 1);
+    -fx-background-color: rgb(77, 77, 77);
     -fx-background-radius: 12;
     -fx-pref-width: 80px;
+    -fx-border-color: black;
+    -fx-border-width: 5;
+    -fx-border-radius: 8;
 }
 
 .weapon-icon {
+    -fx-border-color: red;
     -fx-fit-width: 64px;
     -fx-fit-height: 64px;
     -fx-opacity: 0.5;
