@@ -36,7 +36,8 @@
         <Button fx:id="shopTabBtn" onAction="#showShop" prefWidth="400.0" styleClass="tab-button" text="Shop" />
     </HBox>
 
-    <AnchorPane fx:id="upgradePane" layoutX="50.0" layoutY="220.0" prefHeight="450.0" prefWidth="700.0" />
+    <!-- Pane for Upgrade -->
+    <AnchorPane fx:id="upgradePane" layoutX="50.0" layoutY="220.0" prefHeight="450.0" prefWidth="700.0"> </AnchorPane>
 
     <!-- Content panes -->
     <AnchorPane fx:id="UpgradeTapsPane" layoutX="55.0" layoutY="319.0" prefHeight="260.0" prefWidth="690.0" styleClass="upgrade-taps-pane">
@@ -165,7 +166,6 @@
         </VBox>
         <Button layoutX="315" layoutY="10" onAction="#handleCloseSettings" prefHeight="25" prefWidth="25" style="-fx-background-color: red; -fx-text-fill: white; -fx-background-radius: 100%; -fx-font-weight: bold; -fx-cursor: hand;" text="X" />
     </AnchorPane>
-     <Text fx:id="upgradeTankText" layoutX="236.0" layoutY="297.0" styleClass="upgradeTankText" text="UPGRADE TANK!" textAlignment="CENTER" />
 
     <!-- Difficulty Pane -->
     <AnchorPane fx:id="difficultyPane" layoutX="235.0" layoutY="160.0" prefHeight="500" prefWidth="350" styleClass="generic-pane" visible="false">

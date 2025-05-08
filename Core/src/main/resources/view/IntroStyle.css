@@ -176,14 +176,6 @@ Circle.empty {
     -fx-background-radius: 6;
 }
 
-.upgradeTankText {
-    -fx-font-family: "Luckiest Guy";
-    -fx-font-size: 45;
-    -fx-font-weight: bold;
-    -fx-fill: white;
-    -fx-effect: dropshadow(gaussian, black, 4, 0.4, 0, 2);
-}
-
 .upgrade-taps-pane {
     -fx-background-color: #3E4E1C;
     -fx-border-color: #2e3a15;

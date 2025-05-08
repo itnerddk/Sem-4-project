@@ -14,7 +14,7 @@ public class CannonTurretShopInfo implements IWeaponShopInfo {
 
     @Override
     public String getDisplayName() {
-        return "Cannon Turret";
+        return "Cannon";
     }
 
     @Override
