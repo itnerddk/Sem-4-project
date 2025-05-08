@@ -27,6 +27,7 @@
         <module>Persistence</module>
         <module>MachineGunTurret</module>
         <module>Inventory</module>
+        <module>RayCasting</module>
     </modules>
 
     <properties>
@@ -84,6 +85,11 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
                 <version>2.18.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.sdu.sem4.g7</groupId>
+                <artifactId>Common</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>    

@@ -13,6 +13,7 @@ public class ServiceLocator {
     private static IUpgradeStatsService upgradeStatsService;
     private static IAudioProcessingService audioProcessingService;
     private static ILogicService logicService;
+    private static IRayCastingService rayCastingService;
 
     public static void loadServices() {
         ServiceLoader<ICurrencyService> currencyLoader = ServiceLoader.load(ICurrencyService.class);
@@ -38,6 +39,9 @@ public class ServiceLocator {
 
         ServiceLoader<ILogicService> logicLoader = ServiceLoader.load(ILogicService.class);
         logicService = logicLoader.findFirst().orElse(null);
+
+        ServiceLoader<IRayCastingService> rayCastingLoader = ServiceLoader.load(IRayCastingService.class);
+        rayCastingService = rayCastingLoader.findFirst().orElse(null);
     }
 
     public static Optional<ICurrencyService> getCurrencyService() {
@@ -70,5 +74,9 @@ public class ServiceLocator {
 
     public static Optional<ILogicService> getLogicService () {
         return Optional.ofNullable(logicService);
+    }
+
+    public static Optional<IRayCastingService> getRayCastingService () {
+        return Optional.ofNullable(rayCastingService);
     }
 }

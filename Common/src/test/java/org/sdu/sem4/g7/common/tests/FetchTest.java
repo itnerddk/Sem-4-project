@@ -23,17 +23,17 @@ public class FetchTest {
     }
 
     @BeforeEach
-    public void setUp() {
-        worldData = new WorldData();
+    public static void setUp() {
+        FetchTest.worldData = new WorldData();
         // Create a world with 1000 entities of different classes
         for (int i = 0; i < 1000; i++) {
             EntityA entityA = new EntityA();
             entityA.setHealth((int)Math.random() * 100);
-            worldData.addEntity(entityA);
+            FetchTest.worldData.addEntity(entityA);
 
             EntityB entityB = new EntityB();
             entityB.setHealth((int)Math.random() * 100);
-            worldData.addEntity(entityB);
+            FetchTest.worldData.addEntity(entityB);
         }
     }
 
@@ -41,7 +41,7 @@ public class FetchTest {
     public void testClassFetch() {
         // Test fetching entities by class
         long start = System.nanoTime();
-        worldData.getEntities(EntityA.class);
+        FetchTest.worldData.getEntities(EntityA.class);
         long end = System.nanoTime();
         long duration = end - start;
         System.out.println("\tTime to fetch entities of class A: " + duration + " ns");

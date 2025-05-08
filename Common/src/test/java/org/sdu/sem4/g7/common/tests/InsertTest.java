@@ -13,7 +13,7 @@ public class InsertTest {
 
     @BeforeAll
     public static void setUp() {
-        worldData = new WorldData();
+        InsertTest.worldData = new WorldData();
     }
 
     @Test
@@ -28,7 +28,7 @@ public class InsertTest {
             entity.setHealth((int)Math.random() * 100);
 
             long start = System.nanoTime();
-            worldData.addEntity(entity);
+            InsertTest.worldData.addEntity(entity);
             long end = System.nanoTime();
             long duration = end - start;
             if (single == 0) {
