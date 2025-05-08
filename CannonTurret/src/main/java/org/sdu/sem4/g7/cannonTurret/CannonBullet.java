@@ -7,7 +7,7 @@ import org.sdu.sem4.g7.tank.parts.Bullet;
 public class CannonBullet extends Bullet {
 
     public CannonBullet() {
-        super();
+        super(100);
         setMaxFlightTime(3);
         setHealth(1);
         try {

@@ -5,37 +5,66 @@ import java.net.URI;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
+import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.common.data.Vector2;
+import org.sdu.sem4.g7.common.services.IUpgradeStatsService;
 import org.sdu.sem4.g7.common.services.IWeaponInstance;
+import org.sdu.sem4.g7.common.services.ServiceLocator;
 
 public abstract class Turret extends Entity implements IWeaponInstance {
     private Tank tank;
-    private Bullet bullet;
+    private Class<? extends Bullet> bulletClass;
     private Vector2 offset;
     private Vector2 muzzle;
     private int attackSpeed;
     private long lastShotTime;
+    private int damageUpgradeBonus;
 
     private URI shootSoundFile;
     private URI explosionSoundFile;
 
-    public Turret() {
+    public Turret(Class<? extends Bullet> bulletClass, Vector2 offset, Vector2 muzzle, int attackSpeed) {
+        super();
+        this.bulletClass = bulletClass;
+        this.offset = offset;
+        this.muzzle = muzzle;
+        this.attackSpeed = attackSpeed;
+        setCollision(false);
     }
-
+    
     public Tank getTank() {
         return this.tank;
     }
-
+    
     public void setTank(Tank tank) {
+        if (tank.getEntityType() == EntityType.PLAYER) {
+            damageUpgradeBonus = ServiceLocator.getUpgradeStatsService()
+                .map(IUpgradeStatsService::getDamageBonus)
+                .orElse(0);
+        }
         this.tank = tank;
     }
 
-    public Bullet getBullet() {
-        return this.bullet;
-    }
+    public Bullet getBullet() throws Exception {
+        Bullet bullet = bulletClass.getDeclaredConstructor().newInstance();
+        bullet.setWeaponBonus(damageUpgradeBonus);
+        bullet.setCreatedBy(this.tank);
 
-    public void setBullet(Bullet bullet) {
-        this.bullet = bullet;
+        bullet.setPosition(this.getPosition());
+        bullet.getPosition().add(this.getOffset());
+        Vector2 rotatedMuzzle = new Vector2(this.getMuzzle().getX(), this.getMuzzle().getY());
+        rotatedMuzzle.rotate(this.getRotation());
+        bullet.getPosition().add(rotatedMuzzle);
+        
+        bullet.setRotation(this.getRotation() - 90);
+        
+        float rotationInRadians = bullet.getRotation();
+        rotationInRadians = (float) Math.toRadians(rotationInRadians);
+
+
+        bullet.setVelocity(Math.cos(rotationInRadians) * 8, Math.sin(rotationInRadians) * 8);
+
+        return bullet;
     }
 
     public Vector2 getOffset() {

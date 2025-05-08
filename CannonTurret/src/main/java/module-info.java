@@ -7,7 +7,7 @@ module CannonTurret {
     requires transitive TankParts;
     requires javafx.graphics;
     provides org.sdu.sem4.g7.common.services.IEntityProcessingService with CannonTurretProcessor;
-
+    exports org.sdu.sem4.g7.cannonTurret to TankParts;
     // provides IEntityProcessingService with CannonTurretProcessor;
     // provides IPreGamePluginService with CannonTurretPlugin;
     provides Turret with CannonTurret;

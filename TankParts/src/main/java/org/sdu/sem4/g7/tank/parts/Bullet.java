@@ -15,41 +15,25 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
 
     private int baseDamage = 0;
     private int weaponBonus = 0;
-    private int upgradeBonus = 0;
-    private int damage;
 
     private double fligthTime = 0;
     private double maxFlightTime = 1; // in seconds
 
     private Entity createdBy;
 
-    public Bullet() {
+    public Bullet(int baseDamage) {
         super();
+        this.baseDamage = baseDamage;
         setEntityType(EntityType.BULLET);
         setCollision(true);
-    }
-
-    public void finalizeDamage() {
-        int upgradeBonus = ServiceLocator.getUpgradeStatsService()
-                .map(IUpgradeStatsService::getDamageBonus)
-                .orElse(0);
-        this.damage = baseDamage + upgradeBonus + weaponBonus;
     }
 
     public void setWeaponBonus(int weaponBonus) {
         this.weaponBonus = weaponBonus;
     }
 
-    public void setUpgradeBonus(int upgradeBonus) {
-        this.upgradeBonus = upgradeBonus;
-    }
-
     public int getDamage() {
-        return damage;
-    }
-
-    public void setBaseDamage(int baseDamage) {
-        this.baseDamage = baseDamage;
+        return baseDamage + weaponBonus;
     }
 
     public void increaseFlightTime(double delta) {
@@ -99,7 +83,7 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
 
             Entity otherEntity = (Entity) other;
 
-            int effectiveDamage = Math.max(0, damage - getArmorReduction(otherEntity));
+            int effectiveDamage = Math.max(0, getDamage() - getArmorReduction(otherEntity));
 
             try {
                 Method methodGetShield = otherEntity.getClass().getMethod("getShield");

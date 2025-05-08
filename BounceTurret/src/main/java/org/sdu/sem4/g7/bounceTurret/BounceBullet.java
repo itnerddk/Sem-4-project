@@ -12,8 +12,8 @@ import org.sdu.sem4.g7.tank.parts.Bullet;
 public class BounceBullet extends Bullet {
     IRigidbodyService lastHit = null;
     URI bounceSoundFile = null;
-    BounceBullet() {
-        super();
+    public BounceBullet() {
+        super(100);
         setMaxFlightTime(3);
         setHealth(10);
         try {

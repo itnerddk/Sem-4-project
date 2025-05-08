@@ -4,6 +4,7 @@ module BounceTurret {
     requires transitive TankParts;
 
     // requires javafx.graphics;
+    exports org.sdu.sem4.g7.bounceTurret to TankParts;
     provides org.sdu.sem4.g7.common.services.IEntityProcessingService with org.sdu.sem4.g7.bounceTurret.BounceTurretProcessor;
     provides org.sdu.sem4.g7.tank.parts.Turret with org.sdu.sem4.g7.bounceTurret.BounceTurret;
 
