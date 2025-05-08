@@ -70,6 +70,12 @@ public class GameInstance {
 
     private void setupCanvas() {
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
+        gameWindow.widthProperty().addListener((obs, oldVal, newVal) -> {
+            gameData.setDisplayWidth((int) newVal.doubleValue());
+        });
+        gameWindow.heightProperty().addListener((obs, oldVal, newVal) -> {
+            gameData.setDisplayHeight((int) newVal.doubleValue());
+        });
         gameCanvas.setViewOrder(-9999);
         gameWindow.getChildren().addAll(gameCanvas, debugText);
         rootPane.getChildren().add(gameWindow);
