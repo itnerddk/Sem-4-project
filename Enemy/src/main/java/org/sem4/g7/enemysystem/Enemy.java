@@ -25,10 +25,7 @@ public class Enemy extends Tank {
         // Test code to load turret
         ServiceLoader<ITurretProviderService> turretLoader = ServiceLoader.load(ITurretProviderService.class);
         for (ITurretProviderService turretProvider : turretLoader) {
-            for (Provider<? extends Entity> turret : turretProvider.getTurrets()) {
-                this.setTurret((Turret)turret.get());
-                break; // Only set the first turret found
-            }
+            this.setTurret((Turret)turretProvider.getTurrets().get((int) (Math.random() * turretProvider.getTurrets().size())).get());
         }
     }
 

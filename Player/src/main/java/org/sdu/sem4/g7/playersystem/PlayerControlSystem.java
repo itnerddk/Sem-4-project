@@ -2,6 +2,7 @@ package org.sdu.sem4.g7.playersystem;
 
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
+import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 
@@ -36,8 +37,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
             }
 
             // Rotate turret
-            double angle = Math.atan2(gameData.getRelativeMouseY() - player.getPosition().getY(), gameData.getRelativeMouseX() - player.getPosition().getX());
-            player.getTurret().setRotation((float)(angle * 180 / (float)Math.PI) + 90);
+            player.getTurret().aimTowards(new Vector2(gameData.getRelativeMouseX(), gameData.getRelativeMouseY()));
 
             // Shoot
             if (gameData.isDown(GameData.Keys.SPACE) || gameData.isMouseDown()) {

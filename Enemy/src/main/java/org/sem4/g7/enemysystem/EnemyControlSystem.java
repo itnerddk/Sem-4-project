@@ -40,8 +40,20 @@ public class EnemyControlSystem implements IEntityProcessingService {
                 angle += 90; // Add 90 degrees if the "front" of the enemy is offset by 90 degrees
 
                 // Update the enemy's rotation
-                enemy.setRotation((float) angle);
-                enemy.getTurret().setRotation((float) angle);
+                double currentRotation = enemy.getRotation();
+                double rotationDiff = angle - currentRotation;
+                if (rotationDiff > 180) {
+                    rotationDiff -= 360;
+                } else if (rotationDiff < -180) {
+                    rotationDiff += 360;
+                }
+                if (Math.abs(rotationDiff) > 1) {
+                    if (rotationDiff > 0) {
+                        enemy.turnRight();
+                    } else {
+                        enemy.turnLeft();
+                    }
+                }
 
                 // Check if enough time has passed to shoot
                 double currentTime = gameData.getTime(); // Assuming `gameData.getTime()` returns time in seconds

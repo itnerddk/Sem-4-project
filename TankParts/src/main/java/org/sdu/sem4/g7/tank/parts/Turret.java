@@ -16,6 +16,7 @@ public abstract class Turret extends Entity implements IWeaponInstance {
     private Class<? extends Bullet> bulletClass;
     private Vector2 offset;
     private Vector2 muzzle;
+    private int rotationSpeed;
     private int attackSpeed;
     private long lastShotTime;
     private int damageUpgradeBonus;
@@ -28,6 +29,7 @@ public abstract class Turret extends Entity implements IWeaponInstance {
         this.bulletClass = bulletClass;
         this.offset = offset;
         this.muzzle = muzzle;
+        this.rotationSpeed = 3;
         this.attackSpeed = attackSpeed;
         setCollision(false);
     }
@@ -43,6 +45,29 @@ public abstract class Turret extends Entity implements IWeaponInstance {
                 .orElse(0);
         }
         this.tank = tank;
+    }
+
+    public void aimTowards(Vector2 target) {
+        Vector2 direction = new Vector2(target);
+        direction.subtract(this.getPosition());
+        direction.normalize();
+        double targetRotation = Math.toDegrees(Math.atan2(direction.getY(), direction.getX())) + 90;
+        double currentRotation = this.getRotation();
+        double rotationDiff = targetRotation - currentRotation;
+        if (rotationDiff > 180) {
+            rotationDiff -= 360;
+        } else if (rotationDiff < -180) {
+            rotationDiff += 360;
+        }
+        if (Math.abs(rotationDiff) > rotationSpeed) {
+            if (rotationDiff > 0) {
+                this.setRotation((float) (currentRotation + rotationSpeed));
+            } else {
+                this.setRotation((float) (currentRotation - rotationSpeed));
+            }
+        } else {
+            this.setRotation((float) targetRotation);
+        }
     }
 
     public Bullet getBullet() throws Exception {

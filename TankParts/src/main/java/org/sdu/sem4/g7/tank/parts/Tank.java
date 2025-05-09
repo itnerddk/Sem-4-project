@@ -59,7 +59,6 @@ public abstract class Tank extends Entity implements IRigidbodyService {
     private void processTurret() {
         if (turret != null) {
             turret.setPosition(getPosition().getX(), getPosition().getY());
-            // turret.setRotation(getRotation());
         }
     }
 
@@ -85,12 +84,18 @@ public abstract class Tank extends Entity implements IRigidbodyService {
 
     public void turnLeft() {
         this.setRotation((float)(this.getRotation() - this.getRotationSpeed()));
+        if (turret != null) {
+            turret.setRotation((float)(turret.getRotation() - this.getRotationSpeed()));
+        }
         // Turn velocity
         getVelocity().rotate(-this.getRotationSpeed());
     }
 
     public void turnRight() {
         this.setRotation((float)(this.getRotation() + this.getRotationSpeed()));
+        if (turret != null) {
+            turret.setRotation((float)(turret.getRotation() + this.getRotationSpeed()));
+        }
         // Turn velocity
         getVelocity().rotate(this.getRotationSpeed());
     }
