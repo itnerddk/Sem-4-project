@@ -3,6 +3,7 @@ package org.sdu.sem4.g7.playersystem;
 import org.sdu.sem4.g7.common.Config.CommonConfig;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
+import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 
@@ -40,9 +41,12 @@ public class PlayerControlSystem implements IEntityProcessingService {
             if (gameData.isPressed(GameData.Keys.DEBUG)) {
                 CommonConfig.setDEBUG(!CommonConfig.isDEBUG());
             }
+            
+            // Rotate turret
+            player.getTurret().aimTowards(new Vector2(gameData.getRelativeMouseX(), gameData.getRelativeMouseY()));
 
             // Shoot
-            if (gameData.isDown(GameData.Keys.SPACE)) {
+            if (gameData.isDown(GameData.Keys.SPACE) || gameData.isMouseDown()) {
                 player.shoot(gameData, world);
             }
 

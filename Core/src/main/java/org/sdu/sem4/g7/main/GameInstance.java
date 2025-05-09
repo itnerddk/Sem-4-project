@@ -11,6 +11,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -18,6 +19,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.sdu.sem4.g7.UI.controllers.GameResultController;
 import org.sdu.sem4.g7.UI.controllers.PauseMenuController;
+import org.sdu.sem4.g7.UI.controllers.WeaponSelectorController;
 import org.sdu.sem4.g7.common.data.*;
 import org.sdu.sem4.g7.common.data.GameData.Keys;
 import org.sdu.sem4.g7.common.enums.EntityType;
@@ -47,8 +49,9 @@ public class GameInstance {
     private static final Text debugText = new Text(10, 20, "");
     private boolean paused = false;
     private Parent pauseMenu;
-    
-    
+
+    private WeaponSelectorController weaponSelectorController;
+
     private final Collection<IGamePluginService> pluginServices;
 
     public GameInstance(GameData gameData, WorldData worldData, int missionId) {
@@ -67,6 +70,12 @@ public class GameInstance {
 
     private void setupCanvas() {
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
+        gameWindow.widthProperty().addListener((obs, oldVal, newVal) -> {
+            gameData.setDisplayWidth((int) newVal.doubleValue());
+        });
+        gameWindow.heightProperty().addListener((obs, oldVal, newVal) -> {
+            gameData.setDisplayHeight((int) newVal.doubleValue());
+        });
         gameCanvas.setViewOrder(-9999);
         gameWindow.getChildren().addAll(gameCanvas, debugText);
         rootPane.getChildren().add(gameWindow);
@@ -104,10 +113,20 @@ public class GameInstance {
                     gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
                     update();
                     gameData.updateKeys();
+                    gameData.updateMouse();
                     gameData.setDelta((now - lastTick) * 1.0e-9);
                     // gameData.addDebug("Entity Count", String.valueOf(worldData.getEntities().size()));
                     // gameData.addDebug("Delta", String.valueOf((Math.round(gameData.getDelta() * 10000) / 10.0)));
                     lastTick = now;
+
+                    if (weaponSelectorController != null) {
+                        weaponSelectorController.init();
+                    }
+
+                    if (gameData.isPressed(GameData.Keys.TAB)) {
+                        weaponSelectorController.init();
+                    }
+
                     draw();
 
                     try {
@@ -185,8 +204,24 @@ public class GameInstance {
                 }
             }
         };
+        loadWeaponSelectorUI();
         animationTimer.start();
     }
+
+    private void loadWeaponSelectorUI() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/WeaponSelector.fxml"));
+            Parent selectorUI = loader.load();
+            weaponSelectorController = loader.getController();
+            weaponSelectorController.init(); // Første init
+            rootPane.getChildren().add(selectorUI);
+
+        } catch (IOException e) {
+            System.err.println("Failed to load WeaponSelector.fxml");
+            e.printStackTrace();
+        }
+    }
+
 
     private void showResultOverlay(boolean isWin, int score, int target, int coins) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/GameResult.fxml"));
@@ -250,6 +285,7 @@ public class GameInstance {
                             .add(gameData.getDisplayWidth() / 2, gameData.getDisplayHeight() / 2);
                     gameWindow.setTranslateX(pos.getX());
                     gameWindow.setTranslateY(pos.getY());
+                    gameData.setGameWindowPos(pos.getX(), pos.getY());
                 });
 
         // Sync entities and render
@@ -313,6 +349,14 @@ public class GameInstance {
         scene.setFill(Color.BLACK);
         scene.setOnKeyPressed(event -> setupKeys(event, true));
         scene.setOnKeyReleased(event -> setupKeys(event, false));
+        scene.setOnMousePressed(event -> {
+            gameData.setMousePressed(true);
+        });
+        scene.setOnMouseReleased(event -> {
+            gameData.setMousePressed(false);
+        });
+        scene.setOnMouseMoved(event -> setMousePos(event));
+        scene.setOnMouseDragged(event -> setMousePos(event));
         scene.getStylesheets().add(getClass().getResource("/view/style.css").toExternalForm());
         return scene;
     }
@@ -351,11 +395,17 @@ public class GameInstance {
                     paused = !paused;
                     pauseMenu.setVisible(paused);
                 }
+                break;
             case H:
                 this.gameData.setPressed(Keys.DEBUG, pressed);
+                break;
             default:
                 break;
         }
+    }
+
+    private void setMousePos(MouseEvent event) {
+        gameData.setMousePos(event.getX(), event.getY());
     }
 
     private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
@@ -365,4 +415,15 @@ public class GameInstance {
     private Collection<? extends IPostEntityProcessingService> getPostEntityProcessingServices() {
         return ServiceLoader.load(IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
+
+    private boolean isWeaponAvailable(String weaponId) {
+        Optional<IBoughtWeaponsService> ownershipServiceOpt =
+                ServiceLocator.getBoughtWeaponsService();
+
+        return ownershipServiceOpt
+                .map(service -> service.isWeaponBought(weaponId))
+                .orElse(true);
+    }
+
+
 }

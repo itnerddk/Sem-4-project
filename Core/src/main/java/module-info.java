@@ -26,10 +26,12 @@ module Core {
     uses ISettingPluginService;
     uses IInventoryService;
     uses ITurretProviderService;
+    uses IWeaponShopInfo;
 
     // Aware
     uses IGameDataAware;
     uses IMapAware;
+
 
     // Exports
     exports org.sdu.sem4.g7.main;

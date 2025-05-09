@@ -1,0 +1,62 @@
+/* Våben container */
+.weapon-box {
+    -fx-background-color: #556B2F;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: #4E7329;
+    -fx-border-width: 2;
+    -fx-padding: 14;
+    -fx-spacing: 6;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 4, 0.3, 0, 2);
+}
+
+/* Våbennavn */
+.weapon-name {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(one-pass-box, black, 2, 0, 0, 1);
+}
+
+/* Købsknap */
+.shop-price-button {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFD700;
+    -fx-background-color: linear-gradient(to bottom, #2E7D32, #1B5E20);
+    -fx-background-radius: 10;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-padding: 8 16;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.5), 6, 0, 0, 2);
+    -fx-cursor: hand;
+    -fx-alignment: center;
+}
+
+/* Købsknap: hover */
+.shop-price-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #388E3C, #2E7D32);
+}
+
+.shop-price-button:pressed {
+    -fx-background-color: linear-gradient(to bottom, #1B5E20, #2E7D32);
+    -fx-translate-y: 1;
+}
+
+/* Købsknap: disabled (Owned) */
+.shop-price-button:disabled {
+    -fx-background-color: #777;
+    -fx-text-fill: #ccc;
+    -fx-effect: none;
+    -fx-cursor: default;
+}
+
+.shop-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 10;
+}
+
+.shop-scroll .viewport {
+    -fx-background-color: transparent;
+}

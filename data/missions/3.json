@@ -12,13 +12,13 @@
       "entityType": "Enemies",
       "x": 9,
       "y": 1,
-      "health": 100
+      "health": 1000
     },
     {
       "entityType": "Enemies",
       "x": 9,
       "y": 8,
-      "health": 100
+      "health": 1000
     }
   ],
   "map": [

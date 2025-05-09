@@ -9,7 +9,6 @@ import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Hitbox;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
-import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.IRigidbodyService;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -60,7 +59,6 @@ public abstract class Tank extends Entity implements IRigidbodyService {
     private void processTurret() {
         if (turret != null) {
             turret.setPosition(getPosition().getX(), getPosition().getY());
-            turret.setRotation(getRotation());
         }
     }
 
@@ -97,6 +95,9 @@ public abstract class Tank extends Entity implements IRigidbodyService {
         if (newRotation < 0) {
             newRotation = 360 + newRotation;
         }
+        if (turret != null) {
+            turret.setRotation((float)(turret.getRotation() - this.getRotationSpeed() * weight));
+        }
 
         this.setRotation(newRotation);
         // Turn velocity
@@ -111,6 +112,9 @@ public abstract class Tank extends Entity implements IRigidbodyService {
         float newRotation = (float)(this.getRotation() + this.getRotationSpeed() * weight);
         if (newRotation > 360) {
             newRotation = 0 + newRotation - 360;
+        }
+        if (turret != null) {
+            turret.setRotation((float)(turret.getRotation() + this.getRotationSpeed() * weight));
         }
 
         this.setRotation(newRotation);

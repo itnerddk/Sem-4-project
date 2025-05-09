@@ -14,6 +14,10 @@ public class ServiceLocator {
     private static IAudioProcessingService audioProcessingService;
     private static ILogicService logicService;
     private static IRayCastingService rayCastingService;
+    private static IDifficultyService difficultyService;
+    private static IBoughtWeaponsService boughtWeaponsService;
+    private static IInventoryService inventoryService;
+
 
     public static void loadServices() {
         ServiceLoader<ICurrencyService> currencyLoader = ServiceLoader.load(ICurrencyService.class);
@@ -42,6 +46,16 @@ public class ServiceLocator {
 
         ServiceLoader<IRayCastingService> rayCastingLoader = ServiceLoader.load(IRayCastingService.class);
         rayCastingService = rayCastingLoader.findFirst().orElse(null);
+        
+        ServiceLoader<IDifficultyService> difficultyLoader = ServiceLoader.load(IDifficultyService.class);
+        difficultyService = difficultyLoader.findFirst().orElse(null);
+
+        ServiceLoader<IBoughtWeaponsService> boughtWeaponsLoader = ServiceLoader.load(IBoughtWeaponsService.class);
+        boughtWeaponsService = boughtWeaponsLoader.findFirst().orElse(null);
+
+        ServiceLoader<IInventoryService> inventoryLoader = ServiceLoader.load(IInventoryService.class);
+        inventoryService = inventoryLoader.findFirst().orElse(null);
+
     }
 
     public static Optional<ICurrencyService> getCurrencyService() {
@@ -54,6 +68,10 @@ public class ServiceLocator {
 
     public static Optional<IUpgradeService> getUpgradeService() {
         return Optional.ofNullable(upgradeService);
+    }
+
+    public static Optional<IBoughtWeaponsService> getBoughtWeaponsService() {
+        return Optional.ofNullable(boughtWeaponsService);
     }
 
     public static Optional<IMissionLoaderService> getMissionLoaderService() {
@@ -79,4 +97,14 @@ public class ServiceLocator {
     public static Optional<IRayCastingService> getRayCastingService () {
         return Optional.ofNullable(rayCastingService);
     }
+
+    public static Optional<IDifficultyService> getDifficultyService() {
+        return Optional.ofNullable(difficultyService);
+    }
+
+    public static Optional<IInventoryService> getInventoryService() {
+        return Optional.ofNullable(inventoryService);
+    }
+
+
 }

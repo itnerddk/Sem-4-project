@@ -85,7 +85,7 @@ public class GameData {
     }
 
 
-    // Key handling
+    //#region Key handling
     // Key data
     public enum Keys {
         LEFT,
@@ -114,6 +114,45 @@ public class GameData {
     }
     public void updateKeys() {
         keysLast.putAll(keys);
+    }
+
+    //#region Mouse handling
+    private double gameWindowX;
+    private double gameWindowY;
+    private double mouseX;
+    private double mouseY;
+    private boolean mousePressed;
+    private boolean mouseDown;
+
+    public void setMousePos(double mouseX, double mouseY) {
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
+    }
+    public void setGameWindowPos(double x, double y) {
+        this.gameWindowX = x;
+        this.gameWindowY = y;
+    }
+    public double getRelativeMouseX() {
+        return mouseX - gameWindowX;
+    }
+    public double getRelativeMouseY() {
+        return mouseY - gameWindowY;
+    }
+
+    public boolean isMouseDown() {
+        return mouseDown;
+    }
+    public boolean isMousePressed() {
+        return mousePressed && !mouseDown;
+    }
+    public boolean isMouseReleased() {
+        return !mousePressed && mouseDown;
+    }
+    public void setMousePressed(boolean mousePressed) {
+        this.mousePressed = mousePressed;
+    }
+    public void updateMouse() {
+        mouseDown = mousePressed;
     }
 
     //#region Debug

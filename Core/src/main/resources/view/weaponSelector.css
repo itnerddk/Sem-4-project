@@ -1,0 +1,34 @@
+.weapon-icon-box {
+    -fx-background-color: #2e003e;
+    -fx-border-color: transparent;
+    -fx-border-width: 5;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 8, 0.3, 0, 2);
+    -fx-alignment: center;
+    -fx-opacity: 0.5;
+    -fx-scale-x: 0.9;
+    -fx-scale-y: 0.9;
+}
+
+.weapon-icon-box.center {
+    -fx-border-color: yellow;
+    -fx-border-width: 3;
+    -fx-border-radius: 11;
+    -fx-background-radius: 12;
+    -fx-padding: 4;
+    -fx-background-color: #8312ab;
+    -fx-opacity: 1.0;
+    -fx-scale-x: 1.0;
+    -fx-scale-y: 1.0;
+}
+
+.weapon-label {
+    -fx-text-fill: gold;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-wrap-text: false;
+    -fx-alignment: center;
+    -fx-max-width: 64px;
+    -fx-text-alignment: center;
+}

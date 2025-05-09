@@ -34,7 +34,7 @@ public class Player extends Tank {
         this.setArmor(totalArmor);
 
         // Health
-        int baseHealth = 100;
+        int baseHealth = 1000;
         int bonusHealth = ServiceLocator.getUpgradeStatsService()
                 .map(IUpgradeStatsService::getHealthBonus)
                 .orElse(0);

@@ -20,8 +20,12 @@ module Common {
     uses IAudioProcessingService;
     uses ILogicService;
     uses IRayCastingService;
+    uses IDifficultyService;
+    uses IBoughtWeaponsService;
+    uses IInventoryService;
 
     // Aware
     uses IMapAware;
     uses IWorldAware;
+
 }

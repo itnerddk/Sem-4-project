@@ -15,37 +15,36 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
 
     private int baseDamage = 0;
     private int weaponBonus = 0;
-    private int upgradeBonus = 0;
-    private int damage;
+
+    private double flightTime = 0;
+    private double maxFlightTime = 1; // in seconds
 
     private Entity createdBy;
 
-    public Bullet() {
+    public Bullet(int baseDamage) {
         super();
+        this.baseDamage = baseDamage;
         setEntityType(EntityType.BULLET);
-    }
-
-    public void finalizeDamage() {
-        int upgradeBonus = ServiceLocator.getUpgradeStatsService()
-                .map(IUpgradeStatsService::getDamageBonus)
-                .orElse(0);
-        this.damage = baseDamage + upgradeBonus + weaponBonus;
+        setCollision(true);
     }
 
     public void setWeaponBonus(int weaponBonus) {
         this.weaponBonus = weaponBonus;
     }
 
-    public void setUpgradeBonus(int upgradeBonus) {
-        this.upgradeBonus = upgradeBonus;
-    }
-
     public int getDamage() {
-        return damage;
+        return baseDamage + weaponBonus;
     }
 
-    public void setBaseDamage(int baseDamage) {
-        this.baseDamage = baseDamage;
+    public void increaseFlightTime(double delta) {
+        this.flightTime += delta;
+        if (this.flightTime > maxFlightTime) {
+            this.setHealth(0);
+        }
+    }
+
+    public void setMaxFlightTime(double maxFlightTime) {
+        this.maxFlightTime = maxFlightTime;
     }
 
     public Entity getCreatedBy() {
@@ -84,7 +83,7 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
 
             Entity otherEntity = (Entity) other;
 
-            int effectiveDamage = Math.max(0, damage - getArmorReduction(otherEntity));
+            int effectiveDamage = Math.max(0, getDamage() - getArmorReduction(otherEntity));
 
             try {
                 Method methodGetShield = otherEntity.getClass().getMethod("getShield");
@@ -93,6 +92,7 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
                 int shield = (int) methodGetShield.invoke(otherEntity);
 
                 if (shield > 0) {
+                    System.out.println(otherEntity.getHealth());
                     int damageToShield = Math.min(effectiveDamage, shield);
                     int remainingDamage = effectiveDamage - damageToShield;
 
@@ -109,7 +109,7 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
 
             System.out.println("Damage was reduced by " + getArmorReduction(otherEntity) + " from armor");
 
-            this.setHealth(0);
+            this.setHealth(this.getHealth() - 1);
             gameData.playAudio(SoundType.HIT);
             return true;
         }

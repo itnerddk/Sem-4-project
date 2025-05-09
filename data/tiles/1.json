@@ -3,6 +3,7 @@
     "image": "1.png",
     "z": 1,
     "collision": true,
-    "immoveable": true,
+    "invulnerable": true,
+    "replacedByOnDeath": 0,
     "health": 1
 }
