@@ -16,6 +16,8 @@ import org.sdu.sem4.g7.MissionLoader.objects.MissionObject;
 import org.sdu.sem4.g7.MissionLoader.objects.TileEntity;
 import org.sdu.sem4.g7.MissionLoader.objects.TileObject;
 import org.sdu.sem4.g7.common.Config.CommonConfig;
+import org.sdu.sem4.g7.common.aware.IMapAware;
+import org.sdu.sem4.g7.common.aware.IWorldAware;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Mission;
@@ -209,24 +211,11 @@ public class MissionLoaderService implements IMissionLoaderService {
 			return null;
 		}
 
-		// Fill AI with map
-		ServiceLocator.getLogicService().ifPresentOrElse(
-				service -> {
-					service.init(mission.getMap(), gameData);
-				},
-				() -> {
-					System.err.println("Logic service not found");
-				}
-		);
-		// Fill Raycasting with map
-		ServiceLocator.getRayCastingService().ifPresentOrElse(
-			service -> {
-				service.init(mission.getMap());
-			},
-			() -> {
-				System.err.println("Raycasting service not found");
-			}
-		);
+		
+		// Fill map awares/consumers
+		ServiceLoader.load(IMapAware.class).forEach(aware -> {
+			aware.initMap(mission.getMap());
+		});
 
 		// Create a new world
 		WorldData world = new WorldData();
@@ -235,6 +224,12 @@ public class MissionLoaderService implements IMissionLoaderService {
 		for (IEntityPluginService plugin : getPluginServices()) {
             plugin.start(gameData, world);
         }
+
+		// Fill world awares/consumers
+		ServiceLoader.load(IWorldAware.class).forEach(aware -> {
+			aware.initWorld(world);
+		});
+
 
 		// render map
 		renderMapTiles(mission.getMap(), world);

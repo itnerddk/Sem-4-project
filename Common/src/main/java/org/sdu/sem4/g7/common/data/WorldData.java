@@ -87,11 +87,13 @@ public class WorldData {
         return r;
     }
 
-    public List<IRigidbodyService> getRigidBodyEntities(Class<? extends Entity> entities) {
+    public List<IRigidbodyService> getRigidBodyEntities(Class<? extends Entity>... entities) {
         List<IRigidbodyService> r = new ArrayList<>();
-        for (Entity e : getEntities(entities)) {
-            if (e instanceof IRigidbodyService) {
-                r.add((IRigidbodyService) e);
+        for (Class<? extends Entity> entity : entities) {
+            for (Entity e : getEntities(entity)) {
+                if (e instanceof IRigidbodyService) {
+                    r.add((IRigidbodyService) e);
+                }
             }
         }
         return r;

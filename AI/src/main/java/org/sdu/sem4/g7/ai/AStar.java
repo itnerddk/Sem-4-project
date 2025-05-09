@@ -223,17 +223,19 @@ public class AStar {
     }
 
     private void drawCircle(Vector2 vector2, Color color) {
-        gameData.gc.save();
-        // Draw circle at vector2 position
-        gameData.gc.setFill(color);
-        gameData.gc.setStroke(color);
-        gameData.gc.setLineWidth(Math.min(steps, CommonConfig.DEFAULT_SCALING*2));
-        gameData.gc.strokeOval(
-                (int) vector2.getX() * CommonConfig.getTileSize() - CommonConfig.getTileSize()/2,
-                (int) vector2.getY() * CommonConfig.getTileSize() - CommonConfig.getTileSize()/2,
-                CommonConfig.getTileSize(),
-                CommonConfig.getTileSize()
-        );
-        gameData.gc.restore();
+        if (CommonConfig.isDEBUG()) {
+            gameData.gc.save();
+            // Draw circle at vector2 position
+            gameData.gc.setFill(color);
+            gameData.gc.setStroke(color);
+            gameData.gc.setLineWidth(Math.min(steps, CommonConfig.DEFAULT_SCALING*2));
+            gameData.gc.strokeOval(
+                    (int) vector2.getX() * CommonConfig.getTileSize() - CommonConfig.getTileSize()/2,
+                    (int) vector2.getY() * CommonConfig.getTileSize() - CommonConfig.getTileSize()/2,
+                    CommonConfig.getTileSize(),
+                    CommonConfig.getTileSize()
+            );
+            gameData.gc.restore();
+        }
     }
 }

@@ -1,10 +1,12 @@
 import org.sdu.sem4.g7.common.services.*;
+import org.sdu.sem4.g7.common.aware.*;
 
 module Common {
     requires javafx.base;
     requires transitive javafx.graphics;
     requires com.fasterxml.jackson.annotation;
     exports org.sdu.sem4.g7.common.services;
+    exports org.sdu.sem4.g7.common.aware;
     exports org.sdu.sem4.g7.common.data;
     exports org.sdu.sem4.g7.common.enums;
     exports org.sdu.sem4.g7.common.Config;
@@ -18,4 +20,8 @@ module Common {
     uses IAudioProcessingService;
     uses ILogicService;
     uses IRayCastingService;
+
+    // Aware
+    uses IMapAware;
+    uses IWorldAware;
 }

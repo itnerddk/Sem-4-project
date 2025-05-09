@@ -351,6 +351,8 @@ public class GameInstance {
                     paused = !paused;
                     pauseMenu.setVisible(paused);
                 }
+            case H:
+                this.gameData.setPressed(Keys.DEBUG, pressed);
             default:
                 break;
         }

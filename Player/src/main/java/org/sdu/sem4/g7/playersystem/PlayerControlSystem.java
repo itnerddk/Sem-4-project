@@ -1,5 +1,6 @@
 package org.sdu.sem4.g7.playersystem;
 
+import org.sdu.sem4.g7.common.Config.CommonConfig;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
@@ -34,6 +35,10 @@ public class PlayerControlSystem implements IEntityProcessingService {
                 player.turnLeft();
             } else if (gameData.isDown(GameData.Keys.RIGHT)) {
                 player.turnRight();
+            }
+
+            if (gameData.isPressed(GameData.Keys.DEBUG)) {
+                CommonConfig.setDEBUG(!CommonConfig.isDEBUG());
             }
 
             // Shoot

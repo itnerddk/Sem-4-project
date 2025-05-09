@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 import org.sdu.sem4.g7.common.Config.CommonConfig;
+import org.sdu.sem4.g7.common.aware.IGameDataAware;
+import org.sdu.sem4.g7.common.aware.IMapAware;
+import org.sdu.sem4.g7.common.aware.IWorldAware;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Vector2;
@@ -62,10 +66,11 @@ class CompositeValue {
     }
 }
 
-public class LogicService implements ILogicService {
+public class LogicService implements ILogicService, IMapAware, IGameDataAware, IWorldAware {
     
     static List<List<Integer>> map;
     static GameData gameData;
+    static WorldData worldData;
 
     private static final EnumMap<EntityActions, BiFunction<Entity, Vector2, Vector2>> actionMap = new EnumMap<>(EntityActions.class);
 
@@ -80,9 +85,18 @@ public class LogicService implements ILogicService {
     }
 
     @Override
-    public void init(List<List<Integer>> map, GameData gameData) {
+    public void initMap(List<List<Integer>> map) {
         LogicService.map = map;
+    }
+
+    @Override
+    public void initGameData(GameData gameData) {
         LogicService.gameData = gameData;
+    }
+
+    @Override
+    public void initWorld(WorldData worldData) {
+        LogicService.worldData = worldData;
     }
 
     BayesianNetwork bayesianNetwork = new BayesianNetwork();
@@ -94,14 +108,14 @@ public class LogicService implements ILogicService {
         if (compValue == null) {
             decisionMap.put(key, new CompositeValue(new AStar(from, to, map, gameData), to, EntityActions.IDLE, 0));
             compValue = decisionMap.get(key);
-            getAction(from, to, null);
+            getAction(from, to);
         }
         return compValue;
     }
 
 
     @Override
-    public EntityActions getAction(Entity entity, Vector2 playerPosition, WorldData worldData) {
+    public EntityActions getAction(Entity entity, Vector2 playerPosition) {
         // Get the health of the entity
         float health = (float) entity.getHealth() / (float) entity.getMaxHealth();
         // Get the distance to the player
@@ -113,25 +127,50 @@ public class LogicService implements ILogicService {
         CompositeValue compValue = getOrCreateValue(new CompositeKey(entity.getID()), entity, playerPosition);
 
         // If 5 seconds has passed since last decision, re-evaluate
-        if ((System.currentTimeMillis() - compValue.decisionTaken) > 5*1000) {
-            System.out.println("Time passed re-evaluate");
+        if ((System.currentTimeMillis() - compValue.decisionTaken) > (5*1000) * (Math.random() + 0.5f)) {
+            // System.out.println("Time passed re-evaluate");
 
-            final boolean[] raycasts = {false, false};
+            // Filter only the two closest entities of the same type
+            final List<Entity> nearbyEntities = new ArrayList<>();
+            if (worldData != null) {
+                nearbyEntities.addAll((List<Entity>) LogicService.worldData.getEntities(entity.getClass()).stream()
+                    .filter(e -> e.getID() != entity.getID())
+                    .filter(e -> e.getPosition().distance(entity.getPosition()) < 5 * CommonConfig.getTileSize())
+                    .sorted((e1, e2) -> Double.compare(e1.getPosition().distance(entity.getPosition()), e2.getPosition().distance(entity.getPosition())))
+                    .limit(2)
+                    .toList());
+            }
+
+            final boolean[] raycasts = {false, false, false, false}; // 0: inline, 1: in range, 2: group 1, 3: group 2
             // Check if can see player
             ServiceLocator.getRayCastingService().ifPresent(
                 (rayCasting) -> {
                     Vector2 directionVector = new Vector2(playerPosition).subtract(entity.getPosition()).normalize();
                     
-                    System.out.println("Direction vector: " + directionVector);
-                    List<IRigidbodyService> entities = worldData.getRigidBodyEntities(entity.getClass());
-                    entities.remove((IRigidbodyService) entity);
-                    if (rayCasting.isInEntities(entity.getPosition(), directionVector, entities.toArray(new IRigidbodyService[0])) != null) {
+                    // System.out.println("Direction vector: " + directionVector);
+                    if (rayCasting.isInEntities(entity.getPosition(), directionVector, List.of(entity), entity.getClass()) != null) {
                         // System.out.println("Hitting another of same entity type");
                         raycasts[0] = true;
                     }
                     if (rayCasting.isInMap(entity.getPosition(), directionVector, (int) distance, 5) == null) {
                         // System.out.println("No tiles in the way");
                         raycasts[1] = true;
+                    }
+                    Vector2 directionVector2;
+                    if (nearbyEntities.size() == 0) {
+                        return;
+                    }
+                    for (Entity e : nearbyEntities) {
+                        directionVector2 = new Vector2(e.getPosition()).subtract(entity.getPosition()).normalize();
+                        int distance2 = (int) new Vector2(e.getPosition()).distance(entity.getPosition());
+                        if (rayCasting.isInEntities(entity.getPosition(), directionVector2, distance2, 5, List.of(entity, e), entity.getClass()) != null) { 
+                            // System.out.println("Hitting another entity");
+                            if (raycasts[2] == false) {
+                                raycasts[2] = true;
+                            } else {
+                                raycasts[3] = true;
+                            }
+                        }
                     }
                 }
             );
@@ -140,11 +179,25 @@ public class LogicService implements ILogicService {
                 rangeModifier = 0;
             }
 
-            HashMap<EntityActions, Float> chances = bayesianNetwork.evaluate(health, rangeModifier, false, raycasts[0]);
+            float inGroup = 0;
+            if (raycasts[2]) {
+                inGroup = 0.5f;
+            } else if (raycasts[3]) {
+                inGroup = 1.0f;
+            }
+
+            boolean teammateOnMap = false;
+            if (raycasts[0] || raycasts[2] || raycasts[3]) {
+                teammateOnMap = true;
+            } else {
+                teammateOnMap = LogicService.worldData.getEntities(entity.getClass()).size() > 1;
+            }
+
+            HashMap<EntityActions, Float> chances = bayesianNetwork.evaluate(health, rangeModifier, inGroup, teammateOnMap, raycasts[0]);
             // Get the action with the highest chance
             EntityActions newAction = bayesianNetwork.pickAction(chances);
             // If the old action still has a high chance, keep it
-            System.out.println(compValue.action);
+            // System.out.println(compValue.action);
             if (!chances.containsKey(compValue.action)) {
             } else if (compValue.action != null && chances.get(compValue.action) > 0.4f && chances.get(compValue.action) > chances.get(newAction) + 0.1f) {
                 newAction = compValue.action;
@@ -240,8 +293,17 @@ public class LogicService implements ILogicService {
     private static boolean isPathClear(Vector2 from, Vector2 to) {
         // Placeholder for actual raycast or collision check
         // This should check if the path between from and to is clear
-        // For now, we will just return true
-        return true;
+        final boolean[] clear = {true};
+        ServiceLocator.getRayCastingService().ifPresent(
+            (rayCasting) -> {
+                Vector2 directionVector = new Vector2(to).subtract(from).normalize();
+                if (rayCasting.isInMap(from, directionVector, (int) from.distance(to), 5) != null) {
+                    // System.out.println("Hitting a tile");
+                    clear[0] = false;
+                }
+            }
+        );
+        return clear[0];
     }
 
     private static Vector2 attack(Entity entity, Vector2 targetPosition) {
@@ -266,7 +328,25 @@ public class LogicService implements ILogicService {
     }
     
     private static Vector2 groupUp(Entity entity, Vector2 targetPosition) {
-        return targetPosition;
+        // System.out.println("Trying to group up");
+        // Find nearest entity of the same type and move towards it
+
+        Optional<? extends Entity> closestEntity = LogicService.worldData.getEntities(entity.getClass()).stream()
+            .filter(e -> !e.getID().equals(entity.getID()))
+            .sorted((e1, e2) -> Double.compare(e1.getPosition().distance(entity.getPosition()), e2.getPosition().distance(entity.getPosition())))
+            .findFirst();
+
+        if (!closestEntity.isPresent()) {
+            System.out.println("No other entity found");
+            return null; // No other entity found
+        }
+        // System.out.println("I (" + entity.getID() + ") am trying to group up with " + closestEntity.get().getID());
+        Vector2 target = new Vector2(closestEntity.get().getPosition());
+        Vector2 from = new Vector2(entity.getPosition());
+        Vector2 direction = new Vector2(target).subtract(from).normalize();
+        Vector2 newTarget = target.subtract(direction.multiply(3 * CommonConfig.getTileSize()));
+
+        return closestPoint(newTarget);
     }
 
     private static Vector2 moveAside(Entity entity, Vector2 targetPosition) {
@@ -276,25 +356,25 @@ public class LogicService implements ILogicService {
         // Get a perpendicular direction to sidestep
         Vector2 perp = new Vector2(-toTarget.getY(), toTarget.getX()).normalize(); // Clockwise perpendicular
         
-        float sidestepDistance = 1.0f; // Tweak this value as needed
+        float sidestepDistance = 2.0f * CommonConfig.getTileSize(); // Tweak this value as needed
     
         // Try both sides and pick the one that’s clear
         Vector2 option1 = currentPos.copy().add(perp.copy().multiply(sidestepDistance));
         Vector2 option2 = currentPos.copy().subtract(perp.copy().multiply(sidestepDistance));
     
         // Placeholder for actual raycast or collision check
-        boolean option1Clear = isPathClear(currentPos, option1); // You'll implement this
+        boolean option1Clear = isPathClear(currentPos, option1);
         boolean option2Clear = isPathClear(currentPos, option2);
     
         if (option1Clear && !option2Clear) return option1;
         if (!option1Clear && option2Clear) return option2;
         if (option1Clear && option2Clear) {
             // Pick the one closer to the original direction of motion
-            return option1.distance(targetPosition) < option2.distance(targetPosition) ? option1 : option2;
+            return option1.distance(targetPosition) < option2.distance(targetPosition) ? closestPoint(option1) : closestPoint(option2);
         }
     
         // If both are blocked, just try to move back a bit
-        return currentPos.copy().subtract(toTarget.normalize().multiply(0.5f));
+        return closestPoint(currentPos.copy().subtract(toTarget.normalize().multiply(0.5f)));
     }
     
 

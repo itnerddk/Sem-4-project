@@ -73,53 +73,63 @@ public class BayesianNetwork {
     }
 
     List<BayesianNode> nodes = new ArrayList<>();
-    
+
     float healthRemaining;
     float range;
-    boolean inGroup;
+    float inGroup;
+    boolean teammateOnMap;
     boolean teammateInLine;
 
     public BayesianNetwork() {
-        this.nodes = new ArrayList<>(
-            List.of(
-                new BayesianNode("Health Remaining", () -> {return healthRemaining;}),
-                new BayesianNode("Range", () -> {return range;}),
-                new BayesianNode("In Group", () -> {return inGroup ? 1f : 0f;}),
-                new BayesianNode("Teammate in Line", () -> {return teammateInLine ? 1f : 0f;})
-            )
-        );
+        this.nodes = new ArrayList<>();
+        BayesianNode HR = new BayesianNode("Health Remaining", () -> {
+            return healthRemaining;
+        });
+        BayesianNode Ra = new BayesianNode("Range", () -> {
+            return range;
+        });
+        BayesianNode IG = new BayesianNode("In Group", () -> {
+            return inGroup;
+        });
+        BayesianNode TI = new BayesianNode("Teammate in Line", () -> {
+            return teammateInLine ? 1f : 0f;
+        });
+        BayesianNode TOM = new BayesianNode("Teammate on Map", () -> {
+            return teammateOnMap ? 0f : -1f;
+        });
+
         // Add nodes to the network
-        this.nodes.add(new BayesianNode("Attack or Flee", Map.of(
-            this.nodes.get(0), 0.4f,
-            this.nodes.get(1), 0.4f,
-            this.nodes.get(2), 0.2f
-        )));
+        BayesianNode AoF = new BayesianNode("Attack or Flee", Map.of(
+                HR, 0.6f,
+                Ra, 0.2f,
+                IG, 0.2f));
 
         this.nodes.add(new BayesianNode("Group Up", Map.of(
-            this.nodes.get(0), 0.4f,
-            this.nodes.get(2), -0.2f,
-            this.nodes.get(4), -0.4f
-        ), EntityActions.GROUP_UP));
+                HR, -0.4f,
+                IG, -0.2f,
+                AoF, -0.4f,
+                TOM, 1.0f), EntityActions.GROUP_UP));
 
-        this.nodes.add(new BayesianNode("Attack", Map.of(
-            this.nodes.get(4), 1f
-        ), EntityActions.ATTACK));
+        BayesianNode Att = new BayesianNode("Attack", Map.of(
+                AoF, 1f), EntityActions.ATTACK);
 
-        this.nodes.add(new BayesianNode("Flee", Map.of(
-            this.nodes.get(4), -1f
-        ), EntityActions.FLEE));
+        BayesianNode Flee = new BayesianNode("Flee", Map.of(
+                AoF, -0.8f), EntityActions.FLEE);
 
-        this.nodes.add(new BayesianNode("Move Aside", Map.of(
-            this.nodes.get(3), 0.9f,
-            this.nodes.get(6), 0.1f
-        ), EntityActions.MOVE_ASIDE));
+        BayesianNode MA = new BayesianNode("Move Aside", Map.of(
+                TI, 0.9f,
+                Att, 0.1f), EntityActions.MOVE_ASIDE);
+
+        this.nodes.addAll(List.of(HR, Ra, IG, TI, AoF, Att, Flee, MA));
     }
 
-    public HashMap<EntityActions, Float> evaluate(float healthRemaining, float range, boolean inGroup, boolean teammateInLine) {
+    public HashMap<EntityActions, Float> evaluate(float healthRemaining, float range, float inGroup, boolean teammateOnMap,
+            boolean teammateInLine) {
         // Set values for evaluation needs
         this.healthRemaining = healthRemaining;
         this.range = range;
         this.inGroup = inGroup;
+        this.teammateOnMap = teammateOnMap;
         this.teammateInLine = teammateInLine;
         long startTime = System.nanoTime();
         // Sort nodes
@@ -127,15 +137,14 @@ public class BayesianNetwork {
         HashMap<EntityActions, Float> chances = new HashMap<>();
         float cumulativeChance = 0f;
 
-        for(BayesianNode node : nodes){
-            if(node.getAction() != null){
+        for (BayesianNode node : nodes) {
+            if (node.getAction() != null) {
                 float chance = node.evaluate();
                 cumulativeChance += chance;
                 chances.put(node.action, chance);
             }
         }
-        System.out.println(chances.size());
-
+        // System.out.println(chances.size());
 
         for (Map.Entry<EntityActions, Float> entry : chances.entrySet()) {
             EntityActions action = entry.getKey();
@@ -148,13 +157,15 @@ public class BayesianNetwork {
         for (Map.Entry<EntityActions, Float> entry : chances.entrySet()) {
             EntityActions action = entry.getKey();
             float chance = entry.getValue();
-            System.out.println("Action: " + action + ", Chance: " + chance);
+            // System.out.println("Action: " + action + ", Chance: " + chance);
         }
 
         // Print out the time taken for evaluation
         // System.out.print("Chosen action " + action + " time taken: ");
-        // System.out.println(TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - startTime) / 1000.0 + "ms");
-        // System.out.println("Chosen action " + action + " time taken: " + (System.nanoTime() - startTime) / 1000000.0 + "ms");
+        // System.out.println(TimeUnit.NANOSECONDS.toMicros(System.nanoTime() -
+        // startTime) / 1000.0 + "ms");
+        // System.out.println("Chosen action " + action + " time taken: " +
+        // (System.nanoTime() - startTime) / 1000000.0 + "ms");
         return chances;
     }
 

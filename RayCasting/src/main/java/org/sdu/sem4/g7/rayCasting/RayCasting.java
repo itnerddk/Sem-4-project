@@ -1,24 +1,32 @@
 package org.sdu.sem4.g7.rayCasting;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.sdu.sem4.g7.common.Config.CommonConfig;
+import org.sdu.sem4.g7.common.aware.IMapAware;
+import org.sdu.sem4.g7.common.aware.IWorldAware;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.Hitbox;
 import org.sdu.sem4.g7.common.data.Vector2;
+import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IRayCastingService;
 import org.sdu.sem4.g7.common.services.IRigidbodyService;
 
-public class RayCasting implements IRayCastingService {
+public class RayCasting implements IRayCastingService, IMapAware, IWorldAware {
 
-    public static ConcurrentHashMap<Integer, List<List<Integer>>> scaledMaps = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Integer, List<List<Integer>>> scaledMaps = new ConcurrentHashMap<>();
+    private static WorldData worldData;
 
     @Override
-    public void init(List<List<Integer>> map) {
+    public void initMap(List<List<Integer>> map) {
         RayCasting.scaledMaps.put(1, map);
+    }
+
+    @Override
+    public void initWorld(WorldData worldData) {
+        RayCasting.worldData = worldData;
     }
 
     @Override
@@ -40,6 +48,10 @@ public class RayCasting implements IRayCastingService {
             int dx = (int) Math.round(point.getX());
             int dy = (int) Math.round(point.getY());
 
+            if (dx < 0 || dy < 0 || dx >= localMap.get(0).size() || dy >= localMap.size()) {
+                return null;
+            }
+
             if (localMap.get(dy).get(dx) == 1) {
                 return point.divide(resolution).multiply(CommonConfig.getTileSize());
             }
@@ -49,7 +61,7 @@ public class RayCasting implements IRayCastingService {
     }
 
     @Override
-    public Vector2 isInEntities(Vector2 start, Vector2 direction, int maxDistance, int stepSize, IRigidbodyService... entities) {
+    public Vector2 isInEntities(Vector2 start, Vector2 direction, int maxDistance, int stepSize, List<Entity> ignoreEntities, Class<? extends Entity>... entityClasses) {
         
         if (stepSize > maxDistance) return null;
 
@@ -58,7 +70,10 @@ public class RayCasting implements IRayCastingService {
         for (int i = 0; i < maxDistance; i += stepSize) {
             point.add(change);
             Hitbox pointHitbox = new Hitbox(point, new Vector2(stepSize, stepSize), 0);
-            for (IRigidbodyService rb : entities) {
+            for (IRigidbodyService rb : RayCasting.worldData.getRigidBodyEntities(entityClasses)) {
+                if (ignoreEntities != null && ignoreEntities.contains((Entity) rb)) {
+                    continue;
+                }
                 if (rb.getHitbox().checkCollision(pointHitbox) != null) {
                     return point;
                 }
@@ -69,8 +84,8 @@ public class RayCasting implements IRayCastingService {
     }
 
     @Override
-    public Vector2 isInEntities(Vector2 start, Vector2 direction, IRigidbodyService... entities) {
-        return this.isInEntities(start, direction, 5 * CommonConfig.getTileSize(), (int) (0.1 * CommonConfig.getTileSize()), entities);
+    public Vector2 isInEntities(Vector2 start, Vector2 direction, List<Entity> ignoreEntities, Class<? extends Entity>... entityClasses) {
+        return this.isInEntities(start, direction, 5 * CommonConfig.getTileSize(), (int) (0.1 * CommonConfig.getTileSize()), ignoreEntities, entityClasses);
     }
     
 

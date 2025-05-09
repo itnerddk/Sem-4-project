@@ -25,7 +25,8 @@ public class Enemy extends Tank {
     private EntityActions currentAction = EntityActions.IDLE;
 
     /**
-     * This action is only what it's doing at the moment, doesn't have any effect on anything as of now.
+     * This action is only what it's doing at the moment, doesn't have any effect on
+     * anything as of now.
      */
     public EntityActions logicalAction;
 
@@ -42,7 +43,7 @@ public class Enemy extends Tank {
         ServiceLoader<ITurretProviderService> turretLoader = ServiceLoader.load(ITurretProviderService.class);
         for (ITurretProviderService turretProvider : turretLoader) {
             for (Provider<? extends Entity> turret : turretProvider.getTurrets()) {
-                this.setTurret((Turret)turret.get());
+                this.setTurret((Turret) turret.get());
                 break; // Only set the first turret found
             }
         }
@@ -67,6 +68,7 @@ public class Enemy extends Tank {
     public void setPath(ArrayList<Vector2> path) {
         this.path = path;
     }
+
     public ArrayList<Vector2> getPath() {
         return path;
     }
@@ -74,6 +76,7 @@ public class Enemy extends Tank {
     public void setTarget(Vector2 target) {
         this.target = target;
     }
+
     public Vector2 getTarget() {
         return target;
     }
@@ -81,10 +84,10 @@ public class Enemy extends Tank {
     public void setCurrentAction(EntityActions currentAction) {
         this.currentAction = currentAction;
     }
+
     public EntityActions getCurrentAction() {
         return currentAction;
     }
-
 
     @Override
     public void processPosition(GameData gameData) {
@@ -95,19 +98,23 @@ public class Enemy extends Tank {
             this.currentAction = EntityActions.IDLE;
             return;
         }
-        if (new Vector2(this.getPosition()).distance(new Vector2(this.path.get(0)).multiply(CommonConfig.getTileSize())) < (pointRadius * CommonConfig.getTileSize())) {
+        if (new Vector2(this.getPosition()).distance(new Vector2(this.path.get(0))
+                .multiply(CommonConfig.getTileSize())) < (pointRadius * CommonConfig.getTileSize())) {
             // System.out.println("Removing point");
             this.path.remove(0);
-            if (this.path.isEmpty()) this.currentAction = EntityActions.IDLE;
-            
+            if (this.path.isEmpty())
+                this.currentAction = EntityActions.IDLE;
+
             // This is where we move
-            
+
         } else {
             this.currentAction = EntityActions.MOVING;
 
-            // System.out.println(Vector2.round(this.getPosition()) + " -> " + new Vector2(this.path.get(0)).multiply(CommonConfig.getTileSize()));
+            // System.out.println(Vector2.round(this.getPosition()) + " -> " + new
+            // Vector2(this.path.get(0)).multiply(CommonConfig.getTileSize()));
 
-            double targetRotation = Math.round(new Vector2(this.path.get(0)).subtract(new Vector2(this.getPosition()).divide(CommonConfig.getTileSize())).rotation());
+            double targetRotation = Math.round(new Vector2(this.path.get(0))
+                    .subtract(new Vector2(this.getPosition()).divide(CommonConfig.getTileSize())).rotation());
             // System.out.println(Math.round(this.getRotation()) + " -> " + targetRotation);
             // turnLeft and turnRight within 5 degrees
             double angleDiff = Math.round(this.getRotation()) - targetRotation;
@@ -119,15 +126,15 @@ public class Enemy extends Tank {
 
             // Above 5 degrees, turn with 1.0f weight
             // Below 5 degrees, turn with variable weight
-            float weight = 1.0f;
+            float turnWeight = 1.0f;
             if (Math.abs(angleDiff) < 25) {
-                weight = (float) Math.abs((float) angleDiff / 12.5f);
+                turnWeight = (float) Math.abs((float) angleDiff / 12.5f);
             }
 
             if (angleDiff > 0) {
-                this.turnLeft(weight);
+                this.turnLeft(turnWeight);
             } else if (angleDiff < 0) {
-                this.turnRight(weight);
+                this.turnRight(turnWeight);
             }
 
             // Move forward
@@ -144,46 +151,78 @@ public class Enemy extends Tank {
                 this.accelerate(acceleration);
                 // System.out.println("Accelerating: " + acceleration);
             } else if (Math.abs(angleDiff) < 10) {
+                double distance = new Vector2(this.path.get(0))
+                        .subtract(new Vector2(this.getPosition()).divide(CommonConfig.getTileSize())).length();
+                // Emergency brake if dangerously close and still moving
+                if (distance < 1 && this.getSpeed() > 0.1f) {
+                    this.decelerate(1.0f); // SLAM THE BRAKES
+                    return; // stop here, don't apply other movement
+                }
+
                 // Based on distance to the next point accelerate less
                 // If the distance is less than 1 tile, accelerate less
-                double distance = new Vector2(this.path.get(0)).subtract(new Vector2(this.getPosition()).divideInt(CommonConfig.getTileSize())).length();
-                if (distance < 1) {
-                    this.accelerate((float) new Vector2(this.path.get(0)).subtract(new Vector2(this.getPosition()).divideInt(CommonConfig.getTileSize())).length());
-                } else if (distance < 2) {
-                    this.accelerate(0.7f);
+                float v = (float) this.getSpeed() * CommonConfig.getTileSize(); // speed in pixels/s
+                float maxDecel = (float) this.getDeceleration() * CommonConfig.getTileSize(); // decel in pixels/s^2
+                float d = (float) distance * CommonConfig.getTileSize(); // distance in pixels
+
+                // Estimate brake distance (no /2 since your `getDeceleration()` might already
+                // account for it)
+                float brakeDist = (v * v) / (2 * maxDecel);
+
+                
+                
+                if (d <= brakeDist + 0.1f) { // +0.1f as buffer
+                    // Compute how deep into the braking zone we are
+                    float t = 1.0f - (d / brakeDist);
+                    float weight = (float) Math.pow(Math.max(0, Math.min(1, t)), 2);
+
+                    // Only brake if we're still moving forward
+                    if (this.getSpeed() > 0.01f) {
+                        this.decelerate(weight);
+                    } else {
+                        // Optional: apply brakes *lightly* to prevent jitter/reverse
+                        this.decelerate(0.0f);
+                    }
                 } else {
+                    // Accelerate if we're not turning sharply
                     this.accelerate(1.0f);
                 }
+
             }
         }
 
     }
 
-
     @Override
     public void render(GraphicsContext gc) {
         super.render(gc);
 
-        // Draw rotation
-        gc.save();
-
-        gc.translate(this.getPosition().getX(), this.getPosition().getY());
-
-        gc.fillText(Double.toString(Math.round(this.getRotation()*10)/10.0), 0, 50);
-
-        gc.fillText(Vector2.round(new Vector2(getPosition()).multiply(10)).divide(10).toString(), 0, 72);
-
-        // Format to fill 8 characters
-        gc.fillText(String.format("%s\n->%s", this.getCurrentAction().toString(), this.logicalAction.toString()), 0, 100);
-
-        gc.restore();
-
-        // Draw target
-        if (this.target != null) {
+        if (CommonConfig.isDEBUG()) {
+            this.getHitbox().render(gc);
+            // Draw rotation
             gc.save();
-            gc.setFill(javafx.scene.paint.Color.RED);
-            gc.fillOval(this.target.getX(), this.target.getY(), 10, 10);
+
+            gc.translate(this.getPosition().getX(), this.getPosition().getY());
+
+            gc.fillText(Double.toString(Math.round(this.getRotation() * 10) / 10.0), 0, 50);
+
+            gc.fillText(Vector2.round(new Vector2(getPosition()).multiply(10)).divide(10).toString(), 0, 72);
+
+            // Format to fill 8 characters
+            if (this.getCurrentAction() != null && this.logicalAction != null) {
+                gc.fillText(String.format("%s\n->%s", this.getCurrentAction().toString(), this.logicalAction.toString()), 0,
+                        100);
+            }
+
             gc.restore();
+
+            // Draw target
+            if (this.target != null) {
+                gc.save();
+                gc.setFill(javafx.scene.paint.Color.RED);
+                gc.fillOval(this.target.getX(), this.target.getY(), 10, 10);
+                gc.restore();
+            }
         }
     }
 }
