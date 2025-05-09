@@ -16,7 +16,7 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
     private int baseDamage = 0;
     private int weaponBonus = 0;
 
-    private double fligthTime = 0;
+    private double flightTime = 0;
     private double maxFlightTime = 1; // in seconds
 
     private Entity createdBy;
@@ -37,8 +37,8 @@ public abstract class Bullet extends Entity implements IRigidbodyService {
     }
 
     public void increaseFlightTime(double delta) {
-        this.fligthTime += delta;
-        if (this.fligthTime > maxFlightTime) {
+        this.flightTime += delta;
+        if (this.flightTime > maxFlightTime) {
             this.setHealth(0);
         }
     }
