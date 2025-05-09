@@ -54,6 +54,7 @@ public class Inventory implements IInventoryService, IGamePluginService, IEntity
             Turret currentTurret = player.getTurret();
             Turret turret = turrets.get(turretIndex);
             if (currentTurret != null) {
+                turret.setRotation(currentTurret.getRotation());
                 world.removeEntity(currentTurret);
             }
             player.setTurret(turret);
