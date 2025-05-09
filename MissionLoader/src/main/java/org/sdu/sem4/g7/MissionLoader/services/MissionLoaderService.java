@@ -125,7 +125,7 @@ public class MissionLoaderService implements IMissionLoaderService {
 
 					// Enemies with a max health of 100 should contribute with something around 1.05x
 					// f(x)=0.7+1.5 (1-ℯ^(-((x)/(400))))
-					mission.setDifficulty((float)(mission.getDifficulty() * Math.max(1.0, (0.7 + 1.5 * (1 - Math.exp(-(((float)enemy.getHealth()) / (400))))))));
+					mission.setDifficulty((float)(mission.getDifficulty() * Math.max(1.0, (0.7 + 1.5 * (1 - Math.exp(-(((float)(enemy.getHealth() / 10)) / (400))))))));
 				}
 				System.out.println(mission.getName() + " has a difficulty of " + mission.getDifficulty());
 			} catch (Exception e) {
