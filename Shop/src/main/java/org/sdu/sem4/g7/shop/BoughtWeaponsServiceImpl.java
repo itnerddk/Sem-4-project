@@ -26,7 +26,15 @@ public class BoughtWeaponsServiceImpl implements IBoughtWeaponsService {
 
     public void buyWeapon(String weaponId) {
         ServiceLocator.getPersistenceService().ifPresent(p -> {
-            List<String> owned = new ArrayList<>(p.getStringList(SAVE_KEY));
+            List<String> owned = p.getStringList(SAVE_KEY);
+
+
+            if (owned == null) {
+                owned = new ArrayList<>();
+            } else {
+                owned = new ArrayList<>(owned);
+            }
+
             if (!owned.contains(weaponId)) {
                 owned.add(weaponId);
                 p.saveStringList(SAVE_KEY, owned);

@@ -19,7 +19,7 @@ public class CannonTurretShopInfo implements IWeaponShopInfo {
 
     @Override
     public int getPrice() {
-        return 500;
+        return 0;
     }
 
     @Override

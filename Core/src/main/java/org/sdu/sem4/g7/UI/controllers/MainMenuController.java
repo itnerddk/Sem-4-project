@@ -5,53 +5,53 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.sdu.sem4.g7.common.services.ServiceLocator;
-import org.sdu.sem4.g7.common.services.IInventoryService;
-import org.sdu.sem4.g7.common.services.ISettingPluginService;
-import org.sdu.sem4.g7.common.services.ITurretProviderService;
-
+import org.sdu.sem4.g7.common.data.Entity;
+import org.sdu.sem4.g7.common.services.*;
 import java.io.IOException;
-
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Setting;
 import org.sdu.sem4.g7.common.data.SettingGroup;
 import org.sdu.sem4.g7.common.enums.DifficultyEnum;
 import org.sdu.sem4.g7.common.enums.SoundType;
-
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.ServiceLoader;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.function.Supplier;
 
 public class MainMenuController implements Initializable {
 
-    @FXML private AnchorPane UpgradeTapsPane;
-    @FXML private Button upgradeTabBtn, shopTabBtn;
-    @FXML private ImageView coinIcon, levelIcon;
-    @FXML private Label coinDisplay, levelDisplay;
-    @FXML private AnchorPane settingsPane, upgradePane, shopPane;
-    @FXML private ImageView backgroundImage;
-    @FXML private Parent mainMenuPane;
     private Stage stage;
     private GameData gameData = new GameData();
+
+    @FXML private Parent mainMenuPane;
+    @FXML private AnchorPane settingsPane, upgradePane, shopPane;
+    @FXML private ImageView backgroundImage;
+    @FXML private Button upgradeTabBtn, shopTabBtn;
+
+    // Currency
+    @FXML private ImageView coinIcon, levelIcon;
+    @FXML private Label coinDisplay, levelDisplay;
+
+    // Upgrade
+    @FXML private AnchorPane UpgradeTapsPane;
     @FXML private Text upgradeTankText;
+
+    // Shop
+    @FXML private AnchorPane shopTapsPane;
+    @FXML private ScrollPane shopScrollPane;
 
     // Health upgrade UI
     @FXML private ImageView healthIcon;
@@ -100,6 +100,8 @@ public class MainMenuController implements Initializable {
     @FXML private Button difficultyNormalButton;
     @FXML private Button difficultyHardButton;
 
+    // Shop
+    @FXML private GridPane weaponGrid;
 
 
     @Override
@@ -112,7 +114,7 @@ public class MainMenuController implements Initializable {
         speedIcon.setImage(new Image(getClass().getResource("/images/speed.png").toExternalForm()));
         damageIcon.setImage(new Image(getClass().getResource("/images/damage.png").toExternalForm()));
         armorIcon.setImage(new Image(getClass().getResource("/images/armor.png").toExternalForm()));
-      
+
         gameData = new GameData();
 
         Font font = Font.loadFont(getClass().getResourceAsStream("/fonts/LuckiestGuy-Regular.ttf"), 20);
@@ -189,13 +191,13 @@ public class MainMenuController implements Initializable {
 
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MissionSelector.fxml"));
                         Parent missionSelectorPane = loader.load();
-                        
+
                         MissionSelectorController controller = loader.getController();
                         controller.init(gameData);
                         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                         controller.setStage(stage);
                         gameData.setPrimaryStage(stage);
-            
+
                         Scene missionSelectorScene = new Scene(missionSelectorPane);
                         stage.setScene(missionSelectorScene);
                     } catch (Exception e) {
@@ -205,18 +207,21 @@ public class MainMenuController implements Initializable {
                 () -> System.out.println("MissionLoaderService not found")
         );
     }
-   
+
 
     @FXML private void showUpgrades() {
         gameData.playAudio(SoundType.BUTTON_CLICK);
         upgradePane.setVisible(true);
         shopPane.setVisible(false);
+        shopScrollPane.setVisible(false);
     }
 
     @FXML private void showShop() {
         gameData.playAudio(SoundType.BUTTON_CLICK);
         upgradePane.setVisible(false);
         shopPane.setVisible(true);
+        shopScrollPane.setVisible(true);
+        setupShopWeapons();
     }
 
     @FXML private void handleBack(ActionEvent event) {
@@ -288,7 +293,7 @@ public class MainMenuController implements Initializable {
                     case HARD:
                         difficultyHardButton.setDisable(true);
                         break;
-                
+
                     default:
                         difficultyNormalButton.setDisable(true);
                         break;
@@ -296,7 +301,7 @@ public class MainMenuController implements Initializable {
             },
             () -> {
                 System.out.println("Could not find a DifficultyService!");
-                difficultyNormalButton.setDisable(true); // default to normal selected 
+                difficultyNormalButton.setDisable(true); // default to normal selected
             }
         );
 
@@ -339,7 +344,7 @@ public class MainMenuController implements Initializable {
         difficultyNormalButton.setDisable(true);
         difficultyHardButton.setDisable(false);
     }
-    
+
     @FXML
     private void handleDifficultyHard(ActionEvent event) {
         gameData.playAudio(SoundType.BUTTON_CLICK);
@@ -557,7 +562,7 @@ public class MainMenuController implements Initializable {
 
     private void spawnSetting(Setting setting, VBox parent) {
         System.out.println("Setting: " + setting.getName() + " - " + setting.getDescription());
-            
+
         // Load Setting.fxml file
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Setting.fxml"));
         Pane settingPane = null;
@@ -726,6 +731,103 @@ public class MainMenuController implements Initializable {
                 armorPriceButton.setText(upgradeService.getArmorUpgradePrice() + "$");
             }
         });
+    }
+
+    // Shop
+    private void setupShopWeapons() {
+        ServiceLocator.getBoughtWeaponsService().ifPresent(boughtService -> {
+            ServiceLoader<IWeaponShopInfo> loader = ServiceLoader.load(IWeaponShopInfo.class);
+            List<IWeaponShopInfo> weapons = loader.stream()
+                    .map(ServiceLoader.Provider::get)
+                    .sorted(Comparator.comparingInt(IWeaponShopInfo::getPrice))
+                    .collect(Collectors.toList());
+
+            weaponGrid.getChildren().clear();
+
+            int col = 0;
+            int row = 0;
+            int maxCols = 4;
+
+            for (IWeaponShopInfo weapon : weapons) {
+                VBox weaponBox = createWeaponBox(weapon, boughtService);
+                weaponGrid.add(weaponBox, col, row);
+                col++;
+                if (col >= maxCols) {
+                    col = 0;
+                    row++;
+                }
+            }
+        });
+    }
+
+    private VBox createWeaponBox(IWeaponShopInfo weapon, IBoughtWeaponsService boughtService) {
+        VBox box = new VBox();
+        box.setAlignment(Pos.TOP_CENTER);
+        box.setPrefSize(125, 200);
+        box.getStyleClass().add("weapon-box");
+
+        ImageView icon = new ImageView(weapon.getImage());
+        icon.setFitHeight(48);
+        icon.setFitWidth(48);
+        icon.setPreserveRatio(true);
+
+        Label name = new Label(weapon.getDisplayName());
+        name.getStyleClass().add("weapon-name");
+        VBox.setMargin(name, new Insets(25, 0, 4, 0));
+
+        Button buyButton = new Button();
+        buyButton.getStyleClass().add("shop-price-button");
+        VBox.setMargin(buyButton, new Insets(15, 0, 0, 0));
+
+        boolean alreadyBought = boughtService.isWeaponBought(weapon.getWeaponId()) || weapon.getPrice() == 0;
+
+        if (alreadyBought) {
+            buyButton.setText("Owned");
+            buyButton.setDisable(true);
+
+            ServiceLocator.getInventoryService().ifPresent(inv -> {
+                boolean alreadyInInventory = inv.getAllOwnedTurrets().stream()
+                        .noneMatch(e -> e.getWeaponId().equals(weapon.getWeaponId()));
+
+                if (alreadyInInventory) {
+                    weaponToEntity(weapon).ifPresent(inv::add);
+                }
+            });
+
+        } else {
+            buyButton.setText(weapon.getPrice() + "$");
+
+            buyButton.setOnAction(e -> {
+                ServiceLocator.getCurrencyService().ifPresent(currency -> {
+                    if (currency.getCurrency() >= weapon.getPrice()) {
+                        currency.subtractCurrency(weapon.getPrice());
+                        boughtService.buyWeapon(weapon.getWeaponId());
+
+                        ServiceLocator.getInventoryService().ifPresent(inv -> {
+                            weaponToEntity(weapon).ifPresent(inv::add);
+                            System.out.println("Added to inventory: " + weapon.getWeaponId());
+                        });
+
+                        buyButton.setText("Owned");
+                        buyButton.setDisable(true);
+                        coinDisplay.setText("Coins: " + currency.getCurrency());
+                    }
+                });
+            });
+        }
+
+        box.getChildren().addAll(icon, name, buyButton);
+        return box;
+    }
+
+    private Optional<Entity> weaponToEntity(IWeaponShopInfo weapon) {
+        return ServiceLoader.load(ITurretProviderService.class).stream()
+                .map(ServiceLoader.Provider::get)
+                .flatMap(provider -> provider.getTurrets().stream())
+                .map(Supplier::get)
+                .filter(entity -> entity.getID().equals(weapon.getWeaponId()))
+                .map(entity -> (Entity) entity)
+                .findFirst();
     }
 
 }

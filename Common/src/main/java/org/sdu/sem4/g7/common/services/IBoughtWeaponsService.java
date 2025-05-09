@@ -5,5 +5,6 @@ import java.util.List;
 public interface IBoughtWeaponsService {
     boolean isWeaponBought(String weaponId);
     List<String> getBoughtWeaponIds();
+    void buyWeapon(String weaponId);
 }
 
