@@ -27,7 +27,6 @@ import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.*;
 
 import java.io.IOException;
-import java.security.Provider.Service;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -60,6 +59,7 @@ public class GameInstance {
         this.gameData = gameData;
         this.worldData = worldData;
         this.gameCanvas = new Canvas(gameData.getMissionLoaderService().getMapSizeX(), gameData.getMissionLoaderService().getMapSizeY());
+        gameData.gc = gameCanvas.getGraphicsContext2D();
         this.pluginServices = loadServices(IGamePluginService.class);
 
         setupCanvas();
@@ -109,6 +109,8 @@ public class GameInstance {
                     if (paused) {
                         return;
                     }
+                    GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+                    gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
                     update();
                     gameData.updateKeys();
                     gameData.updateMouse();
@@ -140,7 +142,7 @@ public class GameInstance {
 
                             List<Entity> players = worldData.getEntities(EntityType.PLAYER);
                             if (players.size() >= 1) {
-                                Entity player = players.getFirst();
+                                Entity player = players.iterator().next();
                                 int healthBonus = (int) (100.0f * (((float) player.getHealth() / (float) player.getMaxHealth()) * difficulty));
                                 finalScore += healthBonus;
                             }
@@ -272,7 +274,7 @@ public class GameInstance {
 
     private void draw() {
         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
+        // gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
 
         // Follow player
         worldData.getEntities().stream()
@@ -393,6 +395,10 @@ public class GameInstance {
                     paused = !paused;
                     pauseMenu.setVisible(paused);
                 }
+                break;
+            case H:
+                this.gameData.setPressed(Keys.DEBUG, pressed);
+                break;
             default:
                 break;
         }

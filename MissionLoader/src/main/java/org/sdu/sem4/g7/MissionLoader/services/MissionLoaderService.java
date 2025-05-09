@@ -15,6 +15,9 @@ import org.sdu.sem4.g7.MissionLoader.objects.EnemyStartPositionObject;
 import org.sdu.sem4.g7.MissionLoader.objects.MissionObject;
 import org.sdu.sem4.g7.MissionLoader.objects.TileEntity;
 import org.sdu.sem4.g7.MissionLoader.objects.TileObject;
+import org.sdu.sem4.g7.common.Config.CommonConfig;
+import org.sdu.sem4.g7.common.aware.IMapAware;
+import org.sdu.sem4.g7.common.aware.IWorldAware;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Mission;
@@ -122,7 +125,7 @@ public class MissionLoaderService implements IMissionLoaderService {
 
 					// Enemies with a max health of 100 should contribute with something around 1.05x
 					// f(x)=0.7+1.5 (1-ℯ^(-((x)/(400))))
-					mission.setDifficulty((float)(mission.getDifficulty() * Math.max(1.0, (0.7 + 1.5 * (1 - Math.exp(-(((float)enemy.getHealth()) / (400))))))));
+					mission.setDifficulty((float)(mission.getDifficulty() * Math.max(1.0, (0.7 + 1.5 * (1 - Math.exp(-(((float)(enemy.getHealth() / 10)) / (400))))))));
 				}
 				System.out.println(mission.getName() + " has a difficulty of " + mission.getDifficulty());
 			} catch (Exception e) {
@@ -163,6 +166,12 @@ public class MissionLoaderService implements IMissionLoaderService {
 				// Create a entity to render
 				Entity tileEntity = new TileEntity(tileInfo);
 
+				// set sprite
+				tileEntity.setSprite(new File(Config.tilesDir, tileInfo.getImage()).toURI(), CommonConfig.DEFAULT_SCALING);
+			
+				if (y == 0) CommonConfig.setTileSize((int) tileEntity.getSprite().getImage().getWidth());
+
+				// set position
 				tileEntity.setPosition(x * tileEntity.getSprite().getImage().getWidth(), y * tileEntity.getSprite().getImage().getHeight());
 
 				world.addEntity(tileEntity);
@@ -199,6 +208,12 @@ public class MissionLoaderService implements IMissionLoaderService {
 			return null;
 		}
 
+		
+		// Fill map awares/consumers
+		ServiceLoader.load(IMapAware.class).forEach(aware -> {
+			aware.initMap(mission.getMap());
+		});
+
 		// Create a new world
 		WorldData world = new WorldData();
 
@@ -206,6 +221,12 @@ public class MissionLoaderService implements IMissionLoaderService {
 		for (IEntityPluginService plugin : getPluginServices()) {
             plugin.start(gameData, world);
         }
+
+		// Fill world awares/consumers
+		ServiceLoader.load(IWorldAware.class).forEach(aware -> {
+			aware.initWorld(world);
+		});
+
 
 		// render map
 		renderMapTiles(mission.getMap(), world);
@@ -221,10 +242,10 @@ public class MissionLoaderService implements IMissionLoaderService {
 			Entity enemy;
 			try {
 				enemy = world.getEntityTypes().get(espo.getEntityType()).get(0).getDeclaredConstructor().newInstance();
-				enemy.setPosition(espo.getX(), espo.getY());
+				enemy.setPosition(espo.getX() * CommonConfig.getTileSize(), espo.getY() * CommonConfig.getTileSize());
 				enemy.setHealth(Math.round(espo.getHealth() * difficultyMultiplier)); // set health using the difficultyMultiplier
 				enemy.setMaxHealth(Math.round(espo.getHealth() * difficultyMultiplier));
-				System.out.println("set enemy health from mission: " + Math.round(espo.getHealth() * difficultyMultiplier));
+				System.out.println("set enemy health from mission: " + enemy.getHealth());
 				
 				// Set maxHealth to the same value as health if not explicitly defined
         		if (enemy.getMaxHealth() == 0) {
@@ -242,7 +263,7 @@ public class MissionLoaderService implements IMissionLoaderService {
 		// Create player
 		try {
 			Entity player = world.getEntityTypes().get("Players").get(0).getDeclaredConstructor().newInstance();
-			player.setPosition(mission.getPlayer().getX(), mission.getPlayer().getY());
+			player.setPosition(mission.getPlayer().getX() * CommonConfig.getTileSize(), mission.getPlayer().getY() * CommonConfig.getTileSize());
 			world.addEntity(player);
 		} catch (Exception ex) {
 			System.err.println("Could not create a player!");

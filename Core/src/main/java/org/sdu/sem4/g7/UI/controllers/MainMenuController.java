@@ -21,6 +21,8 @@ import javafx.util.Duration;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.services.*;
 import java.io.IOException;
+
+import org.sdu.sem4.g7.common.aware.IGameDataAware;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Setting;
 import org.sdu.sem4.g7.common.data.SettingGroup;
@@ -117,6 +119,10 @@ public class MainMenuController implements Initializable {
 
         gameData = new GameData();
 
+        // Load gamedata awares/consumers
+        ServiceLoader.load(IGameDataAware.class).forEach(aware -> {
+            aware.initGameData(gameData);
+        });
         Font font = Font.loadFont(getClass().getResourceAsStream("/fonts/LuckiestGuy-Regular.ttf"), 20);
         System.out.println("Loaded font: " + font.getName());
 

@@ -1,9 +1,7 @@
 package org.sdu.sem4.g7.cannonTurret;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 
-import javafx.scene.image.Image;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.enums.SoundType;
@@ -16,7 +14,7 @@ public class CannonTurret extends Turret {
     public CannonTurret() {
         super(CannonBullet.class, new Vector2(0, 0), new Vector2(0, -25), 400);
         try {
-            this.setSprite(this.getClass().getClassLoader().getResource("CannonTurret.png").toURI(), 5);
+            this.setSprite(this.getClass().getClassLoader().getResource("CannonTurret.png").toURI());
             this.setzIndex(-10);
 
             // Load the sound files

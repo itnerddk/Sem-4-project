@@ -4,20 +4,20 @@
   "description": "Navigate through a wide maze with ambush points and open combat zones.",
   "difficulty": 5,
   "player": {
-    "x": 96,
-    "y": 96
+    "x": 1,
+    "y": 1
   },
   "enemies": [
     {
       "entityType": "Enemies",
-      "x": 576,
-      "y": 96,
+      "x": 9,
+      "y": 1,
       "health": 1000
     },
     {
       "entityType": "Enemies",
-      "x": 576,
-      "y": 480,
+      "x": 9,
+      "y": 8,
       "health": 1000
     }
   ],

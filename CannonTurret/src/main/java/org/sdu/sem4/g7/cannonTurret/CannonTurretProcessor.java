@@ -6,7 +6,6 @@ import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.data.Vector2;
-import org.sdu.sem4.g7.tank.parts.Bullet;
 import org.sdu.sem4.g7.tank.parts.Turret;
 
 public class CannonTurretProcessor implements IEntityProcessingService {

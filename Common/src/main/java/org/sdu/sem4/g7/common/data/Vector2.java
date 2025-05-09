@@ -46,6 +46,10 @@ public class Vector2 {
         this.y = vector.getY();
     }
 
+    public Vector2 copy() {
+        return new Vector2(this);
+    }
+
     /**
      * Set the x and y values based on other vector
      * @param vector
@@ -127,11 +131,28 @@ public class Vector2 {
         return this;
     }
 
+    public Vector2 divideInt(double scalar) {
+        this.divide(scalar);
+        Vector2 newThis = Vector2.round(this);
+        this.x = newThis.getX();
+        this.y = newThis.getY();
+        return this;
+    }
+
+
+    /**
+     * Get the length of the vector
+     * @return the length of the vector
+     */
+    public double length() {
+        return Math.sqrt(x * x + y * y);
+    }
+
     public Vector2 normalize() {
         double length = Math.sqrt(x * x + y * y);
         if (length != 0) {
-            x /= length;
-            y /= length;
+            this.x /= length;
+            this.y /= length;
         }
         return this;
     }
@@ -185,6 +206,14 @@ public class Vector2 {
         return this;
     }
 
+    public double rotation() {
+        double angle = Math.atan2(x, -y);
+        if (angle < 0) {
+            angle += 2 * Math.PI;
+        }
+        return Math.toDegrees(angle);
+    }
+
     public static Vector2 round(Vector2 vector) {
         return new Vector2(Math.round(vector.getX()), Math.round(vector.getY()));
     }
@@ -194,5 +223,18 @@ public class Vector2 {
     @Override
     public String toString() {
         return "Vector2 {x=" + x + ", y=" + y + "}";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Vector2 vector2 = (Vector2) obj;
+        return Double.compare(vector2.x, x) == 0 && Double.compare(vector2.y, y) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * Double.hashCode(x) + Double.hashCode(y);
     }
 }

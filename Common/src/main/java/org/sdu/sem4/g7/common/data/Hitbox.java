@@ -1,5 +1,7 @@
 package org.sdu.sem4.g7.common.data;
 
+import org.sdu.sem4.g7.common.Config.CommonConfig;
+
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -38,21 +40,23 @@ public class Hitbox {
     }
 
     public void render(GraphicsContext gc) {
-        gc.save();
-        gc.translate(position.getX(), position.getY());
-        gc.rotate(rotation);
-        Rectangle rect = createRotatedRectangle();
-        gc.strokeRect(-size.getX() / 2, -size.getY() / 2, size.getX(), size.getY());
-        gc.setStroke(javafx.scene.paint.Color.BLUE);
-        gc.strokeRect(-rect.getWidth() / 2, -rect.getHeight() / 2, rect.getWidth(), rect.getHeight());
-        gc.restore();
-
-        // Draw radius
-        // gc.save();
-        // gc.setStroke(javafx.scene.paint.Color.RED);
-        // gc.translate(position.getX(), position.getY());
-        // gc.strokeOval(-radius(), -radius(), radius() * 2, radius() * 2);
-        // gc.restore();
+        if (CommonConfig.isDEBUG()) {
+            gc.save();
+            gc.translate(position.getX(), position.getY());
+            gc.rotate(rotation);
+            Rectangle rect = createRotatedRectangle();
+            gc.strokeRect(-size.getX() / 2, -size.getY() / 2, size.getX(), size.getY());
+            gc.setStroke(javafx.scene.paint.Color.BLUE);
+            gc.strokeRect(-rect.getWidth() / 2, -rect.getHeight() / 2, rect.getWidth(), rect.getHeight());
+            gc.restore();
+    
+            // Draw radius
+            // gc.save();
+            // gc.setStroke(javafx.scene.paint.Color.RED);
+            // gc.translate(position.getX(), position.getY());
+            // gc.strokeOval(-radius(), -radius(), radius() * 2, radius() * 2);
+            // gc.restore();
+        }
     }
 
     public Vector2 collides(Hitbox other) {

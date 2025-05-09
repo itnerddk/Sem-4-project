@@ -12,6 +12,8 @@ public class ServiceLocator {
     private static IPersistenceService persistenceLoaderService;
     private static IUpgradeStatsService upgradeStatsService;
     private static IAudioProcessingService audioProcessingService;
+    private static ILogicService logicService;
+    private static IRayCastingService rayCastingService;
     private static IDifficultyService difficultyService;
     private static IBoughtWeaponsService boughtWeaponsService;
     private static IInventoryService inventoryService;
@@ -39,6 +41,12 @@ public class ServiceLocator {
         ServiceLoader<IAudioProcessingService> audioLoader = ServiceLoader.load(IAudioProcessingService.class);
         audioProcessingService = audioLoader.findFirst().orElse(null);
 
+        ServiceLoader<ILogicService> logicLoader = ServiceLoader.load(ILogicService.class);
+        logicService = logicLoader.findFirst().orElse(null);
+
+        ServiceLoader<IRayCastingService> rayCastingLoader = ServiceLoader.load(IRayCastingService.class);
+        rayCastingService = rayCastingLoader.findFirst().orElse(null);
+        
         ServiceLoader<IDifficultyService> difficultyLoader = ServiceLoader.load(IDifficultyService.class);
         difficultyService = difficultyLoader.findFirst().orElse(null);
 
@@ -80,6 +88,14 @@ public class ServiceLocator {
 
     public static Optional<IAudioProcessingService> getAudioProcessingService () {
         return Optional.ofNullable(audioProcessingService);
+    }
+
+    public static Optional<ILogicService> getLogicService () {
+        return Optional.ofNullable(logicService);
+    }
+
+    public static Optional<IRayCastingService> getRayCastingService () {
+        return Optional.ofNullable(rayCastingService);
     }
 
     public static Optional<IDifficultyService> getDifficultyService() {

@@ -1,5 +1,6 @@
 package org.sdu.sem4.g7.playersystem;
 
+import org.sdu.sem4.g7.common.Config.CommonConfig;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Vector2;
@@ -13,6 +14,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
         // Borrowing some process space... TODO: Fjern denne linje
 
         for (Entity entity : world.getEntities(Player.class)) {
+            // System.out.println(entity.getPosition());
             // Controls
             Player player = (Player) entity;
 
@@ -36,6 +38,10 @@ public class PlayerControlSystem implements IEntityProcessingService {
                 player.turnRight();
             }
 
+            if (gameData.isPressed(GameData.Keys.DEBUG)) {
+                CommonConfig.setDEBUG(!CommonConfig.isDEBUG());
+            }
+            
             // Rotate turret
             player.getTurret().aimTowards(new Vector2(gameData.getRelativeMouseX(), gameData.getRelativeMouseY()));
 

@@ -3,6 +3,7 @@ package org.sdu.sem4.g7.MissionLoader.objects;
 import java.io.File;
 
 import org.sdu.sem4.g7.MissionLoader.config.Config;
+import org.sdu.sem4.g7.common.Config.CommonConfig;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Hitbox;
@@ -25,7 +26,7 @@ public class TileEntity extends Entity implements IRigidbodyService {
     public TileEntity(TileObject tileObject) {
         super();
         setImmoveable(true);
-        setSprite(new File(Config.tilesDir, tileObject.getImage()).toURI(), Config.tileSize);
+        setSprite(new File(Config.tilesDir, tileObject.getImage()).toURI(), CommonConfig.getTileSize());
         setzIndex(tileObject.getZ());
         setCollision(tileObject.isCollision());
         setHealth(tileObject.getHealth());

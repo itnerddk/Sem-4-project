@@ -3,12 +3,12 @@ package org.sdu.sem4.g7.tank.parts;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sdu.sem4.g7.common.Config.CommonConfig;
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Hitbox;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
-import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.IRigidbodyService;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -31,7 +31,7 @@ public abstract class Tank extends Entity implements IRigidbodyService {
         this.setCollision(true);
         try {
             System.out.println(this.getClass().getClassLoader().getResource("Tank.png"));
-            this.setSprite(this.getClass().getClassLoader().getResource("Tank.png").toURI(), 5);
+            this.setSprite(this.getClass().getClassLoader().getResource("Tank.png").toURI(), CommonConfig.DEFAULT_SCALING);
         } catch (Exception e) {
             // TODO: handle exception
         }
@@ -62,42 +62,68 @@ public abstract class Tank extends Entity implements IRigidbodyService {
         }
     }
 
-    public void accelerate() {
+    public void accelerate(float weight) {
         this.setSpeed(
             lerp(
                 this.getSpeed(),
-                Math.min(this.getSpeed() + (this.getAcceleration()), this.getMaxSpeed()),
+                Math.min(this.getSpeed() + (this.getAcceleration() * weight), this.getMaxSpeed()),
                 0.7
             )
         );
     }
+    
+    public void accelerate() {
+        this.accelerate(1.0f);
+    }
 
-    public void decelerate() {
+    public void decelerate(float weight) {
         this.setSpeed(
             lerp(
                 this.getSpeed(),
-                Math.max(this.getSpeed() - (this.getDeceleration()), -(this.getMaxSpeed()/2)),
+                Math.max(this.getSpeed() - (this.getDeceleration() * weight), -(this.getMaxSpeed()/2)),
                 0.5
             )
         );
     }
 
-    public void turnLeft() {
-        this.setRotation((float)(this.getRotation() - this.getRotationSpeed()));
-        if (turret != null) {
-            turret.setRotation((float)(turret.getRotation() - this.getRotationSpeed()));
+    public void decelerate() {
+        this.decelerate(1.0f);
+    }
+
+    public void turnLeft(float weight) {
+        float newRotation = (float)(this.getRotation() - this.getRotationSpeed() * weight);
+        if (newRotation < 0) {
+            newRotation = 360 + newRotation;
         }
+        if (turret != null) {
+            turret.setRotation((float)(turret.getRotation() - this.getRotationSpeed() * weight));
+        }
+
+        this.setRotation(newRotation);
         // Turn velocity
-        getVelocity().rotate(-this.getRotationSpeed());
+        getVelocity().rotate(-this.getRotationSpeed() * weight);
+    }
+
+    public void turnLeft() {
+        this.turnLeft(1.0f);
+    }
+
+    public void turnRight(float weight) {
+        float newRotation = (float)(this.getRotation() + this.getRotationSpeed() * weight);
+        if (newRotation > 360) {
+            newRotation = 0 + newRotation - 360;
+        }
+        if (turret != null) {
+            turret.setRotation((float)(turret.getRotation() + this.getRotationSpeed() * weight));
+        }
+
+        this.setRotation(newRotation);
+        // Turn velocity
+        getVelocity().rotate(this.getRotationSpeed() * weight);
     }
 
     public void turnRight() {
-        this.setRotation((float)(this.getRotation() + this.getRotationSpeed()));
-        if (turret != null) {
-            turret.setRotation((float)(turret.getRotation() + this.getRotationSpeed()));
-        }
-        // Turn velocity
-        getVelocity().rotate(this.getRotationSpeed());
+        this.turnRight(1.0f);
     }
 
     public void shoot(GameData gameData, WorldData mission) {

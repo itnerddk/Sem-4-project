@@ -13,6 +13,7 @@
     <modules>
         <module>Core</module>
         <module>Common</module>
+        <module>AI</module>
         <module>Player</module>
         <module>TankParts</module>
         <module>CannonTurret</module>
@@ -26,6 +27,7 @@
         <module>Persistence</module>
         <module>MachineGunTurret</module>
         <module>Inventory</module>
+        <module>RayCasting</module>
         <module>Difficulty</module>
         <module>Shop</module>
         <module>BounceTurret</module>
@@ -35,8 +37,8 @@
     <properties>
         <java>java</java>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>        
-        <maven.compiler.source>1.9</maven.compiler.source>
-        <maven.compiler.target>1.9</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <javafx.version>21.0.2</javafx.version>
     </properties>
     
@@ -87,6 +89,11 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
                 <version>2.18.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.sdu.sem4.g7</groupId>
+                <artifactId>Common</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>    
