@@ -37,7 +37,6 @@ public class PersistenceService implements IPersistenceService {
      * @throws IOException
      */
     private DataFileObject readFileObject() throws StreamReadException, DatabindException, FileNotFoundException, IOException {
-        System.out.println("Reading file: " + PersistenceService.persistenceFile);
         return objectMapper.readValue(new FileReader(persistenceFile), DataFileObject.class);
     }
 
