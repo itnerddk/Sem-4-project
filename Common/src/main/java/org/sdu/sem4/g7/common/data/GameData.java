@@ -255,8 +255,12 @@ public class GameData {
     }
 
     public boolean playAudio(SoundType soundType, String soundName, float volume) {
+        return playAudio(soundType, soundName, volume, true);
+    }
+
+    public boolean playAudio(SoundType soundType, String soundName, float volume, boolean pitch) {
         if (audioProcessingService != null) {
-            return audioProcessingService.playSound(soundType, soundName, volume * soundVolume.get(soundType) * soundVolume.get(SoundType.MASTER));
+            return audioProcessingService.playSound(soundType, soundName, volume * soundVolume.get(soundType) * soundVolume.get(SoundType.MASTER), pitch);
         } else {
             System.err.println("Audio processing service is not set.");
             return true;

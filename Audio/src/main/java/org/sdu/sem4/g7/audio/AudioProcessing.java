@@ -1,6 +1,5 @@
 package org.sdu.sem4.g7.audio;
 
-import java.io.File;
 import java.net.URI;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -58,19 +57,26 @@ public class AudioProcessing implements IAudioProcessingService, IGamePluginServ
         }
     }
 
+
     @Override
     public void playSound(SoundType soundType, float volume) {
-        playSound(soundType, "", volume);
+        playSound(soundType, "", volume, true);
     }
 
     @Override
-    public boolean playSound(SoundType soundType, String soundName, float volume) {
+    public void playSound(SoundType soundType, float volume, boolean pitch) {
+        playSound(soundType, "", volume, pitch);
+    }
+
+    @Override
+    public boolean playSound(SoundType soundType, String soundName, float volume, boolean pitch) {
         AudioClip sound = soundMap.get(new CompositeKey(soundType, soundName));
-        double pitch = 0.8 + Math.random() * 0.4; // Random pitch between 0.8 and 1.2
         if (sound != null) {
-            sound.setVolume(volume);
-            sound.setRate(pitch);
-            sound.play();
+            double _pitch = 1.0;
+            if (pitch) {
+                _pitch = 0.8 + Math.random() * 0.4; // Random pitch between 0.8 and 1.2
+            }
+            sound.play(volume, 0, _pitch, 0, (int) System.currentTimeMillis());
             return true;
         }
         System.out.println("Sound not found: " + soundType + " " + soundName);

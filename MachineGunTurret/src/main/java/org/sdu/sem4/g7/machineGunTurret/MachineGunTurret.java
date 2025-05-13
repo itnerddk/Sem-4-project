@@ -1,6 +1,5 @@
 package org.sdu.sem4.g7.machineGunTurret;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.sdu.sem4.g7.common.data.GameData;
@@ -46,7 +45,7 @@ public class MachineGunTurret extends Turret {
         }
         if (this.bulletShot) {
             // Play the shoot sound
-            if (gameData.playAudio(SoundType.SHOOT, getShootSoundFile().toString(), 1f)) {
+            if (gameData.playAudio(SoundType.SHOOT, getShootSoundFile().toString(), 1f, false)) {
                 System.out.println("Playing shoot sound");
             } else {
                 gameData.addAudio(SoundType.SHOOT, getShootSoundFile());

@@ -11,8 +11,9 @@ public interface IAudioProcessingService {
      * @param volume the volume of the sound (0.0 - 1.0)
      */
     void playSound(SoundType soundType, float volume);
+    void playSound(SoundType soundType, float volume, boolean pitch);
 
-    boolean playSound(SoundType soundType, String soundName, float volume);
+    boolean playSound(SoundType soundType, String soundName, float volume, boolean pitch);
 
     void addSound(SoundType soundType, URI soundFile);
 
