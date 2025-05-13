@@ -6,7 +6,19 @@ public class HealthUpgrade {
     private int level = 0;
     private final int[] prices = {2000, 3500, 5000, 7000, 10000};
 
-    public int getLevel() { return level; }
+    public int getLevel() {
+        ServiceLocator.getPersistenceService().ifPresent(
+            service -> {
+                // load level from persistence
+                if (service.intExists(this.getClass().getName())) {
+                    int loadedLevel = service.getInt(this.getClass().getName());
+                    this.level = loadedLevel;
+                }
+            }
+        );
+        return level;
+    }
+    
     public void setLevel(int level) { this.level = level; }
     public boolean isMaxed() { return level >= prices.length; }
     public int getNextPrice() { return isMaxed() ? -1 : prices[level]; }
