@@ -21,7 +21,9 @@ public class LevelManager implements ILevelService {
                 if (persistenceService.intExists(persistenceLevelKey)) {
                     int loadedLevel = persistenceService.getInt(persistenceLevelKey);
                     this.level = loadedLevel;
-                }   
+                } else {
+                    this.level = 1;
+                }
             }
         );
         return level;

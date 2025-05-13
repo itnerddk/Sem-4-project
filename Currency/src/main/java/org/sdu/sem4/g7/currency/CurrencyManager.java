@@ -22,6 +22,8 @@ public class CurrencyManager implements ICurrencyService {
                 if (persistenceService.intExists(persistenceKey)) {
                     int loadedCurrency = persistenceService.getInt(persistenceKey);
                     localCurrency = loadedCurrency;
+                } else {
+                    localCurrency = 0;
                 }
             }
         );

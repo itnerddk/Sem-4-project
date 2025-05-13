@@ -130,6 +130,7 @@ public class IntroController implements Initializable {
                     save.put("name", "Save " + i);
                     // If the file id is not set continue instead of trying to put values in the map.
                     if (!persistenceService.fileExists(i)) continue;
+                    persistenceService.setFileId(i);
                     save.put("valid", true);
                     ServiceLocator.getLevelService().ifPresent(levelService -> {save.put("level", levelService.getLevel());});
                     ServiceLocator.getCurrencyService().ifPresent(currencyService -> {save.put("currency", currencyService.getCurrency());});

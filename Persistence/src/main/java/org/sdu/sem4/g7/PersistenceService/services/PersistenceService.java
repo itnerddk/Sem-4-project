@@ -37,6 +37,7 @@ public class PersistenceService implements IPersistenceService {
      * @throws IOException
      */
     private DataFileObject readFileObject() throws StreamReadException, DatabindException, FileNotFoundException, IOException {
+        System.out.println("Reading file: " + PersistenceService.persistenceFile);
         return objectMapper.readValue(new FileReader(persistenceFile), DataFileObject.class);
     }
 
@@ -107,13 +108,12 @@ public class PersistenceService implements IPersistenceService {
 
     public boolean setFileId(int fileId) {
         PersistenceService.actualSaveFileID = fileId;
-        if (new File(persistenceFolder, String.format("save%,d.json", fileId)).isFile()) {
-            PersistenceService.persistenceFile = new File(PersistenceService.persistenceFolder, String.format("save%,d.json", PersistenceService.actualSaveFileID));
+        PersistenceService.persistenceFile = new File(PersistenceService.persistenceFolder, String.format("save%,d.json", PersistenceService.actualSaveFileID));
+        if (PersistenceService.persistenceFile.isFile()) {
             return true;
         }
         // If the file does not exist, create it
         createFile();
-        PersistenceService.persistenceFile = new File(PersistenceService.persistenceFolder, String.format("save%,d.json", PersistenceService.actualSaveFileID));
         return false;
     }
 
