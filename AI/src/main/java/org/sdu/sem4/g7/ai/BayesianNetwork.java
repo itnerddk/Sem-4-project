@@ -9,6 +9,8 @@ public class BayesianNetwork {
     // Node System
     class BayesianNode {
         String name;
+        int iteration = 0;
+        float savedValue = 0f;
         Map<BayesianNode, Float> parents;
         List<BayesianNode> children = new ArrayList<>();
 
@@ -36,11 +38,16 @@ public class BayesianNetwork {
             }
         }
 
-        public float evaluate() {
+        public float evaluate(int iteration) {
+            if (this.iteration == iteration) {
+                return savedValue;
+            }
             if (callback != null) {
                 try {
                     float value = callback.call();
                     // System.out.println("Evaluated " + name + " to " + value);
+                    this.iteration = iteration;
+                    this.savedValue = value;
                     return value;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -52,7 +59,7 @@ public class BayesianNetwork {
                 BayesianNode parent = entry.getKey();
                 // If the weight is negative, then the parent is inverted
                 float weight = entry.getValue();
-                float parentValue = parent.evaluate();
+                float parentValue = parent.evaluate(iteration);
                 if (weight < 0) {
                     parentValue = 1 - parentValue;
                 }
@@ -124,7 +131,7 @@ public class BayesianNetwork {
     }
 
     public HashMap<EntityActions, Float> evaluate(float healthRemaining, float range, float inGroup, boolean teammateOnMap,
-            boolean teammateInLine) {
+            boolean teammateInLine, int iteration) {
         // Set values for evaluation needs
         this.healthRemaining = healthRemaining;
         this.range = range;
@@ -139,7 +146,7 @@ public class BayesianNetwork {
 
         for (BayesianNode node : nodes) {
             if (node.getAction() != null) {
-                float chance = node.evaluate();
+                float chance = node.evaluate(iteration);
                 cumulativeChance += chance;
                 chances.put(node.action, chance);
             }

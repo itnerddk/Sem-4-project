@@ -17,7 +17,6 @@ import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.enums.EntityActions;
 import org.sdu.sem4.g7.common.services.ILogicService;
-import org.sdu.sem4.g7.common.services.IRigidbodyService;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
 
 class CompositeKey {
@@ -193,7 +192,7 @@ public class LogicService implements ILogicService, IMapAware, IGameDataAware, I
                 teammateOnMap = LogicService.worldData.getEntities(entity.getClass()).size() > 1;
             }
 
-            HashMap<EntityActions, Float> chances = bayesianNetwork.evaluate(health, rangeModifier, inGroup, teammateOnMap, raycasts[0]);
+            HashMap<EntityActions, Float> chances = bayesianNetwork.evaluate(health, rangeModifier, inGroup, teammateOnMap, raycasts[0], (entity.getID() + System.currentTimeMillis()).hashCode());
             // Get the action with the highest chance
             EntityActions newAction = bayesianNetwork.pickAction(chances);
             // If the old action still has a high chance, keep it
