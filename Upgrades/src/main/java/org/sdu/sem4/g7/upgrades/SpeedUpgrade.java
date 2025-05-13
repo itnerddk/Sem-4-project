@@ -1,8 +1,5 @@
 package org.sdu.sem4.g7.upgrades;
 
-import java.util.ServiceLoader;
-
-import org.sdu.sem4.g7.common.services.IPersistenceService;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
 
 public class SpeedUpgrade {
@@ -15,11 +12,15 @@ public class SpeedUpgrade {
     public int getNextPrice() { return isMaxed() ? -1 : prices[level]; }
 
     public SpeedUpgrade() {
-        // get level from storage
-        ServiceLoader<IPersistenceService> persistenceServiceLoader = ServiceLoader.load(IPersistenceService.class);
-        if (persistenceServiceLoader.findFirst().isPresent()) {
-            level = persistenceServiceLoader.findFirst().get().getInt(this.getClass().getName());
-        }
+        ServiceLocator.getPersistenceService().ifPresent(
+            service -> {
+                // load level from persistence
+                if (service.intExists(this.getClass().getName())) {
+                    int loadedLevel = service.getInt(this.getClass().getName());
+                    this.level = loadedLevel;
+                }
+            }
+        );
     }
 
     public boolean upgrade() {

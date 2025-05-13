@@ -7,6 +7,32 @@ import java.util.List;
  */
 public interface IPersistenceService {
 
+
+    /**
+     * 
+     * Check if the file id exists
+     * 
+     * @return the status of the files existence
+     */
+    public boolean fileExists(int fileId);
+
+    /**
+     * 
+     * Set the current persistence file id
+     * 
+     * @return if the file exists
+     */
+    public boolean setFileId(int fileId);
+
+
+    /**
+     * 
+     * Delete the file with the given id
+     * 
+     * @return if the file was successfully deleted
+     */
+    public boolean deleteFileId(int fileId);
+
     /**
      * 
      * Get string

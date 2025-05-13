@@ -18,8 +18,10 @@ public class LevelManager implements ILevelService {
         ServiceLocator.getPersistenceService().ifPresent(
             persistenceService -> {
                 // load level from persistence
-                int loadedLevel = persistenceService.getInt(persistenceLevelKey);
-                this.level = loadedLevel;
+                if (persistenceService.intExists(persistenceLevelKey)) {
+                    int loadedLevel = persistenceService.getInt(persistenceLevelKey);
+                    this.level = loadedLevel;
+                }   
             }
         );
         return level;

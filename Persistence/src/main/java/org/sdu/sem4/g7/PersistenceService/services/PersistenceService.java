@@ -23,7 +23,8 @@ public class PersistenceService implements IPersistenceService {
     private final static ObjectMapper objectMapper = new ObjectMapper();
 
     private static File persistenceFolder = new File("./data/playerdata/");
-    private static File persistenceFile = new File(persistenceFolder, "save.json");
+    private static int actualSaveFileID = 1;
+    private static File persistenceFile = new File(persistenceFolder, String.format("save%,d.json", actualSaveFileID));
 
     /**
      * 
@@ -59,6 +60,30 @@ public class PersistenceService implements IPersistenceService {
         writer.close();
     }
 
+    /**
+     * 
+     * Handles the creation of a new file
+     * 
+     */
+    private void createFile() {
+        DataFileObject dfo = new DataFileObject();
+
+        // Create the empty object
+        dfo.setCreated(new Date());
+        dfo.setRevision(0);
+        dfo.setStringMap(new HashMap<>());
+        dfo.setIntMap(new HashMap<>());
+        dfo.setStringListMap(new HashMap<>());
+        dfo.setIntListMap(new HashMap<>());
+
+        // save the object
+        try {
+            writeFileObject(dfo);
+        } catch (IOException e) {
+            System.err.println("Could not create the playerdata file!");
+            e.printStackTrace();
+        }
+    }
 
     public PersistenceService() {
 
@@ -69,27 +94,36 @@ public class PersistenceService implements IPersistenceService {
 
         // Create a barebone persistence file, if it does not exists
         if (!persistenceFile.isFile()) {
-            DataFileObject dfo = new DataFileObject();
-
-            // Create the empty object
-            dfo.setCreated(new Date());
-            dfo.setRevision(0);
-            dfo.setStringMap(new HashMap<>());
-            dfo.setIntMap(new HashMap<>());
-            dfo.setStringListMap(new HashMap<>());
-            dfo.setIntListMap(new HashMap<>());
-
-            // save the object
-            try {
-                writeFileObject(dfo);
-            } catch (IOException e) {
-                System.err.println("Could not create the playerdata file!");
-                e.printStackTrace();
-            }
+            // Might not need this as it's currently used differently,
+            // so commented out.
+            // createFile();
         }
 
     }
 
+    public boolean fileExists(int fileId) {
+        return new File(persistenceFolder, String.format("save%,d.json", fileId)).isFile();
+    }
+
+    public boolean setFileId(int fileId) {
+        PersistenceService.actualSaveFileID = fileId;
+        if (new File(persistenceFolder, String.format("save%,d.json", fileId)).isFile()) {
+            PersistenceService.persistenceFile = new File(PersistenceService.persistenceFolder, String.format("save%,d.json", PersistenceService.actualSaveFileID));
+            return true;
+        }
+        // If the file does not exist, create it
+        createFile();
+        PersistenceService.persistenceFile = new File(PersistenceService.persistenceFolder, String.format("save%,d.json", PersistenceService.actualSaveFileID));
+        return false;
+    }
+
+    public boolean deleteFileId(int fileId) {
+        File file = new File(persistenceFolder, String.format("save%,d.json", fileId));
+        if (file.isFile()) {
+            return file.delete();
+        }
+        return false;
+    }
 
     @Override
     public String getString(String key) {

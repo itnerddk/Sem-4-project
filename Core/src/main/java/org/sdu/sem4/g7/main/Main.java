@@ -36,10 +36,10 @@ public class Main extends Application {
 
 
         // Inject Main Menu with GameData
-        FXMLLoader mainMenuLoader = new FXMLLoader(getClass().getResource("/view/MainMenu.fxml"));
-        mainMenuLoader.load();
-        MainMenuController controller = mainMenuLoader.getController();
-        controller.setGameData(gameData);
+        // FXMLLoader mainMenuLoader = new FXMLLoader(getClass().getResource("/view/MainMenu.fxml"));
+        // mainMenuLoader.load();
+        // MainMenuController controller = mainMenuLoader.getController();
+        // controller.setGameData(gameData);
 
         // Insert reference to primaryStage in gamedata TODO: Find a better way, currently needed to change it from the game
         gameData.setPrimaryStage(primaryStage);

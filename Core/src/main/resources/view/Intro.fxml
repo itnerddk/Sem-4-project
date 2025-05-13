@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="800" prefWidth="800" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.sdu.sem4.g7.UI.controllers.IntroController">
+<AnchorPane prefHeight="800" prefWidth="800" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.sdu.sem4.g7.UI.controllers.IntroController">
 
     <!-- Background -->
     <ImageView fx:id="backgroundImage" fitHeight="800" fitWidth="800"> </ImageView>
@@ -13,13 +16,33 @@
 
 
     <!-- Play Button -->
-    <Button layoutX="247.0" layoutY="393.0" onAction="#handleStartGame" prefHeight="60.0" prefWidth="320.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="New Game" />
+    <Button fx:id="newSaveButton" layoutX="247.0" layoutY="393.0" onAction="#newSave" prefHeight="60.0" prefWidth="320.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="New Game" />
     <!-- Load Save -->
-    <Button layoutX="247.0" layoutY="462.0" onAction="#loadSave" prefHeight="60.0" prefWidth="320.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="Load Save" />
+    <Button fx:id="loadSaveButton" layoutX="247.0" layoutY="462.0" onAction="#loadSave" prefHeight="60.0" prefWidth="320.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="Load Save" />
     <!-- Credits Button -->
     <Button layoutX="247.0" layoutY="532.0" onAction="#handleCredits" prefHeight="60.0" prefWidth="155.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="Credits" />
     <!-- Quit Button -->
     <Button layoutX="414.0" layoutY="532.0" onAction="#handleQuitGame" prefHeight="60.0" prefWidth="155.0" styleClass="button-custom" stylesheets="@IntroStyle.css" text="Exit" />
+
+
+    <!-- Saves -->
+    <AnchorPane fx:id="savePane" layoutX="232.0" layoutY="150.0" prefHeight="500" prefWidth="350" styleClass="generic-pane" stylesheets="@generic.css" visible="false">
+        <children>
+           <VBox fx:id="savesVbox" layoutX="20.0" layoutY="20.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <children>
+                 <Label fx:id="title" styleClass="generic-header" text="New Game" />
+                 <!-- <fx:include source="SaveButton.fxml" />
+                 <fx:include source="NewSaveButton.fxml" />
+                 <fx:include source="NewSaveButton.fxml" /> -->
+              </children>
+           </VBox>
+           <Button layoutX="315.0" layoutY="10.0" onAction="#handleCloseSaves" prefHeight="25" prefWidth="25" style="-fx-background-color: red; -fx-text-fill: white; -fx-background-radius: 100%; -fx-font-weight: bold; -fx-cursor: hand;" text="X" />
+        </children>
+    </AnchorPane>
+    <stylesheets>
+        <URL value="@generic.css" />
+        <URL value="@IntroStyle.css" />
+    </stylesheets>
 
 
 </AnchorPane>

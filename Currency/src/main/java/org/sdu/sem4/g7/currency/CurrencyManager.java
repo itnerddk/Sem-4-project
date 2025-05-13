@@ -19,8 +19,10 @@ public class CurrencyManager implements ICurrencyService {
         ServiceLocator.getPersistenceService().ifPresent(
             persistenceService -> {
                 // load currency from persistence
-                int loadedCurrency = persistenceService.getInt(persistenceKey);
-                localCurrency = loadedCurrency;
+                if (persistenceService.intExists(persistenceKey)) {
+                    int loadedCurrency = persistenceService.getInt(persistenceKey);
+                    localCurrency = loadedCurrency;
+                }
             }
         );
         return localCurrency;
