@@ -2,7 +2,7 @@
   "id": 5,
   "name": "Zigger Zagger",
   "description": "Zig and Zag babyy~!",
-  "difficulty": 5,
+  "difficulty": 2,
   "player": {
     "x": 15,
     "y": 15

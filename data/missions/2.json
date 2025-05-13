@@ -2,7 +2,7 @@
   "id": 2,
   "name": "Battlefield Arena",
   "description": "An open battlefield with scattered cover. Perfect for maneuvering and large-scale fights.",
-  "difficulty": 6,
+  "difficulty": 2,
   "player": {
     "x": 6,
     "y": 6

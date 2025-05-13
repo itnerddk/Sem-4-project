@@ -2,7 +2,7 @@
   "id": 6,
   "name": "Open Field",
   "description": "A vast open field with minimal cover. Perfect for long-range engagements.",
-  "difficulty": 4,
+  "difficulty": 10,
   "player": {
     "x": 19,
     "y": 19

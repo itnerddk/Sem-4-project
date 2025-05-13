@@ -2,7 +2,7 @@
     "id": 1,
     "name": "Challenging Arena",
     "description": "A tank battle in a confined arena with walls and obstacles!",
-    "difficulty": 7,
+    "difficulty": 1,
     "player": {
         "x": 6,
         "y": 6
