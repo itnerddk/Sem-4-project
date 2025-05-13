@@ -394,6 +394,7 @@ public class GameInstance {
                     );
                     paused = !paused;
                     pauseMenu.setVisible(paused);
+                    pauseMenu.toFront();
                 }
                 break;
             case H:
