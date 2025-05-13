@@ -47,8 +47,19 @@ public class EnemyControlSystem implements IEntityProcessingService {
             double tileSize = CommonConfig.getTileSize();
 
             if (distance <= 4 * tileSize) {
-                enemy.getTurret().aimTowards(player.getPosition());
-                enemy.shoot(gameData, world);
+                ServiceLocator.getRayCastingService().ifPresentOrElse(
+                    raycast -> {
+                        if(raycast.isInMap(enemy.getPosition(), new Vector2(player.getPosition()).subtract(enemy.getPosition()).normalize(), (int) enemy.getPosition().distance(player.getPosition()), 5) == null) {
+                            System.out.println("Enemy shooting!");
+                            enemy.getTurret().aimTowards(player.getPosition());
+                            enemy.shoot(gameData, world);
+                        }
+                    },
+                    () -> {
+                        enemy.getTurret().aimTowards(player.getPosition());
+                        enemy.shoot(gameData, world);
+                    }
+                );
             }
 
             enemy.processPosition(gameData);
