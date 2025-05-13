@@ -14,8 +14,6 @@ import org.sdu.sem4.g7.common.services.ServiceLocator;
 import org.sdu.sem4.g7.playersystem.Player;
 
 public class EnemyControlSystem implements IEntityProcessingService {
-
-    private static final double SHOOT_INTERVAL = 3.5; // 3.5 seconds
     private static final long MAX_PATH_TIME = 4000; // Microseconds
     private static final long MAX_PROCESSING_TIME = 1000 + MAX_PATH_TIME; // Microseconds
 
@@ -48,15 +46,9 @@ public class EnemyControlSystem implements IEntityProcessingService {
             double distance = Math.sqrt(dx * dx + dy * dy);
             double tileSize = CommonConfig.getTileSize();
 
-            if (distance <= 2 * tileSize) {
-                double angle = Math.toDegrees(Math.atan2(dy, dx)) + 90;
-                double currentTime = gameData.getTime();
-                double lastShotTime = enemy.getLastShotTime();
-
-                if (currentTime - lastShotTime >= SHOOT_INTERVAL) {
-                    enemy.shoot(gameData, world);
-                    enemy.setLastShotTime(currentTime);
-                }
+            if (distance <= 4 * tileSize) {
+                enemy.getTurret().aimTowards(player.getPosition());
+                enemy.shoot(gameData, world);
             }
 
             enemy.processPosition(gameData);

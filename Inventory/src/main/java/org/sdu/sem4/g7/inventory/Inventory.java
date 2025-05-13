@@ -2,7 +2,6 @@ package org.sdu.sem4.g7.inventory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ServiceLoader;
 
 import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
@@ -65,38 +64,12 @@ public class Inventory implements IInventoryService, IGamePluginService, IEntity
 
     @Override
     public void start(GameData gameData, WorldData world) {
-        turretIndex = 0;
-
-        if (ServiceLoader.load(IBoughtWeaponsService.class).findFirst().isEmpty()) {
-            loadAllAvailableWeapons();
-        }
-
         setTurret(world);
     }
 
     @Override
     public void stop(GameData gameData, WorldData world) {
         // do nothing
-    }
-
-    private void loadAllAvailableWeapons() {
-        turrets.clear();
-
-        ServiceLoader<IWeaponShopInfo> loader = ServiceLoader.load(IWeaponShopInfo.class);
-
-        for (IWeaponShopInfo info : loader) {
-            String weaponId = info.getWeaponId();
-
-            ServiceLoader<IGamePluginService> gamePlugins = ServiceLoader.load(IGamePluginService.class);
-
-            for (IGamePluginService plugin : gamePlugins) {
-                if (plugin instanceof Turret turret) {
-                    if (turret.getWeaponId().equals(weaponId)) {
-                        add(turret);
-                    }
-                }
-            }
-        }
     }
 
     @Override
@@ -109,6 +82,4 @@ public class Inventory implements IInventoryService, IGamePluginService, IEntity
     public List<IWeaponInstance> getAllOwnedTurrets() {
         return List.copyOf(turrets);
     }
-
-
 }

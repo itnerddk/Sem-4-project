@@ -149,6 +149,7 @@ public class MainMenuController implements Initializable {
         });
 
         setupSettingsPane();
+        setupShopWeapons();
 
         ServiceLocator.getCurrencyService().ifPresentOrElse(
                 service -> coinDisplay.setText("Coins: " + service.getCurrency()),
@@ -173,15 +174,6 @@ public class MainMenuController implements Initializable {
                 () -> System.out.println("AudioProcessingService not found")
 
         );
-
-        ServiceLoader.load(ITurretProviderService.class).forEach(service -> {
-            ServiceLoader.load(IInventoryService.class).forEach(inventory -> {
-                service.getTurrets().forEach(turret -> {
-                    inventory.add(turret.get());
-                    System.out.println("Loaded turret: " + turret.get().getClass().getName());
-                });
-            });
-        });
     }
 
     @FXML
@@ -227,7 +219,6 @@ public class MainMenuController implements Initializable {
         upgradePane.setVisible(false);
         shopPane.setVisible(true);
         shopScrollPane.setVisible(true);
-        setupShopWeapons();
     }
 
     @FXML private void handleBack(ActionEvent event) {
@@ -792,12 +783,7 @@ public class MainMenuController implements Initializable {
             buyButton.setDisable(true);
 
             ServiceLocator.getInventoryService().ifPresent(inv -> {
-                boolean alreadyInInventory = inv.getAllOwnedTurrets().stream()
-                        .noneMatch(e -> e.getWeaponId().equals(weapon.getWeaponId()));
-
-                if (alreadyInInventory) {
-                    weaponToEntity(weapon).ifPresent(inv::add);
-                }
+                weaponToEntity(weapon).ifPresent(inv::add);
             });
 
         } else {
@@ -831,7 +817,8 @@ public class MainMenuController implements Initializable {
                 .map(ServiceLoader.Provider::get)
                 .flatMap(provider -> provider.getTurrets().stream())
                 .map(Supplier::get)
-                .filter(entity -> entity.getID().equals(weapon.getWeaponId()))
+                .map(entity -> (IWeaponInstance) entity)
+                .filter(entity -> entity.getWeaponId().equals(weapon.getWeaponId()))
                 .map(entity -> (Entity) entity)
                 .findFirst();
     }
