@@ -6,6 +6,7 @@ import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
+import org.sdu.sem4.g7.tank.parts.Turret;
 
 public class PlayerControlSystem implements IEntityProcessingService {
 
@@ -43,7 +44,10 @@ public class PlayerControlSystem implements IEntityProcessingService {
             }
             
             // Rotate turret
-            player.getTurret().aimTowards(new Vector2(gameData.getRelativeMouseX(), gameData.getRelativeMouseY()));
+            Turret turret = player.getTurret();
+            if (turret != null) {
+                turret.aimTowards(new Vector2(gameData.getRelativeMouseX(), gameData.getRelativeMouseY()));
+            }
 
             // Shoot
             if (gameData.isDown(GameData.Keys.SPACE) || gameData.isMouseDown()) {

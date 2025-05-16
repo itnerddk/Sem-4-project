@@ -12,8 +12,10 @@ public class Player extends Tank {
     public Player() {
         super();
 
-        this.getSprite().setEffect(new javafx.scene.effect.ColorAdjust(0.45, 0, 0, 0));
-        this.getSprite().setCacheHint(javafx.scene.CacheHint.SPEED);
+        if (this.getSprite() != null) {
+            this.getSprite().setEffect(new javafx.scene.effect.ColorAdjust(0.45, 0, 0, 0));
+            this.getSprite().setCacheHint(javafx.scene.CacheHint.SPEED);
+        }
         this.setzIndex(-5);
         setEntityType(EntityType.PLAYER);
 
