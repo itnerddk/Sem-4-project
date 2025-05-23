@@ -268,7 +268,6 @@ public class MissionLoaderService implements IMissionLoaderService {
 		} catch (Exception ex) {
 			System.err.println("Could not create a player!");
 			ex.printStackTrace();
-			return null;
 		}
 
 		this.worldData = world; // I think it's needed, because im pretty sure the constructor won't get a reference. Because it is null, until this method have been invoked.

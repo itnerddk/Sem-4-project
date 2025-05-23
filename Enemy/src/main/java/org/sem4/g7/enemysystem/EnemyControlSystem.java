@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.sdu.sem4.g7.common.Config.CommonConfig;
+import org.sdu.sem4.g7.common.data.Entity;
 import org.sdu.sem4.g7.common.data.GameData;
 import org.sdu.sem4.g7.common.data.Vector2;
 import org.sdu.sem4.g7.common.data.WorldData;
+import org.sdu.sem4.g7.common.enums.EntityType;
 import org.sdu.sem4.g7.common.enums.SoundType;
 import org.sdu.sem4.g7.common.services.IEntityProcessingService;
 import org.sdu.sem4.g7.common.services.ServiceLocator;
-import org.sdu.sem4.g7.playersystem.Player;
 
 public class EnemyControlSystem implements IEntityProcessingService {
     private static final long MAX_PATH_TIME = 4000; // Microseconds
@@ -38,7 +39,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
                 continue;
             }
 
-            Player player = world.getEntities(Player.class).stream().findFirst().orElse(null);
+            Entity player = world.getEntities().stream().filter(e -> e.getEntityType() == EntityType.PLAYER).findFirst().orElse(null);
             if (player == null) continue;
 
             double dx = player.getPosition().getX() - enemy.getPosition().getX();
